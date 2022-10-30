@@ -1,0 +1,31 @@
+version: "2"
+services:
+  postgres:
+    image: postgres:10.4
+    ports:
+      - "35000:5432"
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: db
+  postgres_admin:
+    image: dpage/pgadmin4:4.28
+    depends_on:
+      - postgres
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.pl
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "5050:80"
+  api:
+    build:
+      dockerfile: Dockerfile
+      context: ./backend/
+    depends_on:
+      - postgres
+    environment:
+      DATABASE_URL: postgresql://postgres:5432/db
+      DATABASE_USER: user
+      DATABASE_PASSWORD: password
+    ports:
+      - "8080:3100"
