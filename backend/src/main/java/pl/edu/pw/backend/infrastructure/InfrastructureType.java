@@ -1,4 +1,4 @@
-package main.java.pl.edu.pw.backend.infrastructure;
+package pl.edu.pw.backend.infrastructure;
 
 public enum InfrastructureType {
     GAS_STATION,
