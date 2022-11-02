@@ -1,6 +1,6 @@
 package pl.edu.pw.backend.infrastructure;
 
-public enum InfrastructureType {
+enum InfrastructureType {
     GAS_STATION,
     RESTAURANT,
     TOILETS,

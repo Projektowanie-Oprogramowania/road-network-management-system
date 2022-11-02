@@ -9,7 +9,7 @@ import pl.edu.pw.backend.point.Point;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Infrastructure {
+class Infrastructure {
     private String name;
     private Point location;
     private InfrastructureType type;

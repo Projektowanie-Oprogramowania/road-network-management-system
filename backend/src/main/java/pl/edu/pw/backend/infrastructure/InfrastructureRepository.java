@@ -1,4 +1,7 @@
 package pl.edu.pw.backend.infrastructure;
 
-public class InfrastructureRepository {
+import org.springframework.data.jpa.repository.JpaRepository;
+
+interface InfrastructureRepository extends JpaRepository<Infrastructure, Long> {
+
 }
