@@ -1,12 +1,14 @@
 import React from 'react';
 import './App.css';
 
-import MenuWindow from './Dashboards/DriverDashboard/MenuWindow';
+import DriverApp from './Dashboards/DriverDashboard/MenuWindow';
+import WorkerApp from './Dashboards/WorkerDashboard/MenuWindow';
 
 const App = () => {
   return (
     <div className="App">
-      <MenuWindow />
+      <DriverApp />
+      <WorkerApp />
     </div>
   );
 }
