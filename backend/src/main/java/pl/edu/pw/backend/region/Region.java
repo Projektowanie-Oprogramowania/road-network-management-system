@@ -1,4 +1,4 @@
-package pl.edu.pw.backend.point;
+package pl.edu.pw.backend.region;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,8 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Point {
+public class Region {
     private int id;
-    private double x;
-    private double y;
+    private String name;
 }
