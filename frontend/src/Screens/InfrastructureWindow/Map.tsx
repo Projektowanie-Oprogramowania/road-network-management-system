@@ -1,34 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Graph } from 'react-d3-graph';
+import { visitFunctionBody } from 'typescript';
 
-// graph payload (with minimalist structure)
-const data = {
-  nodes: [
-    { 
-        id: "Warszawa",
-        cx: 200,
-        cy: 200 
-    }, { 
-        id: "Gdynia",
-        cx: 200,
-        cy: 400
-    }, { 
-        id: "Krakow",
-        cx: 200,
-        cy: 0 
-    }],
-  links: [
-    { source: "Warszawa", target: "Gdynia" },
-    { source: "Warszawa", target: "Krakow" },
-  ],
-};
-
-// the graph configuration, just override the ones you need
-const myConfig = {
+const mapConfig = {
   nodeHighlightBehavior: true,
+  staticGraphWithDragAndDrop: true,
   node: {
     color: "lightgreen",
-    size: 120,
+    size: 80,
     highlightStrokeColor: "blue",
   },
   link: {
@@ -37,19 +16,11 @@ const myConfig = {
 };
 
 const onClickNode = function(nodeId: any) {
-  window.alert(`Clicked node ${nodeId}`);
+  window.alert(`Wybrano punkt ${nodeId}`);
 };
 
 const onClickLink = function(source: any, target: any) {
-  window.alert(`Clicked link between ${source} and ${target}`);
+  window.alert(`Wybrano droge ${source} - ${target}`);
 };
 
-export const Map = () => <Graph
-  id="graph-id" // id is mandatory
-  data={data}
-  config={myConfig}
-  onClickNode={onClickNode}
-  onClickLink={onClickLink}
-/>;
-
-export default Map;
+export { Graph, mapConfig, onClickLink, onClickNode }

@@ -6,16 +6,17 @@ interface IForm {
     fields: Array<{
         name: string,
         type: string,
+        value: string | number
     }>
 }
 
-export const FormComponent = (props: IForm) => {
+export const FormPoint = (props: IForm) => {
     return (
         <form onSubmit={props.onSubmit}>        
         {props.fields.map((v)=> 
             <label>
                 {v.name}
-                <input type={v.type} />
+                <input type={v.type} value={v.value} />
             </label>
         )}
         <input type="submit" value="Submit" />

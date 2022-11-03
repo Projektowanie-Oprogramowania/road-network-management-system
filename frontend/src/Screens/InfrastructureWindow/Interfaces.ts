@@ -1,5 +1,5 @@
 export interface Point {
-    id: number,
+    id: string,
     x: number,
     y: number
 }
@@ -10,10 +10,10 @@ export interface Region {
 }
 
 export interface Road {
-    startingPoint: Point,
-    endingPoint: Point,
+    startingPointId: string,
+    endingPointId: string,
     length: number,
-    region: Region,
+    region?: Region,
 }
 
 export interface Infrastructure_object {
