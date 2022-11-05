@@ -10,14 +10,14 @@ class InfrastructureDTO {
 
     private String name;
     private Point location;
-    private InfrastructureType type;
+    private InfrastructureType infrastructureType;
 
     public Infrastructure toInfrastructure() {
-        return new Infrastructure(name, location, type);
+        return new Infrastructure(name, location, infrastructureType);
     }
 
     public static InfrastructureDTO fromInfrastructure(Infrastructure infrastructure) {
         return new InfrastructureDTO(infrastructure.getName(), infrastructure.getLocation(),
-            infrastructure.getType());
+            infrastructure.getInfrastructureType());
     }
 }

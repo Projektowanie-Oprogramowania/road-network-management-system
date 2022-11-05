@@ -1,16 +1,30 @@
 package pl.edu.pw.backend.infrastructure;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import pl.edu.pw.backend.point.Point;
+
+import javax.persistence.Entity;
+import javax.persistence.ForeignKey;
+import javax.persistence.Id;
+import javax.persistence.OneToOne;
 
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@RequiredArgsConstructor
+@Entity
 class Infrastructure {
+    @Id
+    private Long id;
+
+    @NonNull
     private String name;
+
+    @NonNull
+    @OneToOne
     private Point location;
-    private InfrastructureType type;
+
+    @NonNull
+    private InfrastructureType infrastructureType;
 }
