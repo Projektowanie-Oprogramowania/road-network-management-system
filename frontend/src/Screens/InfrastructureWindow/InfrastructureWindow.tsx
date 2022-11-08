@@ -4,7 +4,6 @@ import { FormComponent } from '../../components/form/Form';
 import { Graph, mapConfig, onClickLink, onClickNode } from './Map';
 
 import {getInfrastructure} from './InfrastructureLogic';
-import { Point } from "./Interfaces";
 
 const PointForm = [
     { 
@@ -69,8 +68,10 @@ export const InfrastructureWindow = () => {
 
 
     return <div>
+        <div style={{height: 40}}/>
         <FormComponent onSubmit={onSubmitPoint} fields={PointForm} />
         <FormComponent onSubmit={onSubmitInfrastructure} fields={InfrastructureForm} />
+        <div style={{height: 40}}/>
         <Graph
             id="graph-id" // id is mandatory
             data={data}

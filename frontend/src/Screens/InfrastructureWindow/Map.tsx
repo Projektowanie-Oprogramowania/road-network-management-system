@@ -1,6 +1,4 @@
-import React, { useState } from 'react';
 import { Graph } from 'react-d3-graph';
-import { visitFunctionBody } from 'typescript';
 
 const mapConfig = {
   nodeHighlightBehavior: true,
