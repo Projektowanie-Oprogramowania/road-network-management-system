@@ -3,6 +3,8 @@ import { Graph } from 'react-d3-graph';
 const mapConfig = {
   nodeHighlightBehavior: true,
   staticGraphWithDragAndDrop: true,
+  width: 1200,
+  height: 800,
   node: {
     color: "lightgreen",
     size: 80,

@@ -5,6 +5,8 @@ import { Graph, mapConfig, onClickLink, onClickNode } from './Map';
 
 import {getInfrastructure} from './InfrastructureLogic';
 
+import './InfrastructureStyles.css';
+
 const PointForm = [
     { 
         name: 'id',
@@ -68,16 +70,29 @@ export const InfrastructureWindow = () => {
 
 
     return <div>
-        <div style={{height: 40}}/>
-        <FormComponent onSubmit={onSubmitPoint} fields={PointForm} />
-        <FormComponent onSubmit={onSubmitInfrastructure} fields={InfrastructureForm} />
-        <div style={{height: 40}}/>
-        <Graph
-            id="graph-id" // id is mandatory
-            data={data}
-            config={mapConfig}
-            onClickNode={onClickNode}
-            onClickLink={onClickLink}
-        />
+        <div style={{display:'flex', flexDirection: 'row', alignItems: 'center'}}>
+            {/* W tym elemencie będą wyświetlane formularze */} 
+            <div className='fill-window' style={{display: 'none'}}>
+                <div className="form-overlay"/>
+                <div className="form-container">
+                    Tu będzie formularz wyświetlany
+                </div>
+            </div>
+            <div>
+                <div style={{height: 40}}/>
+                    <FormComponent onSubmit={onSubmitPoint} fields={PointForm} />
+                    <FormComponent onSubmit={onSubmitInfrastructure} fields={InfrastructureForm} />
+                <div style={{height: 40}}/>
+            </div>
+            <div style={{margin: 40}}>
+                <Graph
+                    id="graph-id" // id is mandatory
+                    data={data}
+                    config={mapConfig}
+                    onClickNode={onClickNode}
+                    onClickLink={onClickLink}
+                />
+            </div>
+        </div>
     </div>
 }

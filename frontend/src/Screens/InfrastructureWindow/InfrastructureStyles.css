@@ -1,0 +1,24 @@
+#graph-id-graph-wrapper > svg {
+    background-color: white;
+}
+
+.fill-window {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+}
+
+.form-overlay {
+    background-color: black;
+    width: 100%;
+    height: 100%;
+    opacity: 50%;
+}
+
+.form-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    background-color: white;
+    transform: translate(-50%, -50%);
+}

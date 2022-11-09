@@ -18,7 +18,7 @@ const Layout = () =>
 export const MenuWindow = () => 
 <BrowserRouter>
     <Routes>
-        <Route path="/" element={<Layout />}>
+        <Route path="/*" element={<Layout />}>
             {screenList.map((v) => <Route path={v.path} element={<v.element />} />)}
         </Route>
     </Routes>
