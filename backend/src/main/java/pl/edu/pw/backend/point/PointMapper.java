@@ -16,4 +16,13 @@ public class PointMapper {
         return new PointDTO(point.getX(), point.getY());
     }
 
+    public static List<Point> mapDTO(List<PointDTO> points) {
+        return points
+                .stream().map(PointMapper::map)
+                .collect(Collectors.toList());
+    }
+
+    public static Point map(PointDTO point) {
+        return new Point(point.getX(), point.getY());
+    }
 }

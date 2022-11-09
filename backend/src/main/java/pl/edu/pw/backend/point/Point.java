@@ -14,6 +14,12 @@ import javax.persistence.Id;
 @AllArgsConstructor
 @Entity
 public class Point {
+
+    public Point(double x, double y) {
+        this.x = x;
+        this.y = y;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
