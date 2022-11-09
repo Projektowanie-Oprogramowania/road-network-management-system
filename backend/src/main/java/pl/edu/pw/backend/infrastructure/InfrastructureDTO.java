@@ -19,7 +19,7 @@ class InfrastructureDTO {
     }
 
     public static InfrastructureDTO fromInfrastructure(Infrastructure infrastructure) {
-        return new InfrastructureDTO(infrastructure.getName(), infrastructure.getLocation(),
+        return new InfrastructureDTO(infrastructure.getName(), infrastructure.getPoint(),
             infrastructure.getInfrastructureType());
     }
 }

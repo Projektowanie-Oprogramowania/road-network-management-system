@@ -1,5 +1,6 @@
 package pl.edu.pw.backend.infrastructure;
 
+import java.beans.Transient;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;

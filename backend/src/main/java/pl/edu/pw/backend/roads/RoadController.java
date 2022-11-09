@@ -1,6 +1,7 @@
 package pl.edu.pw.backend.roads;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,6 +12,7 @@ import java.util.List;
 @RestController
 @RequestMapping("road")
 public class RoadController {
+
     private final RoadService roadService;
 
     @PostMapping

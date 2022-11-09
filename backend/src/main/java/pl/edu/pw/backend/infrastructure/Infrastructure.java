@@ -1,5 +1,7 @@
 package pl.edu.pw.backend.infrastructure;
 
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import lombok.*;
 import pl.edu.pw.backend.point.Point;
 
@@ -16,6 +18,7 @@ import javax.persistence.OneToOne;
 @Entity
 class Infrastructure {
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @NonNull
@@ -23,7 +26,7 @@ class Infrastructure {
 
     @NonNull
     @OneToOne
-    private Point location;
+    private Point point;
 
     @NonNull
     private InfrastructureType infrastructureType;
