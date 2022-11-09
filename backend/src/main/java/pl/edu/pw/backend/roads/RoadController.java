@@ -20,9 +20,9 @@ public class RoadController {
         return ResponseEntity.status(HttpStatus.CREATED).body(roadService.addRoad(addRoad));
     }
 
-    @PutMapping
-    public ResponseEntity<RoadDTO> updateRoad(@RequestBody RoadDTO roadDTO) {
-        return ResponseEntity.status(HttpStatus.OK).body(roadService.updateRoads(roadDTO));
+    @PutMapping("/{id}")
+    public ResponseEntity<RoadDTO> updateRoad(@RequestBody AddRoad roadDTO, @PathVariable int id) {
+        return ResponseEntity.status(HttpStatus.OK).body(roadService.updateRoad(roadDTO, id));
     }
 
     @DeleteMapping("/{id}")

@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.annotations.Cascade;
 import org.springframework.beans.factory.annotation.Required;
 import pl.edu.pw.backend.point.Point;
 import pl.edu.pw.backend.region.Region;
@@ -30,14 +31,17 @@ public class Road {
     @Id
     private int id;
     @OneToMany
+    @Cascade(org.hibernate.annotations.CascadeType.ALL)
     private List<Segment> segments;
 
     private String name;
 
     @ManyToOne
+    @Cascade(org.hibernate.annotations.CascadeType.ALL)
     private Point startingPoint;
 
     @ManyToOne
+    @Cascade(org.hibernate.annotations.CascadeType.ALL)
     private Point endingPoint;
     private double length;
 

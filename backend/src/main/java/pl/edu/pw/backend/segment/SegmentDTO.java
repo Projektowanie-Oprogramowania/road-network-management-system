@@ -13,7 +13,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SegmentDTO {
-    int id;
     List<PointDTO> points;
     PointDTO startingPoint;
     PointDTO endingPoint;
