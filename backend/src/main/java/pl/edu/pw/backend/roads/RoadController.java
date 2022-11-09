@@ -1,6 +1,7 @@
 package pl.edu.pw.backend.roads;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,6 +12,7 @@ import java.util.List;
 @RestController
 @RequestMapping("road")
 public class RoadController {
+
     private final RoadService roadService;
 
     @PostMapping
@@ -18,9 +20,9 @@ public class RoadController {
         return ResponseEntity.status(HttpStatus.CREATED).body(roadService.addRoad(addRoad));
     }
 
-    @PutMapping
-    public ResponseEntity<RoadDTO> updateRoad(@RequestBody RoadDTO roadDTO) {
-        return ResponseEntity.status(HttpStatus.OK).body(roadService.updateRoads(roadDTO));
+    @PutMapping("/{id}")
+    public ResponseEntity<RoadDTO> updateRoad(@RequestBody AddRoad roadDTO, @PathVariable int id) {
+        return ResponseEntity.status(HttpStatus.OK).body(roadService.updateRoad(roadDTO, id));
     }
 
     @DeleteMapping("/{id}")

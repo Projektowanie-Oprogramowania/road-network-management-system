@@ -2,8 +2,11 @@ package pl.edu.pw.backend.roads;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import pl.edu.pw.backend.point.PointMapper;
 import pl.edu.pw.backend.region.Region;
+import pl.edu.pw.backend.region.RegionMapper;
 import pl.edu.pw.backend.region.RegionRepository;
+import pl.edu.pw.backend.segment.SegmentMapper;
 
 import javax.transaction.Transactional;
 import java.util.List;
@@ -21,9 +24,14 @@ public class RoadService {
     }
 
     @Transactional
-    public RoadDTO updateRoads(RoadDTO roadDTO) {
-        Road road = roadRepository.findById(roadDTO.getId()).orElseThrow();
-        //TODO
+    public RoadDTO updateRoad(AddRoad roadDTO, int id) {
+        Road road = roadRepository.findById(id).orElseThrow();
+        road.setName(roadDTO.name);
+        road.setEndingPoint(PointMapper.map(roadDTO.endingPoint));
+        road.setLength(roadDTO.length);
+        road.setRegion(RegionMapper.map(roadDTO.region));
+        road.setSegments(SegmentMapper.mapDTO(roadDTO.segments));
+        road.setStartingPoint(PointMapper.map(roadDTO.startingPoint));
         return RoadMapper.map(roadRepository.save(road));
     }
 

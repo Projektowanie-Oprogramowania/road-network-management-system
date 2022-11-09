@@ -14,8 +14,14 @@ class RoadMapper {
     private RoadMapper() {}
 
     public static Road map(AddRoad addRoad) {
-        //TODO
-        return new Road();
+        return new Road(
+                SegmentMapper.mapDTO(addRoad.getSegments()),
+                addRoad.name,
+                PointMapper.map(addRoad.startingPoint),
+                PointMapper.map(addRoad.endingPoint),
+                addRoad.length,
+                RegionMapper.map(addRoad.region)
+        );
     }
 
     public static RoadDTO map(Road road) {
