@@ -44,3 +44,5 @@ export const getInfrastructure:() => MapData = () => {
         objects: objects
     }
 }
+
+export { addPoint, editPoint, removePoint } from './PointLogic';
