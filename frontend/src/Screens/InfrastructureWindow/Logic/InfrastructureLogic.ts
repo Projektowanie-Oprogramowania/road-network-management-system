@@ -25,3 +25,4 @@ export const getInfrastructure:() => MapData = () => {
 }
 
 export { addPoint, editPoint, removePoint } from './PointLogic';
+export { addRoad, editRoad, removeRoad } from './RoadLogic';

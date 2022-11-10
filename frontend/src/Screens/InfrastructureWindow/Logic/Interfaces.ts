@@ -10,6 +10,7 @@ export interface Region {
 }
 
 export interface Road {
+    id?: string,
     startingPointId: string,
     endingPointId: string,
     length: number,
