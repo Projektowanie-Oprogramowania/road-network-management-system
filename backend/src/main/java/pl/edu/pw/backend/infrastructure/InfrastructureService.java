@@ -1,17 +1,19 @@
 package pl.edu.pw.backend.infrastructure;
 
+import java.beans.Transient;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-@RequiredArgsConstructor
 @Service
 class InfrastructureService {
     //store id and use DB entities
 
     private final static Long RANDOM_ID = 1234L;
 
-    private final InfrastructureRepository infrastructureRepository;
+    @Autowired
+    private InfrastructureRepository infrastructureRepository;
 
     Infrastructure addInfrastructureObject(Infrastructure infrastructure) {
         return infrastructureRepository.save(infrastructure);
