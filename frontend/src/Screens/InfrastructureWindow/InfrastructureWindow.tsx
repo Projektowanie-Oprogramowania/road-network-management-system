@@ -3,39 +3,14 @@ import React from "react"
 import { FormComponent } from '../../components/forms/Form';
 import { FormPoint } from './Forms/FormPoint';
 import { FormRoad } from './Forms/FormRoad';
-import { Graph, mapConfig, onClickLink, onClickNode } from './Map';
+import { Graph, mapConfig } from './Map';
 
 import { getInfrastructure, addPoint, editPoint, removePoint } from './Logic/InfrastructureLogic';
 
 import {Button, Box} from '@mui/material';
 
 import './InfrastructureStyles.css';
-
-const PointForm = [
-    { 
-        name: 'id',
-        type: 'text'
-    }, { 
-        name: 'x',
-        type: 'number',
-    }, { 
-        name: 'y',
-        type: 'number',
-    },
-]
-
-const InfrastructureForm = [
-    { 
-        name: 'id',
-        type: 'text'
-    }, { 
-        name: 'x',
-        type: 'number',
-    }, { 
-        name: 'y',
-        type: 'number',
-    },
-]
+import { Point } from "./Logic/Interfaces";
 
 const mapData = getInfrastructure();
 
@@ -43,6 +18,8 @@ export const InfrastructureWindow = () => {
 
     const [formIsActive, setFormIsActive] = React.useState(false);
     const [formId, setFormId] = React.useState(0);
+
+    const [currentPoint, setCurrentPoint] = React.useState<Point | undefined>(undefined);
 
     const [data, setData] = React.useState({
         nodes: mapData.points.map(v => ({
@@ -75,6 +52,18 @@ export const InfrastructureWindow = () => {
         })
     }
 
+    const onClickNode = function(nodeId: any) {
+        console.log(`Wybrano punkt ${nodeId}`);
+
+        setFormIsActive(true);
+        setFormId(4);
+        setCurrentPoint(data.nodes.filter(v => v.id === nodeId)[0]);
+    };
+    
+    const onClickLink = function(source: any, target: any) {
+        window.alert(`Wybrano droge ${source} - ${target}`);
+    };
+
 
     return <div>
         <div style={{display:'flex', flexDirection: 'row', alignItems: 'center'}}>
@@ -86,21 +75,18 @@ export const InfrastructureWindow = () => {
                         <Box sx={{ p: 10, border: '1px dashed grey', gap: 1 }}>
                             <Button variant="contained" onClick={() => setFormIsActive(false)}>Close</Button>
                             {formId === 0 && <FormPoint onSubmit={addPoint} />}
-                            {formId === 1 && <FormRoad onSubmit={onSubmitInfrastructure} fields={InfrastructureForm} />}
+                            {formId === 4 && <FormPoint onSubmit={editPoint} onDelete={removePoint} data={currentPoint}/>}
+                            {formId === 1 && <FormRoad onSubmit={onSubmitInfrastructure} />}
                         </Box>
                     </div>
                 </div>
             }
             <div style={{width: 520, display: 'flex', flexDirection: 'column', gap: 40, margin: 40, marginRight: 0}}>
                 <div style={{height: 40}}/>
-                <Button variant="contained" onClick={() => setFormIsActive(true)}>Add Infrastructure Object</Button>
-                <Button variant="contained" onClick={() => setFormIsActive(true)}>Add City</Button>
-                <Button variant="contained" onClick={() => setFormIsActive(true)}>Add Point</Button>
-                <Button variant="contained" onClick={() => setFormIsActive(true)}>Add Road</Button>
-                {/*
-                    <FormComponent onSubmit={onSubmitPoint} fields={PointForm} />
-                    <FormComponent onSubmit={onSubmitInfrastructure} fields={InfrastructureForm} />
-                */}
+                <Button variant="contained" onClick={() => {setFormIsActive(true); setFormId(4);}}>Add Infrastructure Object</Button>
+                <Button variant="contained" onClick={() => {setFormIsActive(true); setFormId(4);}}>Add City</Button>
+                <Button variant="contained" onClick={() => {setFormIsActive(true); setFormId(4);}}>Add Point</Button>
+                <Button variant="contained" onClick={() => {setFormIsActive(true); setFormId(4);}}>Add Road</Button>
                 <div style={{height: 40}}/>
             </div>
             <div style={{margin: 40}}>
