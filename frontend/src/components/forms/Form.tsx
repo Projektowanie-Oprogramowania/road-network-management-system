@@ -12,10 +12,12 @@ export const FormComponent = (props: IForm) => {
     return (
         <form onSubmit={props.onSubmit}>        
         {props.fields.map((v)=> 
-            <label>
+            <>
+            <label style={{margin: 5}}>
                 {v.name}
-                <input type={v.type} />
+                <input type={v.type} style={{margin: 5}}/>
             </label>
+            </>
         )}
         <input type="submit" value="Submit" />
       </form>
