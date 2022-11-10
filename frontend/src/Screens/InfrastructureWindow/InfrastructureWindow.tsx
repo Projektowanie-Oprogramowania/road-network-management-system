@@ -1,6 +1,6 @@
 import React from "react"
 
-import { FormComponent } from '../../components/forms/Form';
+import { FormComponent } from '../../components/form/Form';
 import { FormPoint } from './Forms/FormPoint';
 import { FormRoad } from './Forms/FormRoad';
 import { Graph, mapConfig } from './Map';

@@ -1,6 +1,6 @@
 import React from "react"
 import { FormComponent } from '../../components/form/Form';
-import { Point } from "../InfrastructureWindow/Interfaces";
+import { Point } from "../InfrastructureWindow/Logic/Interfaces";
 
 const points: Point[] = [
     { 

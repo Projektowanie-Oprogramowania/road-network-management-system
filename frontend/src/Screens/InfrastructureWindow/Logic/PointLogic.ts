@@ -1,3 +1,5 @@
+import { Point } from "./Interfaces";
+
 export const editPoint: React.FormEventHandler<HTMLFormElement> = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -6,6 +8,23 @@ export const editPoint: React.FormEventHandler<HTMLFormElement> = (e: React.Form
     const y: number =  Number( (e.currentTarget[3] as HTMLInputElement).value );
     //Send request to edit point
     console.log(`Requested to edit point  id: ${id} x: ${x} y: ${y}`);
+
+    /* url to post
+    fetch('', {
+    method: 'PUT',
+    headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+        "id": id,
+        "x": x,
+        "y": y
+    })
+    })
+    .then(response => response.json())
+    .then(response => console.log(JSON.stringify(response)))
+    */
 
     //Return value
     return {
@@ -21,6 +40,22 @@ export const addPoint: React.FormEventHandler<HTMLFormElement> = (e: React.FormE
     //Send request to edit point
     console.log(`Requested to add point  id: ${id} x: ${x} y: ${y}`);
 
+    /* url to post
+    fetch('', {
+    method: 'POST',
+    headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+        "id": id,
+        "x": x,
+        "y": y
+    })
+    })
+    .then(response => response.json())
+    .then(response => console.log(JSON.stringify(response)))
+    */
 
     //Return value
     return {
@@ -30,4 +65,24 @@ export const addPoint: React.FormEventHandler<HTMLFormElement> = (e: React.FormE
 export const removePoint: (id: string) => void = (id: string) => {
     //Send request to delete point
     console.log(`Requested ${id} to delete`);
+}
+
+export const getPoints: () => Array<Point> = () => {
+    //Send request to delete point
+    console.log(`Requested to get points`);
+
+    return [
+        { 
+            id: "Warszawa",
+            x: 200,
+            y: 200 
+        }, { 
+            id: "Gdynia",
+            x: 200,
+            y: 400
+        }, { 
+            id: "Krakow",
+            x: 200,
+            y: 0 
+        }];
 }
