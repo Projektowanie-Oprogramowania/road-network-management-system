@@ -2,6 +2,7 @@ import React from "react"
 import { FormComponent } from '../../components/form/Form';
 import { Point } from "../InfrastructureWindow/Logic/Interfaces";
 
+/*
 const points: Point[] = [
     { 
         id: "Warszawa",
@@ -17,14 +18,15 @@ const points: Point[] = [
         x: 50.061265, 
         y: 19.947009
     }];
-    
+*/
 
 const onSubmitDirection: React.FormEventHandler<HTMLFormElement> = (event) => {
     event.preventDefault();
-    const id = (event.currentTarget[0] as HTMLInputElement).value;
-    const p = points.find(x => x.id === id);
-    if(p!=null) {
-        window.open("https://maps.google.com?q=" + p.x + "," + p.y );
+    const point_1 = (event.currentTarget[0] as HTMLInputElement).value;
+    const point_2 = (event.currentTarget[1] as HTMLInputElement).value;
+    //const p = points.find(x => x.id === id);
+    if(point_1 != null && point_2 != null) {
+        window.open("https://maps.google.com/maps/dir/" + point_1 + "/" + point_2 );
     }
     else {
         window.alert("Nie znaleziono Id!")
@@ -33,6 +35,9 @@ const onSubmitDirection: React.FormEventHandler<HTMLFormElement> = (event) => {
 
 const IdForm = [
 {
+    name: 'navigate from',
+    type: 'text'
+}, {
     name: 'navigate to',
     type: 'text'
 }]

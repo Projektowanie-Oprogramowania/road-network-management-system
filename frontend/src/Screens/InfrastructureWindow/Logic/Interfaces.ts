@@ -1,4 +1,5 @@
 export interface Point {
+    index: number,
     id: string,
     x: number,
     y: number
@@ -10,7 +11,7 @@ export interface Region {
 }
 
 export interface Road {
-    id?: string,
+    id?: number,
     startingPointId: string,
     endingPointId: string,
     length: number,

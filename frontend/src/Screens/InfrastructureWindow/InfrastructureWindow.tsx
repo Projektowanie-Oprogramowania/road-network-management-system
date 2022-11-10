@@ -2,7 +2,7 @@ import React from "react"
 
 import { FormComponent } from '../../components/form/Form';
 import { FormPoint } from './Forms/FormPoint';
-import { FormRoad } from './Forms/FormRoad';
+import { FormRoad, FormRoadSelect } from './Forms/FormRoad';
 import { Graph, mapConfig } from './Map';
 
 import { getInfrastructure, addRoad, addPoint, editPoint, removePoint, editRoad, removeRoad } from './Logic/InfrastructureLogic';
@@ -24,26 +24,22 @@ export const InfrastructureWindow = () => {
     const mapData = getInfrastructure();
     const {data} = React.useMemo(() => ({data: {
         nodes: mapData.points.map(v => ({
+              index: v.index,
               id: v.id,
               x: v.x,
               y: v.y
           })),
-        links: mapData.roads.map(v => ({ source: v.startingPointId, target: v.endingPointId }))
+        links: mapData.roads.filter(
+                v =>  mapData.points.findIndex(p => p.id === v.startingPointId) != -1 && mapData.points.findIndex(p => p.id === v.endingPointId) != -1
+                ).map(v => (
+            {
+                id: v.id, 
+                source: v.startingPointId, 
+                target: v.endingPointId,
+                length: v.length, 
+                region: v.region
+            }))
       }}), [mapData]);
-
-    const onSubmitPoint: React.FormEventHandler<HTMLFormElement> = (event) => {
-        event.preventDefault();
-        const id = (event.currentTarget[0] as HTMLInputElement).value;
-        const x = Number((event.currentTarget[1] as HTMLInputElement).value);
-        const y = Number((event.currentTarget[2] as HTMLInputElement).value);
-    }
-
-    const onSubmitInfrastructure: React.FormEventHandler<HTMLFormElement> = (event) => {
-        event.preventDefault();
-        const id = (event.currentTarget[0] as HTMLInputElement).value;
-        const x = Number((event.currentTarget[1] as HTMLInputElement).value);
-        const y = Number((event.currentTarget[2] as HTMLInputElement).value);
-    }
 
     const onClickNode = function(nodeId: any) {
         console.log(`Wybrano punkt ${nodeId}`);
@@ -54,7 +50,18 @@ export const InfrastructureWindow = () => {
     };
     
     const onClickLink = function(source: any, target: any) {
-        window.alert(`Wybrano droge ${source} - ${target}`);
+        console.log(`Wybrano droge ${source} - ${target}`);
+
+        setFormIsActive(true);
+        setFormId(5);
+        const link = data.links.filter(v => v.source === source && v.target === target)[0];
+        setCurrentRoad({
+            id: link.id,
+            startingPointId: link.source,
+            endingPointId: link.target,
+            length: link.length,
+            region: link.region,
+        });
     };
 
 
@@ -69,8 +76,8 @@ export const InfrastructureWindow = () => {
                             <Button variant="contained" onClick={() => setFormIsActive(false)}>Close</Button>
                             {formId === 0 && <FormPoint onSubmit={addPoint} />}
                             {formId === 4 && <FormPoint onSubmit={editPoint} onDelete={removePoint} data={currentPoint}/>}
-                            {formId === 1 && <FormRoad onSubmit={addRoad} />}
-                            {formId === 5 && <FormRoad onSubmit={editRoad} onDelete={removeRoad} data={currentRoad}/>}
+                            {formId === 1 && <FormRoadSelect points={data.nodes.map(v => v.id)} onSubmit={addRoad} />}
+                            {formId === 5 && <FormRoadSelect points={data.nodes.map(v => v.id)} onSubmit={editRoad} onDelete={removeRoad} data={currentRoad}/>}
                         </Box>
                     </div>
                 </div>
