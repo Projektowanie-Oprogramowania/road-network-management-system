@@ -1,6 +1,6 @@
-import React from "react"
+import React from 'react';
 import { FormComponent } from '../../components/form/Form';
-import { Point } from "../InfrastructureWindow/Logic/Interfaces";
+import { Point } from '../InfrastructureWindow/Logic/Interfaces';
 
 /*
 const points: Point[] = [
@@ -20,31 +20,35 @@ const points: Point[] = [
     }];
 */
 
-const onSubmitDirection: React.FormEventHandler<HTMLFormElement> = (event) => {
+const onSubmitDirection: React.FormEventHandler<HTMLFormElement> = event => {
     event.preventDefault();
     const point_1 = (event.currentTarget[0] as HTMLInputElement).value;
     const point_2 = (event.currentTarget[1] as HTMLInputElement).value;
     //const p = points.find(x => x.id === id);
-    if(point_1 != null && point_2 != null) {
-        window.open("https://maps.google.com/maps/dir/" + point_1 + "/" + point_2 );
+    if (point_1 != null && point_2 != null) {
+        window.open(
+            'https://maps.google.com/maps/dir/' + point_1 + '/' + point_2,
+        );
+    } else {
+        window.alert('Nie znaleziono Id!');
     }
-    else {
-        window.alert("Nie znaleziono Id!")
-    }
-}
+};
 
 const IdForm = [
-{
-    name: 'navigate from',
-    type: 'text'
-}, {
-    name: 'navigate to',
-    type: 'text'
-}]
+    {
+        name: 'navigate from',
+        type: 'text',
+    },
+    {
+        name: 'navigate to',
+        type: 'text',
+    },
+];
 
-export const NavigateWindow = () => 
+export const NavigateWindow = () => (
     <div>
-        <div style={{height: 40}}/>
+        <div style={{ height: 40 }} />
         <FormComponent onSubmit={onSubmitDirection} fields={IdForm} />
-        <div style={{height: 40}}/>
+        <div style={{ height: 40 }} />
     </div>
+);

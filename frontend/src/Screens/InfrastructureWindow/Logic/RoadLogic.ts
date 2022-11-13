@@ -1,29 +1,34 @@
-import { Road } from "./Interfaces";
+import { Road } from './Interfaces';
 
 let roads = [
     {
         id: 0,
         startingPointId: 'Warszawa',
         endingPointId: 'Gdynia',
-        length: 200
-    }, {
+        length: 200,
+    },
+    {
         id: 1,
         startingPointId: 'Warszawa',
         endingPointId: 'Krakow',
-        length: 200
-    }
+        length: 200,
+    },
 ];
 
 let new_index = 2;
 
-export const editRoad: React.FormEventHandler<HTMLFormElement> = (e: React.FormEvent<HTMLFormElement>) => {
+export const editRoad: React.FormEventHandler<HTMLFormElement> = (
+    e: React.FormEvent<HTMLFormElement>,
+) => {
     e.preventDefault();
-    const id: number = Number( (e.currentTarget[1] as HTMLInputElement).value );
+    const id: number = Number((e.currentTarget[1] as HTMLInputElement).value);
     const startId: string = (e.currentTarget[2] as HTMLInputElement).value;
     const endId: string = (e.currentTarget[4] as HTMLInputElement).value;
 
     //Send request to edit point
-    console.log(`Requested to edit road id: ${id}  start: ${startId} end: ${endId}`);
+    console.log(
+        `Requested to edit road id: ${id}  start: ${startId} end: ${endId}`,
+    );
     roads[id].startingPointId = startId;
     roads[id].endingPointId = endId;
 
@@ -45,24 +50,27 @@ export const editRoad: React.FormEventHandler<HTMLFormElement> = (e: React.FormE
     */
 
     //Return value
-    return {
-    }
-}
+    return {};
+};
 
-export const addRoad: React.FormEventHandler<HTMLFormElement> = (e: React.FormEvent<HTMLFormElement>) => {
+export const addRoad: React.FormEventHandler<HTMLFormElement> = (
+    e: React.FormEvent<HTMLFormElement>,
+) => {
     e.preventDefault();
 
-    const id: number = Number( (e.currentTarget[0] as HTMLInputElement).value );
+    const id: number = Number((e.currentTarget[0] as HTMLInputElement).value);
     const startId: string = (e.currentTarget[1] as HTMLInputElement).value;
     const endId: string = (e.currentTarget[3] as HTMLInputElement).value;
 
     //Send request to edit point
-    console.log(`Requested to add road id: ${new_index}  start: ${startId} end: ${endId}`);
+    console.log(
+        `Requested to add road id: ${new_index}  start: ${startId} end: ${endId}`,
+    );
     roads.push({
         id: new_index,
         startingPointId: startId,
         endingPointId: endId,
-        length: 0
+        length: 0,
     });
 
     /* url to post
@@ -83,16 +91,14 @@ export const addRoad: React.FormEventHandler<HTMLFormElement> = (e: React.FormEv
     */
 
     //Return value
-    return {
-    }
-}
+    return {};
+};
 
 export const removeRoad: (id: number) => void = (id: number) => {
     //Send request to delete point
     console.log(`Requested ${id} to delete`);
     const index = roads.findIndex(v => v.id === id);
-    if (index >= 0 && index < roads.length)
-    {
+    if (index >= 0 && index < roads.length) {
         roads.splice(index);
     }
 
@@ -110,15 +116,17 @@ export const removeRoad: (id: number) => void = (id: number) => {
     .then(response => response.json())
     .then(response => console.log(JSON.stringify(response)))
     */
-}
+};
 
 export const getRoads: () => Array<Road> = () => {
     //Send request to delete point
     console.log(`Requested to get points`);
 
     return roads;
-}
+};
 
-export const deleteRoadsConnectedWithNode: (id: string) => void = (id: string) => {
+export const deleteRoadsConnectedWithNode: (id: string) => void = (
+    id: string,
+) => {
     roads = roads.filter(v => v.startingPointId != id && v.endingPointId != id);
-}
+};

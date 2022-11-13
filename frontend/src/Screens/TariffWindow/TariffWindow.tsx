@@ -1,6 +1,3 @@
-import React from "react"
+import React from 'react';
 
-export const TariffWindow = () => 
-    <div>
-        TariffWindow
-    </div>
+export const TariffWindow = () => <div>TariffWindow</div>;

@@ -2,8 +2,8 @@ import { InfrastructureWindow } from '../../Screens/InfrastructureWindow/Infrast
 
 export const screenList = [
     {
-        "label":  'Sieci Drogowe',
-        "path": 'infrastructure',
-        "element": InfrastructureWindow
-    }
-]
+        label: 'Sieci Drogowe',
+        path: 'infrastructure',
+        element: InfrastructureWindow,
+    },
+];

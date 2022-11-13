@@ -1,4 +1,3 @@
-
 import { Point, Road, Infrastructure_object } from './Interfaces';
 
 import { getPoints } from './PointLogic';
@@ -11,7 +10,7 @@ interface MapData {
 }
 
 //TODO connect with backend
-export const getInfrastructure:() => MapData = () => {
+export const getInfrastructure: () => MapData = () => {
     const points: Point[] = getPoints();
     const roads: Road[] = getRoads();
 
@@ -20,9 +19,9 @@ export const getInfrastructure:() => MapData = () => {
     return {
         points: points,
         roads: roads,
-        objects: objects
-    }
-}
+        objects: objects,
+    };
+};
 
 export { getNetworks } from './NetworkLogic';
 export { addPoint, editPoint, removePoint } from './PointLogic';

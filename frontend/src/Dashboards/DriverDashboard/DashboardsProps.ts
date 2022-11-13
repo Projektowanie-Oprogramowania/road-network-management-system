@@ -3,12 +3,13 @@ import { IncidentsWindow } from '../../Screens/IncidentWindow/IncidentWindow';
 
 export const screenList = [
     {
-        "label":  'Navigation',
-        "path": 'navigate',
-        "element": NavigateWindow
-    }, {
-        "label":  'Incidents',
-        "path": 'incidents',
-        "element": IncidentsWindow
-    }
-]
+        label: 'Navigation',
+        path: 'navigate',
+        element: NavigateWindow,
+    },
+    {
+        label: 'Incidents',
+        path: 'incidents',
+        element: IncidentsWindow,
+    },
+];
