@@ -1,9 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { StyledEngineProvider } from '@mui/material/styles';
+import { StyledEngineProvider, ThemeProvider } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+
+import { AlertProvider } from './components/alert/AlertProvider';
+import { theme } from '@styles/theme';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -11,7 +15,12 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <StyledEngineProvider injectFirst>
-      <App />
+      <ThemeProvider theme={theme}>
+        <AlertProvider>
+            <CssBaseline />
+            <App />
+        </AlertProvider>
+      </ThemeProvider>
     </StyledEngineProvider>
   </React.StrictMode>
 );

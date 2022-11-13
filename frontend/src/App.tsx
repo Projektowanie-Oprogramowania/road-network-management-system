@@ -1,6 +1,9 @@
 import React from 'react';
-import { FormControl, SelectChangeEvent, Select, MenuItem } from '@mui/material';
+import { FormControl, SelectChangeEvent, Select, MenuItem, Button } from '@mui/material';
 import './App.css';
+
+import FullScreenAlert from './components/alert/AlertComponent';
+import useAlert from '@context/useAlert';
 
 import DriverApp from './Dashboards/DriverDashboard/MenuWindow';
 import WorkerApp from './Dashboards/WorkerDashboard/MenuWindow';
@@ -24,12 +27,15 @@ const applicationsTable: Array<Application> = [{
 const App = () => {
   const [appid, setAppId] = React.useState(0);
 
+  const { setAlert } = useAlert();
+
   const handleChangeApp = (event: SelectChangeEvent<number>, child: React.ReactNode) => {
     setAppId(event.target.value as number);
   }
 
   return (
     <div className="App">
+      <FullScreenAlert />
       <div>
       <FormControl fullWidth>
         <Select
@@ -44,6 +50,8 @@ const App = () => {
       </FormControl>
       </div>
       {applicationsTable[appid].app({}, undefined)}
+      {/* Test full screen alert visibility */
+      /*<Button onClick={() => {console.log('clicked'); setAlert('test full screen alert');}}>TEST</Button>*/}
     </div>
   );
 }

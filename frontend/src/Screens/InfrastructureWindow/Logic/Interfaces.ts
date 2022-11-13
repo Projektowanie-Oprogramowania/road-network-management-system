@@ -23,3 +23,12 @@ export interface Infrastructure_object {
     location: Point,
     type: number
 }
+
+
+export interface IRoadNetwork {
+    name: string,
+    // Później zamienić na Point pewnie
+    startingNode: string,
+    endingNode: string,
+    length?: number
+}

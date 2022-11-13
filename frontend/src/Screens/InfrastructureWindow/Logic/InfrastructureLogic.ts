@@ -24,5 +24,6 @@ export const getInfrastructure:() => MapData = () => {
     }
 }
 
+export { getNetworks } from './NetworkLogic';
 export { addPoint, editPoint, removePoint } from './PointLogic';
 export { addRoad, editRoad, removeRoad } from './RoadLogic';

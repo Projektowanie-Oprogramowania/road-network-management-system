@@ -5,12 +5,16 @@ import { FormPoint } from './Forms/FormPoint';
 import { FormRoad, FormRoadSelect } from './Forms/FormRoad';
 import { Graph, mapConfig } from './Map';
 
-import { getInfrastructure, addRoad, addPoint, editPoint, removePoint, editRoad, removeRoad } from './Logic/InfrastructureLogic';
+import { getInfrastructure, addRoad, addPoint, editPoint, removePoint, editRoad, removeRoad, getNetworks } from './Logic/InfrastructureLogic';
+import { Point, Road, IRoadNetwork } from "./Logic/Interfaces";
 
-import {Button, Box} from '@mui/material';
+import { Button, Box } from '@mui/material';
 
 import './InfrastructureStyles.css';
-import { Point, Road } from "./Logic/Interfaces";
+import { Paper } from "@mui/material";
+
+import { SimpleComponent } from '@components/lists/simpleComponent';
+import { margin } from "@mui/system";
 
 
 export const InfrastructureWindow = () => {
@@ -20,6 +24,9 @@ export const InfrastructureWindow = () => {
 
     const [currentPoint, setCurrentPoint] = React.useState<Point | undefined>(undefined);
     const [currentRoad, setCurrentRoad] = React.useState<Road | undefined>(undefined);
+    const [currentNetwork, setCurrentNetwork] = React.useState<IRoadNetwork | undefined>(undefined);
+
+    const [roadNetworks, setRoadNetworks] = React.useState<Array<IRoadNetwork>>(getNetworks());
 
     const mapData = getInfrastructure();
     const {data} = React.useMemo(() => ({data: {
@@ -64,9 +71,25 @@ export const InfrastructureWindow = () => {
         });
     };
 
+    const ControlListPanel = () => {
+        return <>
+            <Box sx={{height: '95%'}}>
+                { (roadNetworks.length > 0 && <div>{
+                    roadNetworks.map((v, i) => <SimpleComponent id={i} label={`${v.name}(${v.startingNode}-${v.endingNode})`} choosen={currentNetwork == v} onChoose={() => {
+                        console.log(`wybrano wezel ${v}`);
+                        setCurrentNetwork(v);
+                    }}/>)
+                    }</div>
+                    ) || <div>Brak sieci drogowych</div>
+                }
+            </Box>
+            <Box sx={{height: '5%', justifyContent: 'center', display: 'flex', width: '100%'}}><Button variant="contained">Dodaj sieć drogowa</Button></Box>
+        </>
+    }
+
 
     return <div>
-        <div style={{display:'flex', flexDirection: 'row', alignItems: 'center'}}>
+        <div style={{display:'flex', position: 'relative', flexDirection: 'row', alignItems: 'center', height: '960px'}}>
             {/* W tym elemencie będą wyświetlane formularze */} 
             {formIsActive && 
                 <div className='fill-window'>
@@ -82,6 +105,7 @@ export const InfrastructureWindow = () => {
                     </div>
                 </div>
             }
+            {/* 
             <div style={{width: 520, display: 'flex', flexDirection: 'column', gap: 40, margin: 40, marginRight: 0}}>
                 <div style={{height: 40}}/>
                 <Button variant="contained" onClick={() => {setFormIsActive(true); setFormId(0);}}>Add Infrastructure Object</Button>
@@ -90,15 +114,25 @@ export const InfrastructureWindow = () => {
                 <Button variant="contained" onClick={() => {setFormIsActive(true); setFormId(1);}}>Add Road</Button>
                 <div style={{height: 40}}/>
             </div>
-            <div style={{margin: 40}}>
-                <Graph
-                    id="graph-id" // id is mandatory
-                    data={data}
-                    config={mapConfig}
-                    onClickNode={onClickNode}
-                    onClickLink={onClickLink}
-                />
-            </div>
+            */}
+            <Paper style={{padding: 30, margin: 20, width: '80%', height: '90%'}}>
+                { (currentNetwork &&
+                    <Graph
+                        id="graph-id" // id is mandatory
+                        data={data}
+                        config={mapConfig}
+                        onClickNode={onClickNode}
+                        onClickLink={onClickLink}
+                    />
+                ) || 
+                    <Box sx={{width: mapConfig.width, height: mapConfig.height, display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+                        Wybierz sieć drogową z listy obok aby ją edytować
+                    </Box>
+                }
+            </Paper>
+            <Paper style={{display: 'flex', flexDirection: 'column', padding: 30, margin: 20, width: '80%', height: '90%'}}>
+                <ControlListPanel />
+            </Paper>
         </div>
     </div>
 }
