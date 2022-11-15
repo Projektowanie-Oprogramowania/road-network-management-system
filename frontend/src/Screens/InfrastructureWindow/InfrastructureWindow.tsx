@@ -71,6 +71,36 @@ export const InfrastructureWindow = () => {
         });
     };
 
+    const onDeletePointClick = function(currentPoint: string) {
+        removePoint(currentPoint);
+        setFormIsActive(false)
+    }
+
+    const onEditPointClick = function(currentPoint: React.FormEvent<HTMLFormElement>) {
+        editPoint(currentPoint);
+        setFormIsActive(false);
+    }
+
+    const onDeleteRoadClick = function(currentRoad: number) {
+        removeRoad(currentRoad);
+        setFormIsActive(false);
+    }
+
+    const onEditRoadClick = function(currentRoad: React.FormEvent<HTMLFormElement>) {
+        editRoad(currentRoad);
+        setFormIsActive(false);
+    }
+
+    const onAddPointClick = function(currentRoad: React.FormEvent<HTMLFormElement>) {
+        addPoint(currentRoad);
+        setFormIsActive(false);
+    }
+
+    const OnAddRoadClick = function(currentRoad: React.FormEvent<HTMLFormElement>) {
+        addRoad(currentRoad);
+        setFormIsActive(false);
+    }
+
     const ControlListPanel = () => {
         return <>
             <Box sx={{height: '95%'}}>
@@ -97,10 +127,10 @@ export const InfrastructureWindow = () => {
                     <div className="form-container">
                         <Box sx={{ p: 10, border: '1px dashed grey', gap: 1 }}>
                             <Button variant="contained" onClick={() => setFormIsActive(false)}>Close</Button>
-                            {formId === 0 && <FormPoint onSubmit={addPoint} />}
-                            {formId === 4 && <FormPoint onSubmit={editPoint} onDelete={removePoint} data={currentPoint}/>}
-                            {formId === 1 && <FormRoadSelect points={data.nodes.map(v => v.id)} onSubmit={addRoad} />}
-                            {formId === 5 && <FormRoadSelect points={data.nodes.map(v => v.id)} onSubmit={editRoad} onDelete={removeRoad} data={currentRoad}/>}
+                            {formId === 0 && <FormPoint onSubmit={onAddPointClick} />}
+                            {formId === 4 && <FormPoint onSubmit={onEditPointClick} onDelete={onDeletePointClick} data={currentPoint}/>}
+                            {formId === 1 && <FormRoadSelect points={data.nodes.map(v => v.id)} onSubmit={OnAddRoadClick} />}
+                            {formId === 5 && <FormRoadSelect points={data.nodes.map(v => v.id)} onSubmit={onEditRoadClick} onDelete={onDeleteRoadClick} data={currentRoad}/>}
                         </Box>
                     </div>
                 </div>
