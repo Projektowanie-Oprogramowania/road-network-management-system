@@ -135,16 +135,16 @@ export const InfrastructureWindow = () => {
                     </div>
                 </div>
             }
-            {/* 
+
+            { currentNetwork != undefined &&
             <div style={{width: 520, display: 'flex', flexDirection: 'column', gap: 40, margin: 40, marginRight: 0}}>
                 <div style={{height: 40}}/>
-                <Button variant="contained" onClick={() => {setFormIsActive(true); setFormId(0);}}>Add Infrastructure Object</Button>
-                <Button variant="contained" onClick={() => {setFormIsActive(true); setFormId(0);}}>Add City</Button>
                 <Button variant="contained" onClick={() => {setFormIsActive(true); setFormId(0);}}>Add Point</Button>
                 <Button variant="contained" onClick={() => {setFormIsActive(true); setFormId(1);}}>Add Road</Button>
                 <div style={{height: 40}}/>
             </div>
-            */}
+            }
+            
             <Paper style={{padding: 30, margin: 20, width: '80%', height: '90%'}}>
                 { (currentNetwork &&
                     <Graph
