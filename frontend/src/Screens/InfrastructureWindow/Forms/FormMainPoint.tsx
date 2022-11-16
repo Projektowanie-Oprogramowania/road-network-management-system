@@ -2,41 +2,54 @@ import React from 'react';
 import { Point } from '../Logic/Interfaces';
 import { Button, TextField } from '@mui/material';
 
+import { addPointF } from '../Logic/PointLogic';
+
 interface IFormPoint {
-    onSubmit: React.FormEventHandler<HTMLFormElement>;
-    onDelete?: (id: string) => void;
-    data?: Point;
+    onSubmit: (p: Point) => void;
 }
 
-export const FormPoint = (props: IFormPoint) => {
-    const { data, onDelete, onSubmit } = props;
+export const FormMainPoint = (props: IFormPoint) => {
+    const { onSubmit } = props;
+
+    const handleSubmit: React.FormEventHandler<HTMLFormElement> = (
+        e: React.FormEvent<HTMLFormElement>,
+    ) => {
+        e.preventDefault();
+
+        const id: string = (e.currentTarget[0] as HTMLInputElement).value;
+        const x: number = Number(
+            (e.currentTarget[2] as HTMLInputElement).value,
+        );
+        const y: number = Number(
+            (e.currentTarget[4] as HTMLInputElement).value,
+        );
+        addPointF(
+            {
+                id: id,
+                x: x,
+                y: y,
+            },
+            onSubmit,
+        );
+    };
+
     return (
         <form
-            onSubmit={onSubmit}
+            onSubmit={handleSubmit}
             style={{
                 display: 'flex',
                 flexDirection: 'column',
-                width: '95%',
+                width: 400,
                 gap: 10,
                 margin: 10,
             }}
         >
-            {onDelete && data?.id && (
-                <Button
-                    variant="contained"
-                    color="error"
-                    onClick={() => onDelete(data?.id)}
-                >
-                    Delete Point
-                </Button>
-            )}
             <TextField
                 id="outlined-basic"
                 sx={{ label: { color: 'white' }, input: { color: 'white' } }}
                 label="id"
                 variant="outlined"
                 type="text"
-                defaultValue={data?.id}
             />
             <TextField
                 id="outlined-basic"
@@ -44,7 +57,6 @@ export const FormPoint = (props: IFormPoint) => {
                 label="x"
                 variant="outlined"
                 type="number"
-                defaultValue={data?.x}
             />
             <TextField
                 id="outlined-basic"
@@ -52,7 +64,6 @@ export const FormPoint = (props: IFormPoint) => {
                 label="y"
                 variant="outlined"
                 type="number"
-                defaultValue={data?.y}
             />
             <Button
                 type="submit"
@@ -60,7 +71,7 @@ export const FormPoint = (props: IFormPoint) => {
                 variant="contained"
                 color="primary"
             >
-                Submit
+                Dodaj
             </Button>
         </form>
     );

@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import { FormComponent } from '../../components/form/Form';
 import { FormPoint } from './Forms/FormPoint';
 import { FormRoad, FormRoadSelect } from './Forms/FormRoad';
+import { FormNewNetwork } from './Forms/FormNewNetwork';
 import { Graph, mapConfig } from './Map';
 
 import {
@@ -17,10 +18,10 @@ import {
 } from './Logic/InfrastructureLogic';
 import { Point, Road, IRoadNetwork } from './Logic/Interfaces';
 
-import { Button, Box } from '@mui/material';
+import { Button, Box, Paper, TextField } from '@mui/material';
+import Carousel from 'react-material-ui-carousel';
 
 import './InfrastructureStyles.css';
-import { Paper } from '@mui/material';
 
 import { SimpleComponent } from '@components/lists/simpleComponent';
 import { margin } from '@mui/system';
@@ -28,6 +29,7 @@ import { margin } from '@mui/system';
 export const InfrastructureWindow = () => {
     const [formIsActive, setFormIsActive] = React.useState(false);
     const [formId, setFormId] = React.useState(0);
+    const [currentPage, setCurrentPage] = useState(0);
 
     const [currentPoint, setCurrentPoint] = React.useState<Point | undefined>(
         undefined,
@@ -42,6 +44,9 @@ export const InfrastructureWindow = () => {
     const [roadNetworks, setRoadNetworks] = React.useState<Array<IRoadNetwork>>(
         getNetworks(),
     );
+
+    //dodawanie nowej sieci drogowej
+    const [adding, setAdding] = useState(false);
 
     const mapData = getInfrastructure();
     const { data } = React.useMemo(
@@ -101,12 +106,39 @@ export const InfrastructureWindow = () => {
     };
 
     const ControlListPanel = () => {
-        return (
-            <>
-                <Box sx={{ height: '95%' }}>
-                    {(roadNetworks.length > 0 && (
-                        <div>
-                            {roadNetworks.map((v, i) => (
+        if (adding) {
+            return (
+                <>
+                    <FormNewNetwork
+                        points={mapData.points}
+                        roads={mapData.roads}
+                        setAdding={setAdding}
+                        mapEdit={(n: number) => {
+                            setCurrentNetwork({
+                                name: 'nazwa',
+                                startingNode: 'start',
+                                endingNode: 'koniec',
+                            });
+                            setCurrentPage(n);
+                        }}
+                        addPoint={() => {
+                            setFormIsActive(true);
+                            setFormId(0);
+                        }}
+                        addRoad={() => {
+                            setFormIsActive(true);
+                            setFormId(1);
+                        }}
+                        pageNumber={currentPage}
+                    />
+                </>
+            );
+        } else {
+            return (
+                <>
+                    <Box sx={{ height: '95%' }}>
+                        {(roadNetworks.length > 0 &&
+                            roadNetworks.map((v, i) => (
                                 <SimpleComponent
                                     id={i}
                                     label={`${v.name}(${v.startingNode}-${v.endingNode})`}
@@ -116,22 +148,29 @@ export const InfrastructureWindow = () => {
                                         setCurrentNetwork(v);
                                     }}
                                 />
-                            ))}
-                        </div>
-                    )) || <div>Brak sieci drogowych</div>}
-                </Box>
-                <Box
-                    sx={{
-                        height: '5%',
-                        justifyContent: 'center',
-                        display: 'flex',
-                        width: '100%',
-                    }}
-                >
-                    <Button variant="contained">Dodaj sieć drogowa</Button>
-                </Box>
-            </>
-        );
+                            ))) || <div>Brak sieci drogowych</div>}
+                    </Box>
+                    <Box
+                        sx={{
+                            height: '5%',
+                            justifyContent: 'center',
+                            display: 'flex',
+                            width: '100%',
+                        }}
+                    >
+                        <Button
+                            variant="contained"
+                            onClick={() => {
+                                setCurrentNetwork(undefined);
+                                setAdding(true);
+                            }}
+                        >
+                            Dodaj sieć drogowa
+                        </Button>
+                    </Box>
+                </>
+            );
+        }
     };
 
     return (
@@ -145,7 +184,7 @@ export const InfrastructureWindow = () => {
                     height: '960px',
                 }}
             >
-                {/* W tym elemencie będą wyświetlane formularze */}
+                {/* W tym elemencie będą wyświetlane formularze*/}
                 {formIsActive && (
                     <div className="fill-window">
                         <div className="form-overlay" />
@@ -191,16 +230,6 @@ export const InfrastructureWindow = () => {
                         </div>
                     </div>
                 )}
-                {/* 
-            <div style={{width: 520, display: 'flex', flexDirection: 'column', gap: 40, margin: 40, marginRight: 0}}>
-                <div style={{height: 40}}/>
-                <Button variant="contained" onClick={() => {setFormIsActive(true); setFormId(0);}}>Add Infrastructure Object</Button>
-                <Button variant="contained" onClick={() => {setFormIsActive(true); setFormId(0);}}>Add City</Button>
-                <Button variant="contained" onClick={() => {setFormIsActive(true); setFormId(0);}}>Add Point</Button>
-                <Button variant="contained" onClick={() => {setFormIsActive(true); setFormId(1);}}>Add Road</Button>
-                <div style={{height: 40}}/>
-            </div>
-            */}
                 <Paper
                     style={{
                         padding: 30,

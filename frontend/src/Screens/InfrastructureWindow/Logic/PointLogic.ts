@@ -98,6 +98,43 @@ export const addPoint: React.FormEventHandler<HTMLFormElement> = (
     return {};
 };
 
+interface PointForm {
+    id: string;
+    x: number;
+    y: number;
+}
+
+export const addPointF: (p: PointForm, cb: (p: Point) => void) => void = (
+    p,
+    cb,
+) => {
+    console.log('dodaj ${p}');
+    /* url to post
+    fetch('', {
+    method: 'POST',
+    headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+        "id": id,
+        "x": x,
+        "y": y
+    })
+    })
+    .then(response => response.json())
+    .then(response => console.log(JSON.stringify(response)))
+    */
+
+    //Return value
+    cb({
+        index: 0,
+        id: p.id,
+        x: p.x,
+        y: p.y,
+    });
+};
+
 export const removePoint: (id: string) => void = (id: string) => {
     //Send request to delete point
     console.log(`Requested ${id} to delete`);
