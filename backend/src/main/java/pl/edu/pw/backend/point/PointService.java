@@ -1,13 +1,11 @@
 package pl.edu.pw.backend.point;
 
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
 public class PointService {
-    private final static Long RANDOM_ID = 1234L;
 
     @Autowired
     private PointRepository pointRepository;
@@ -17,7 +15,7 @@ public class PointService {
     }
 
     Point updatePoint(Point point) {
-        return pointRepository.findById(RANDOM_ID).orElseThrow();
+        return pointRepository.findById(point.getId()).orElseThrow();
     }
 
     void removePoint(Long id) {
@@ -28,7 +26,7 @@ public class PointService {
         return pointRepository.findAll();
     }
 
-    PointDTO getPoint(Long id) {
+    public PointDTO getPoint(Long id) {
         Point point = pointRepository.findById(id).orElseThrow();
         return PointDTO.fromPoint(point);
     }

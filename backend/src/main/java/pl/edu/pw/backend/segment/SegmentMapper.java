@@ -8,18 +8,20 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class SegmentMapper {
-    private SegmentMapper() {}
+
+    private SegmentMapper() {
+    }
 
     public static List<SegmentDTO> map(List<Segment> segments) {
         return segments
-                .stream().map(SegmentMapper::map)
-                .collect(Collectors.toList());
+            .stream().map(SegmentMapper::map)
+            .collect(Collectors.toList());
     }
 
     public static List<Segment> mapDTO(List<SegmentDTO> segments) {
         return segments
-                .stream().map(SegmentMapper::map)
-                .collect(Collectors.toList());
+            .stream().map(SegmentMapper::map)
+            .collect(Collectors.toList());
     }
 
     public static Segment map(SegmentDTO segment) {
@@ -30,10 +32,10 @@ public class SegmentMapper {
     }
 
     public static SegmentDTO map(Segment segment) {
+        int id = segment.getId();
         List<PointDTO> points = PointMapper.map(segment.getPoints());
         PointDTO startingPointDTO = PointMapper.map(segment.getStartingPoint());
         PointDTO endingPointDTO = PointMapper.map(segment.getEndingPoint());
-        return new SegmentDTO(points, startingPointDTO, endingPointDTO, segment.getPrice());
+        return new SegmentDTO(id, points, startingPointDTO, endingPointDTO, segment.getPrice());
     }
-
 }

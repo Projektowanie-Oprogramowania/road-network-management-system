@@ -5,16 +5,14 @@ import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import pl.edu.pw.backend.point.PointDTO;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class SegmentDTO {
+public class AddSegmentDTO {
 
-    int id;
-    List<PointDTO> points;
-    PointDTO startingPoint;
-    PointDTO endingPoint;
+    List<Long> pointsIds;
+    Long startingPointId;
+    Long endingPointId;
     BigDecimal price;
 }
