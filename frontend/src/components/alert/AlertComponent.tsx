@@ -40,7 +40,6 @@ const FullScreenAlert = () => {
             </>
         );
     } else {
-        console.log('trying empty XD');
         return <></>;
     }
 };
