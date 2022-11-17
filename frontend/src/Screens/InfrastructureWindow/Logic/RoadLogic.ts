@@ -15,24 +15,41 @@ let roads = [
     },
 ];
 
-let new_index = 2;
+interface RoadForm {
+    id?: number;
+    startId: string;
+    endId: string;
+}
 
-export const editRoad: React.FormEventHandler<HTMLFormElement> = (
-    e: React.FormEvent<HTMLFormElement>,
-) => {
-    e.preventDefault();
-    const id: number = Number((e.currentTarget[1] as HTMLInputElement).value);
-    const startId: string = (e.currentTarget[2] as HTMLInputElement).value;
-    const endId: string = (e.currentTarget[4] as HTMLInputElement).value;
+//addPointAsync
+export const addRoad = async (p: RoadForm) => {
+    let road = {
+        id: p.id ? p.id : roads.length,
+        startingPointId: p.startId,
+        endingPointId: p.endId,
+        length: 0,
+    };
+    roads.push(road);
+    return {
+        error: 0,
+        message: 'dodano droge',
+        value: road,
+    };
+};
 
+export const editRoad = async (p: RoadForm) => {
+    //TODO
     //Send request to edit point
     console.log(
-        `Requested to edit road id: ${id}  start: ${startId} end: ${endId}`,
+        `Requested to edit road id: ${p.id}  start: ${p.startId} end: ${p.endId}`,
     );
-    roads[id].startingPointId = startId;
-    roads[id].endingPointId = endId;
 
-    /* url to post
+    const id = roads.findIndex(v => v.id === p.id);
+
+    roads[id].startingPointId = p.startId;
+    roads[id].endingPointId = p.endId;
+
+    /* url to put
     fetch('', {
     method: 'PUT',
     headers: {
@@ -50,59 +67,24 @@ export const editRoad: React.FormEventHandler<HTMLFormElement> = (
     */
 
     //Return value
-    return {};
+
+    return {
+        error: 0,
+        message: 'edytowano droge',
+        value: roads[id],
+    };
 };
 
-export const addRoad: React.FormEventHandler<HTMLFormElement> = (
-    e: React.FormEvent<HTMLFormElement>,
-) => {
-    e.preventDefault();
-
-    const id: number = Number((e.currentTarget[0] as HTMLInputElement).value);
-    const startId: string = (e.currentTarget[1] as HTMLInputElement).value;
-    const endId: string = (e.currentTarget[3] as HTMLInputElement).value;
-
-    //Send request to edit point
-    console.log(
-        `Requested to add road id: ${new_index}  start: ${startId} end: ${endId}`,
-    );
-    roads.push({
-        id: new_index,
-        startingPointId: startId,
-        endingPointId: endId,
-        length: 0,
-    });
-
-    /* url to post
-    fetch('', {
-    method: 'POST',
-    headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-        "id": id,
-        "startingPointId": startId,
-        "endingPointId": endId
-    })
-    })
-    .then(response => response.json())
-    .then(response => console.log(JSON.stringify(response)))
-    */
-
-    //Return value
-    return {};
-};
-
-export const removeRoad: (id: number) => void = (id: number) => {
+export const removeRoad = async (id: number) => {
     //Send request to delete point
     console.log(`Requested ${id} to delete`);
     const index = roads.findIndex(v => v.id === id);
     if (index >= 0 && index < roads.length) {
-        roads.splice(index);
+        roads.splice(index, 1);
     }
 
-    /* url to post
+    //TODO
+    /*
     fetch('', {
     method: 'DELETE',
     headers: {
@@ -116,17 +98,33 @@ export const removeRoad: (id: number) => void = (id: number) => {
     .then(response => response.json())
     .then(response => console.log(JSON.stringify(response)))
     */
+
+    return {
+        error: 0,
+        message: 'usunieto droge',
+        value: undefined,
+    };
 };
 
-export const getRoads: () => Array<Road> = () => {
+export const getRoads = async () => {
     //Send request to delete point
-    console.log(`Requested to get points`);
+    console.log(`Requested to get roads`);
 
-    return roads;
+    //TODO
+    //get request
+
+    return {
+        error: 0,
+        message: 'pobrano drogi',
+        value: roads,
+    };
 };
 
 export const deleteRoadsConnectedWithNode: (id: string) => void = (
     id: string,
 ) => {
     roads = roads.filter(v => v.startingPointId != id && v.endingPointId != id);
+
+    //TODO
+    //delete request - jeśli nie ma ma to dlete road po id
 };

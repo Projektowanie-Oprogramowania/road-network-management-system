@@ -1,8 +1,9 @@
 import React from 'react';
 import { Point } from '../Logic/Interfaces';
 import { Button, TextField } from '@mui/material';
+import useAlert from '@context/useAlert';
 
-import { addPointF } from '../Logic/PointLogic';
+import { addPoint } from '../Logic/PointLogic';
 
 interface IFormPoint {
     onSubmit: (p: Point) => void;
@@ -10,8 +11,10 @@ interface IFormPoint {
 
 export const FormMainPoint = (props: IFormPoint) => {
     const { onSubmit } = props;
+    //Konteksty
+    const { setAlert } = useAlert();
 
-    const handleSubmit: React.FormEventHandler<HTMLFormElement> = (
+    const handleSubmit: React.FormEventHandler<HTMLFormElement> = async (
         e: React.FormEvent<HTMLFormElement>,
     ) => {
         e.preventDefault();
@@ -23,14 +26,12 @@ export const FormMainPoint = (props: IFormPoint) => {
         const y: number = Number(
             (e.currentTarget[4] as HTMLInputElement).value,
         );
-        addPointF(
-            {
-                id: id,
-                x: x,
-                y: y,
-            },
-            onSubmit,
-        );
+        const response = await addPoint({ id: id, x: x, y: y });
+
+        setAlert(response.message);
+        if (response.value) {
+            onSubmit(response.value);
+        }
     };
 
     return (

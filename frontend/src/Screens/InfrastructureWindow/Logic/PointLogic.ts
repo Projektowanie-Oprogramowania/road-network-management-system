@@ -1,4 +1,4 @@
-import { Point } from './Interfaces';
+import { Point, IResponse } from './Interfaces';
 import { deleteRoadsConnectedWithNode } from './RoadLogic';
 
 let points = [
@@ -22,23 +22,54 @@ let points = [
     },
 ];
 
-export const editPoint: React.FormEventHandler<HTMLFormElement> = (
-    e: React.FormEvent<HTMLFormElement>,
-) => {
-    e.preventDefault();
+interface PointForm {
+    id: string;
+    x: number;
+    y: number;
+}
 
-    const id: string = (e.currentTarget[1] as HTMLInputElement).value;
-    const x: number = Number((e.currentTarget[3] as HTMLInputElement).value);
-    const y: number = Number((e.currentTarget[5] as HTMLInputElement).value);
-    //Send request to edit point
-    console.log(`Requested to edit point  id: ${id} x: ${x} y: ${y}`);
+export const addPoint = async (p: PointForm) => {
+    let point = {
+        index: points.length,
+        id: p.id,
+        x: p.x,
+        y: p.y,
+    };
 
-    const index = points.findIndex(v => v.id === id);
-    if (index !== -1) {
-        points[index].x = x;
-        points[index].y = y;
-    }
+    //TODO
+    points.push(point);
     /* url to post
+    fetch('', {
+    method: 'POST',
+    headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+        "id": id,
+        "x": x,
+        "y": y
+    })
+    })
+    .then(response => response.json())
+    .then(response => console.log(JSON.stringify(response)))
+    */
+
+    return {
+        error: 0,
+        message: 'dodano punkt',
+        value: point,
+    };
+};
+
+export const editPoint = async (p: PointForm) => {
+    //TODO
+    const index = points.findIndex(v => v.id === p.id);
+    if (index !== -1) {
+        points[index].x = p.x;
+        points[index].y = p.y;
+    }
+    /*
     fetch('', {
     method: 'PUT',
     headers: {
@@ -55,87 +86,14 @@ export const editPoint: React.FormEventHandler<HTMLFormElement> = (
     .then(response => console.log(JSON.stringify(response)))
     */
 
-    //Return value
-    return {};
+    return {
+        error: 0,
+        message: 'edytowano wezel',
+        value: points[index],
+    };
 };
 
-export const addPoint: React.FormEventHandler<HTMLFormElement> = (
-    e: React.FormEvent<HTMLFormElement>,
-) => {
-    e.preventDefault();
-
-    const id: string = (e.currentTarget[0] as HTMLInputElement).value;
-    const x: number = Number((e.currentTarget[2] as HTMLInputElement).value);
-    const y: number = Number((e.currentTarget[4] as HTMLInputElement).value);
-    //Send request to edit point
-    console.log(`Requested to add point  id: ${id} x: ${x} y: ${y}`);
-
-    points.push({
-        index: points.length,
-        id: id,
-        x: x,
-        y: y,
-    });
-
-    /* url to post
-    fetch('', {
-    method: 'POST',
-    headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-        "id": id,
-        "x": x,
-        "y": y
-    })
-    })
-    .then(response => response.json())
-    .then(response => console.log(JSON.stringify(response)))
-    */
-
-    //Return value
-    return {};
-};
-
-interface PointForm {
-    id: string;
-    x: number;
-    y: number;
-}
-
-export const addPointF: (p: PointForm, cb: (p: Point) => void) => void = (
-    p,
-    cb,
-) => {
-    console.log('dodaj ${p}');
-    /* url to post
-    fetch('', {
-    method: 'POST',
-    headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-        "id": id,
-        "x": x,
-        "y": y
-    })
-    })
-    .then(response => response.json())
-    .then(response => console.log(JSON.stringify(response)))
-    */
-
-    //Return value
-    cb({
-        index: 0,
-        id: p.id,
-        x: p.x,
-        y: p.y,
-    });
-};
-
-export const removePoint: (id: string) => void = (id: string) => {
+export const removePoint = async (id: string) => {
     //Send request to delete point
     console.log(`Requested ${id} to delete`);
 
@@ -144,7 +102,6 @@ export const removePoint: (id: string) => void = (id: string) => {
         deleteRoadsConnectedWithNode(id);
         points.splice(index, 1);
     }
-
     /* url to delete
     fetch('', {
     method: 'DELETE',
@@ -159,11 +116,32 @@ export const removePoint: (id: string) => void = (id: string) => {
     .then(response => response.json())
     .then(response => console.log(JSON.stringify(response)))
     */
+
+    return {
+        error: 0,
+        message: 'usunieto wezel',
+        value: undefined,
+    };
 };
 
-export const getPoints: () => Array<Point> = () => {
+export const getPoints = async () => {
     //Send request to delete point
     console.log(`Requested to get points`);
 
-    return points;
+    return {
+        error: 0,
+        message: 'pobrano punkty',
+        value: points,
+    };
+};
+
+export const getPointsForNetwork = async (networkId: number) => {
+    //Send request to delete point
+    console.log(`Requested to get points`);
+
+    return {
+        error: 0,
+        message: 'pobrano wezly',
+        value: points,
+    };
 };

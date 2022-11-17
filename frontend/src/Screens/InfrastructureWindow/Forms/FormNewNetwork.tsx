@@ -23,28 +23,42 @@ import { SimpleComponent } from '@components/lists/simpleComponent';
 import { margin } from '@mui/system';
 
 interface IFormNewNetwork {
-    points: Point[];
-    roads: Road[];
+    name: string;
+    onChangeName: (n: string) => void;
+    start?: Point;
+    onStartPointChange: (n: Point) => void;
+    end?: Point;
+    onEndPointChange: (n: Point) => void;
+    length: number;
+    onLengthChange: (n: number) => void;
+    mainPoints: Point[];
+    onMainPointsAdd: React.FormEventHandler<HTMLFormElement>;
     pageNumber: number;
-    setAdding: (b: boolean) => void;
-    mapEdit: (page: number) => void;
-    addPoint: () => void;
-    addRoad: () => void;
+    changePage: (n: number) => void;
+    startMapEdit: () => void;
+    save: () => void;
+    cancel: () => void;
 }
 
 export const FormNewNetwork: React.FC<IFormNewNetwork> = ({
-    points,
-    roads,
+    name,
+    onChangeName,
+    start,
+    onStartPointChange,
+    end,
+    onEndPointChange,
+    length,
+    onLengthChange,
+    mainPoints,
+    onMainPointsAdd,
     pageNumber,
-    setAdding,
-    mapEdit,
-    addPoint,
-    addRoad,
+    changePage,
+    startMapEdit,
+    save,
+    cancel,
 }) => {
-    const [page, setPage] = useState(pageNumber);
-    const [strNode, setSN] = useState<Point | undefined>(undefined);
-    const [endNode, setEN] = useState<Point | undefined>(undefined);
-    const [length, setLength] = useState(0);
+    const [n, setN] = useState(name);
+    const [l, setl] = useState(length);
 
     //Page 0
     const MainPage = () => (
@@ -55,12 +69,14 @@ export const FormNewNetwork: React.FC<IFormNewNetwork> = ({
                 variant="outlined"
                 type="text"
                 autoComplete="off"
+                value={n}
+                onChange={e => setN(e.target.value)}
             />
-            <Button onClick={() => setPage(1)}>
-                {strNode ? strNode.id : 'Początek sieci'}
+            <Button onClick={() => changePage(1)}>
+                {start ? start.id : 'Początek sieci'}
             </Button>
-            <Button onClick={() => setPage(2)}>
-                {endNode ? endNode.id : 'Koniec sieci'}
+            <Button onClick={() => changePage(2)}>
+                {end ? end.id : 'Koniec sieci'}
             </Button>
             <TextField
                 id="outlined-basic"
@@ -72,6 +88,8 @@ export const FormNewNetwork: React.FC<IFormNewNetwork> = ({
                 variant="outlined"
                 type="number"
                 autoComplete="off"
+                value={l}
+                onChange={e => setl(Number(e.target.value))}
             />
         </>
     );
@@ -83,15 +101,15 @@ export const FormNewNetwork: React.FC<IFormNewNetwork> = ({
         cbPage: number;
     }> = ({ cb, point, cbPage }) => (
         <>
-            {points
+            {mainPoints
                 .filter(v => !point || (point && v.id !== point.id))
                 .map(v => (
                     <Button onClick={() => cb(v)}>{v.id}</Button>
                 ))}
-            <Button onClick={() => setPage(cbPage)}>
+            <Button onClick={() => changePage(cbPage)}>
                 Utwórz nowy punkt startowy
             </Button>
-            <Button onClick={() => setPage(0)}>Anuluj</Button>
+            <Button onClick={() => changePage(0)}>Anuluj</Button>
         </>
     );
 
@@ -120,39 +138,34 @@ export const FormNewNetwork: React.FC<IFormNewNetwork> = ({
                         height="650px"
                         navButtonsAlwaysInvisible={true}
                         swipe={false}
-                        index={page}
+                        index={pageNumber}
                     >
                         <MainPage />
                         <PointsSelector
                             cb={(p: Point) => {
-                                setSN(p);
-                                setPage(0);
+                                onStartPointChange(p);
+                                changePage(0);
                             }}
                             cbPage={3}
                         />
                         <PointsSelector
                             cb={(p: Point) => {
-                                setEN(p);
-                                setPage(0);
+                                onEndPointChange(p);
+                                changePage(0);
                             }}
                             cbPage={4}
                         />
                         <>
-                            <FormPoint onSubmit={_addPoint} />
-                            <Button onClick={() => setPage(1)}>Anuluj</Button>
+                            <FormPoint onSubmit={onMainPointsAdd} />
+                            <Button onClick={() => changePage(1)}>
+                                Anuluj
+                            </Button>
                         </>
                         <>
-                            <FormPoint onSubmit={_addPoint} />
-                            <Button onClick={() => setPage(2)}>Anuluj</Button>
-                        </>
-                        <>
-                            <Button onClick={() => addPoint()}>
-                                Dodaj węzeł
+                            <FormPoint onSubmit={onMainPointsAdd} />
+                            <Button onClick={() => changePage(2)}>
+                                Anuluj
                             </Button>
-                            <Button onClick={() => addRoad()}>
-                                Dodaj drogę
-                            </Button>
-                            <Button onClick={() => setPage(0)}>Powrót</Button>
                         </>
                     </Carousel>
                 </Box>
@@ -176,26 +189,21 @@ export const FormNewNetwork: React.FC<IFormNewNetwork> = ({
                         <Button
                             variant="contained"
                             onClick={() => {
-                                setPage(5);
-                                setAdding(true);
-                                mapEdit(5);
+                                startMapEdit();
                             }}
                         >
                             Dodaj węzły lub odcinki płatne
                         </Button>
                     </div>
                     <div>
-                        <Button
-                            variant="contained"
-                            onClick={() => setAdding(true)}
-                        >
+                        <Button variant="contained" onClick={() => save()}>
                             Zapisz
                         </Button>
                         <Button
                             variant="contained"
                             color="error"
                             sx={{ marginLeft: 5 }}
-                            onClick={() => setAdding(false)}
+                            onClick={() => cancel()}
                         >
                             Anuluj
                         </Button>

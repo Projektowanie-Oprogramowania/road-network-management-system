@@ -9,7 +9,7 @@ import {
 import './App.css';
 
 import FullScreenAlert from './components/alert/AlertComponent';
-import useAlert from '@context/useAlert';
+//import useAlert from '@context/useAlert';
 
 import DriverApp from './Dashboards/DriverDashboard/MenuWindow';
 import WorkerApp from './Dashboards/WorkerDashboard/MenuWindow';
@@ -36,7 +36,7 @@ const applicationsTable: Array<Application> = [
 const App = () => {
     const [appid, setAppId] = React.useState(0);
 
-    const { setAlert } = useAlert();
+    //const { setAlert } = useAlert();
 
     const handleChangeApp = (
         event: SelectChangeEvent<number>,

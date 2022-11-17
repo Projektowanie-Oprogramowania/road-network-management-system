@@ -31,3 +31,15 @@ export interface IRoadNetwork {
     endingNode: string;
     length?: number;
 }
+
+export interface INetwork {
+    network: IRoadNetwork;
+    roads: Road[];
+    points: Point[];
+}
+
+export interface IResponse {
+    error: number;
+    message: string;
+    value: object;
+}
