@@ -14,7 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AddRoad {
-    List<SegmentDTO> segments;
+    List<Integer> segments;
     String name;
     PointDTO startingPoint;
     PointDTO endingPoint;
