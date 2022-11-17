@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 import pl.edu.pw.backend.point.Point;
 
 import javax.persistence.*;
@@ -15,20 +16,21 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Segment {
+
     @GeneratedValue
     @Id
     private int id;
 
     @OneToMany
-    @Cascade(org.hibernate.annotations.CascadeType.ALL)
+    @Cascade(CascadeType.MERGE)
     private List<Point> points;
 
     @ManyToOne
-    @Cascade(org.hibernate.annotations.CascadeType.ALL)
+    @Cascade(CascadeType.MERGE)
     private Point startingPoint;
 
     @ManyToOne
-    @Cascade(org.hibernate.annotations.CascadeType.ALL)
+    @Cascade(CascadeType.MERGE)
     private Point endingPoint;
     private BigDecimal price;
 

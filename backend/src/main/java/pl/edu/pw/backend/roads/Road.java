@@ -36,7 +36,7 @@ public class Road {
 
     private String name;
 
-    @ManyToOne
+    @ManyToMany
     @Cascade(org.hibernate.annotations.CascadeType.ALL)
     private Point startingPoint;
 

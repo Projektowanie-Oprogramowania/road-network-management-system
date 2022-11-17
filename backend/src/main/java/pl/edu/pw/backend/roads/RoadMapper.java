@@ -4,6 +4,7 @@ import pl.edu.pw.backend.point.PointDTO;
 import pl.edu.pw.backend.point.PointMapper;
 import pl.edu.pw.backend.region.RegionDTO;
 import pl.edu.pw.backend.region.RegionMapper;
+import pl.edu.pw.backend.segment.Segment;
 import pl.edu.pw.backend.segment.SegmentDTO;
 import pl.edu.pw.backend.segment.SegmentMapper;
 
@@ -13,9 +14,9 @@ import java.util.stream.Collectors;
 class RoadMapper {
     private RoadMapper() {}
 
-    public static Road map(AddRoad addRoad) {
+    public static Road map(AddRoad addRoad, List<Segment> segments) {
         return new Road(
-                SegmentMapper.mapDTO(addRoad.getSegments()),
+                segments,
                 addRoad.name,
                 PointMapper.map(addRoad.startingPoint),
                 PointMapper.map(addRoad.endingPoint),

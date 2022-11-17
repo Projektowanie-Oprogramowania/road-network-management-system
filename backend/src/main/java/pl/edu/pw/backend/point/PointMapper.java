@@ -13,7 +13,7 @@ public class PointMapper {
     }
 
     public static PointDTO map(Point point) {
-        return new PointDTO(point.getX(), point.getY());
+        return new PointDTO(point.getId(), point.getX(), point.getY());
     }
 
     public static List<Point> mapDTO(List<PointDTO> points) {
