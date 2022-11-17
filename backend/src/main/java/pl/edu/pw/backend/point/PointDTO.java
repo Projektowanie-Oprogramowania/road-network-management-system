@@ -17,6 +17,10 @@ public class PointDTO {
         return new Point(x, y);
     }
 
+    public Point toFullPoint() {
+        return new Point(id, x, y);
+    }
+
     public static PointDTO fromPoint(Point point) {
         return new PointDTO(point.getId(), point.getX(), point.getY());
     }

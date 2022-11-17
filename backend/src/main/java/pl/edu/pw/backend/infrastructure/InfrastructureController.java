@@ -36,7 +36,7 @@ public class InfrastructureController {
 
     @PutMapping
     public ResponseEntity<InfrastructureDTO> updateInfrastructureObject(
-        @RequestBody InfrastructureDTO infrastructureDTO) {
+        @RequestBody UpdateInfrastructureDTO infrastructureDTO) {
         Infrastructure updatedInfrastructure = infrastructureService.updateInfrastructureObject(
             infrastructureDTO.toInfrastructure());
         return ResponseEntity.ok(InfrastructureDTO.fromInfrastructure(updatedInfrastructure));
@@ -52,6 +52,15 @@ public class InfrastructureController {
     public ResponseEntity<List<InfrastructureDTO>> getInfrastructure() {
         List<InfrastructureDTO> infraList = infrastructureService.getInfrastructure().stream().map(
             InfrastructureDTO::fromInfrastructure).collect(Collectors.toList());
+        return ResponseEntity.ok(infraList);
+    }
+
+    @GetMapping("/types")
+    public ResponseEntity<List<List<InfrastructureDTO>>> getInfrastructureByType() {
+        List<List<InfrastructureDTO>> infraList = infrastructureService.getInfrastructureListByType()
+            .stream().map(list -> list.stream().map(
+                InfrastructureDTO::fromInfrastructure).collect(Collectors.toList()))
+            .collect(Collectors.toList());
         return ResponseEntity.ok(infraList);
     }
 }
