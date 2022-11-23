@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import useFetch from 'use-fetch';
 import { FormComponent } from '../../components/form/Form';
 import { Point } from '../InfrastructureWindow/Logic/Interfaces';
 
@@ -45,10 +46,30 @@ const IdForm = [
     },
 ];
 
-export const NavigateWindow = () => (
+let sendRequest = false;
+
+export const NavigateWindow = () => {
+    // REQUEST EXAMPLE
+    const { sendRequest: fetchInfrastructure } = useFetch();
+
+    useEffect(() => {
+        const handleRespnse = (response: any) => {
+            console.log(response);
+        }
+    
+        const fetchInfrastructureRequest = {
+            url: `infrastructure`
+        }
+    
+        fetchInfrastructure(fetchInfrastructureRequest, handleRespnse);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+      }, [])
+
+    return (
     <div>
         <div style={{ height: 40 }} />
         <FormComponent onSubmit={onSubmitDirection} fields={IdForm} />
         <div style={{ height: 40 }} />
     </div>
-);
+    );
+}
