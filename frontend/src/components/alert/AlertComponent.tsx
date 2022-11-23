@@ -11,7 +11,7 @@ const FullScreenAlert = () => {
             <>
                 <Box
                     sx={{
-                        position: 'absolute',
+                        position: 'fixed',
                         width: '100%',
                         height: '100%',
                         bgcolor: 'black',
@@ -22,7 +22,7 @@ const FullScreenAlert = () => {
                 <Paper
                     elevation={12}
                     sx={{
-                        position: 'absolute',
+                        position: 'fixed',
                         top: '50%',
                         left: '50%',
                         transform: 'translate(-50%, -50%)',

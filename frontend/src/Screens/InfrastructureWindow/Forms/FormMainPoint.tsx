@@ -3,8 +3,6 @@ import { Point } from '../Logic/Interfaces';
 import { Button, TextField } from '@mui/material';
 import useAlert from '@context/useAlert';
 
-import { addPoint } from '../Logic/PointLogic';
-
 interface IFormPoint {
     onSubmit: (p: Point) => void;
 }
@@ -19,14 +17,18 @@ export const FormMainPoint = (props: IFormPoint) => {
     ) => {
         e.preventDefault();
 
-        const id: string = (e.currentTarget[0] as HTMLInputElement).value;
+        const name: string = (e.currentTarget[0] as HTMLInputElement).value;
         const x: number = Number(
             (e.currentTarget[2] as HTMLInputElement).value,
         );
         const y: number = Number(
             (e.currentTarget[4] as HTMLInputElement).value,
         );
-        const response = await addPoint({ id: id, x: x, y: y });
+        //AddPoint
+        const response = {
+            message: `Utworzono punkt ${name}`,
+            value: { id: name, name: name, x: x, y: y },
+        };
 
         setAlert(response.message);
         if (response.value) {
@@ -48,9 +50,10 @@ export const FormMainPoint = (props: IFormPoint) => {
             <TextField
                 id="outlined-basic"
                 sx={{ label: { color: 'white' }, input: { color: 'white' } }}
-                label="id"
+                label="name"
                 variant="outlined"
                 type="text"
+                autoComplete="off"
             />
             <TextField
                 id="outlined-basic"
@@ -58,6 +61,7 @@ export const FormMainPoint = (props: IFormPoint) => {
                 label="x"
                 variant="outlined"
                 type="number"
+                autoComplete="off"
             />
             <TextField
                 id="outlined-basic"
@@ -65,6 +69,7 @@ export const FormMainPoint = (props: IFormPoint) => {
                 label="y"
                 variant="outlined"
                 type="number"
+                autoComplete="off"
             />
             <Button
                 type="submit"

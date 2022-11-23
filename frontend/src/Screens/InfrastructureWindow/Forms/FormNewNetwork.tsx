@@ -4,17 +4,8 @@ import { FormPoint } from './FormPoint';
 import { FormRoad, FormRoadSelect } from './FormRoad';
 import { Graph, mapConfig } from '../Map';
 
-import {
-    getInfrastructure,
-    addRoad,
-    addPoint as _addPoint,
-    editPoint,
-    removePoint,
-    editRoad,
-    removeRoad,
-    getNetworks,
-} from '../Logic/InfrastructureLogic';
-import { Point, Road, IRoadNetwork } from '../Logic/Interfaces';
+import { getInfrastructure } from '../Logic/InfrastructureLogic';
+import { Point, Road } from '../Logic/Interfaces';
 
 import { Button, Box, Paper, TextField } from '@mui/material';
 import Carousel from 'react-material-ui-carousel';

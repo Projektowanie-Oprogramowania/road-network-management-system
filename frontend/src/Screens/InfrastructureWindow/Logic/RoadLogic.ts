@@ -1,130 +1,140 @@
-import { Road } from './Interfaces';
+import { IResponse } from 'shared/interfaces';
+import { Point, PointDTO, Road, Segment, SegmentDTO } from './Interfaces';
+import { addRegion, getRegion } from './RegionLogic';
 
-let roads = [
+let pointId = 0;
+let segmentId = 0;
+let roadId = 4;
+
+const generatePoint: () => Point = () => ({
+    id: String(pointId++),
+    x: Math.floor(Math.random() * 2000),
+    y: Math.floor(Math.random() * 2000),
+});
+
+const generateSegments: () => Segment[] = () => {
+    const size = Math.floor(Math.random() * 20);
+    const segments: Segment[] = [];
+
+    for (let i = 0; i < size; i++) {
+        const numberOfPoints = Math.floor(Math.random() * 20);
+        const points: Point[] = [];
+        for (let j = 0; j < numberOfPoints; j++) {
+            points.push(generatePoint());
+        }
+        segments.push({
+            id: String(segmentId++),
+            points: points,
+            startingPoint: generatePoint(),
+            endingPoint: generatePoint(),
+            isPaid: Math.floor(Math.random() * 2) ? true : false,
+            price: 0,
+        });
+    }
+
+    return segments;
+};
+
+let networksTable: Road[] = [
     {
-        id: 0,
-        startingPointId: 'Warszawa',
-        endingPointId: 'Gdynia',
-        length: 200,
+        id: '1',
+        name: 'siec 1',
+        segments: generateSegments(),
+        startingPoint: generatePoint(),
+        endingPoint: generatePoint(),
+        length: 100,
+        region: getRegion('0'),
     },
     {
-        id: 1,
-        startingPointId: 'Warszawa',
-        endingPointId: 'Krakow',
-        length: 200,
+        id: '2',
+        name: 'siec 2',
+        segments: generateSegments(),
+        startingPoint: generatePoint(),
+        endingPoint: generatePoint(),
+        length: 100,
+        region: getRegion('1'),
+    },
+    {
+        id: '3',
+        name: 'siec 3',
+        segments: generateSegments(),
+        startingPoint: generatePoint(),
+        endingPoint: generatePoint(),
+        length: 100,
+        region: getRegion('2'),
     },
 ];
 
-interface RoadForm {
-    id?: number;
-    startId: string;
-    endId: string;
+export const getRoads: () => Road[] = () => {
+    //Send request to delete point
+    console.log(`Requested to get networks`);
+
+    return networksTable;
+};
+
+export const getRoadById = async (id: string) => {
+    //Send request to delete point
+    console.log(`Requested to get networks ${id}`);
+
+    const index = networksTable.findIndex(v => v.id == id);
+    return index !== -1 ? networksTable[index] : undefined;
+};
+
+export interface RoadDTO {
+    name: string;
+    segments: SegmentDTO[];
+    startingPoint: PointDTO;
+    endingPoint: PointDTO;
+    length: number;
+    region: string;
 }
 
-//addPointAsync
-export const addRoad = async (p: RoadForm) => {
-    let road = {
-        id: p.id ? p.id : roads.length,
-        startingPointId: p.startId,
-        endingPointId: p.endId,
-        length: 0,
-    };
-    roads.push(road);
-    return {
-        error: 0,
-        message: 'dodano droge',
-        value: road,
-    };
-};
-
-export const editRoad = async (p: RoadForm) => {
-    //TODO
-    //Send request to edit point
-    console.log(
-        `Requested to edit road id: ${p.id}  start: ${p.startId} end: ${p.endId}`,
-    );
-
-    const id = roads.findIndex(v => v.id === p.id);
-
-    roads[id].startingPointId = p.startId;
-    roads[id].endingPointId = p.endId;
-
-    /* url to put
-    fetch('', {
-    method: 'PUT',
-    headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-        "id": id,
-        "startingPointId": startId,
-        "endingPointId": endId
-    })
-    })
-    .then(response => response.json())
-    .then(response => console.log(JSON.stringify(response)))
-    */
-
-    //Return value
-
-    return {
-        error: 0,
-        message: 'edytowano droge',
-        value: roads[id],
-    };
-};
-
-export const removeRoad = async (id: number) => {
+export const addRoad: (r: RoadDTO) => IResponse = (r: RoadDTO) => {
     //Send request to delete point
-    console.log(`Requested ${id} to delete`);
-    const index = roads.findIndex(v => v.id === id);
-    if (index >= 0 && index < roads.length) {
-        roads.splice(index, 1);
-    }
-
-    //TODO
-    /*
-    fetch('', {
-    method: 'DELETE',
-    headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-        "id": id
-    })
-    })
-    .then(response => response.json())
-    .then(response => console.log(JSON.stringify(response)))
-    */
-
-    return {
-        error: 0,
-        message: 'usunieto droge',
-        value: undefined,
+    console.log(`Requested to get networks`);
+    const response: IResponse = {
+        status: 200,
+        statusText: 'OK',
+        data: {},
     };
+    return response;
 };
 
-export const getRoads = async () => {
-    //Send request to delete point
-    console.log(`Requested to get roads`);
+export interface RoadMainData {
+    name: string;
+    startingPoint: PointDTO;
+    endingPoint: PointDTO;
+    length: number;
+    region: string;
+}
 
-    //TODO
-    //get request
-
-    return {
-        error: 0,
-        message: 'pobrano drogi',
-        value: roads,
-    };
-};
-
-export const deleteRoadsConnectedWithNode: (id: string) => void = (
-    id: string,
+export const addRoadByMainData: (r: RoadMainData) => IResponse = (
+    r: RoadMainData,
 ) => {
-    roads = roads.filter(v => v.startingPointId != id && v.endingPointId != id);
+    //Send request to delete point
+    console.log(`Requested to get networks`);
 
-    //TODO
-    //delete request - jeśli nie ma ma to dlete road po id
+    //mock
+    networksTable.push({
+        id: String(roadId++),
+        name: r.name,
+        segments: [],
+        startingPoint: {
+            id: String(pointId++),
+            ...r.startingPoint,
+        },
+        endingPoint: {
+            id: String(pointId++),
+            ...r.endingPoint,
+        },
+        length: r.length,
+        region: addRegion(r.region),
+    });
+
+    const response: IResponse = {
+        status: 200,
+        statusText: 'OK',
+        data: networksTable[networksTable.length - 1],
+    };
+    return response;
 };

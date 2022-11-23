@@ -3,6 +3,14 @@ import { InfrastructureWindow } from '../../Screens/InfrastructureWindow/Infrast
 export const screenList = [
     {
         label: 'Sieci Drogowe',
+        path: 'infrastructure/*',
+        element: InfrastructureWindow,
+    },
+];
+
+export const screenListNav = [
+    {
+        label: 'Sieci Drogowe',
         path: 'infrastructure',
         element: InfrastructureWindow,
     },

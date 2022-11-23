@@ -1,6 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Road, Point } from '../Logic/Interfaces';
-import { Button, TextField, Select, MenuItem, makeStyles } from '@mui/material';
+import {
+    Button,
+    TextField,
+    Select,
+    MenuItem,
+    makeStyles,
+    Checkbox,
+    FormControlLabel,
+} from '@mui/material';
+import { useStateManager } from 'react-select';
 
 interface IForm {
     onSubmit: React.FormEventHandler<HTMLFormElement>;
@@ -25,7 +34,7 @@ export const FormRoad = (props: IForm) => {
                 <Button
                     variant="contained"
                     color="error"
-                    onClick={() => onDelete(data.id ? data.id : 0)}
+                    onClick={() => onDelete(data.id ? Number(data.id) : 0)}
                 >
                     Delete Point
                 </Button>
@@ -37,7 +46,7 @@ export const FormRoad = (props: IForm) => {
                 label="starting point"
                 variant="outlined"
                 type="text"
-                defaultValue={data?.startingPointId}
+                defaultValue={data?.startingPoint.id}
             />
             <TextField
                 id="outlined-basic"
@@ -45,7 +54,7 @@ export const FormRoad = (props: IForm) => {
                 label="ending point"
                 variant="outlined"
                 type="text"
-                defaultValue={data?.endingPointId}
+                defaultValue={data?.endingPoint.id}
             />
             <Button
                 type="submit"
@@ -92,13 +101,20 @@ const style = {
 
 interface IFormSelect {
     onSubmit: React.FormEventHandler<HTMLFormElement>;
-    onDelete?: (id: number) => void;
+    onDelete?: (id: string) => void;
     data?: Road;
     points: string[];
 }
 
 export const FormRoadSelect = (props: IFormSelect) => {
     const { data, points, onDelete, onSubmit } = props;
+    const [p, setP] = useState(true);
+    const [pr, setPr] = useState(0);
+
+    const changePrice: React.ChangeEventHandler<HTMLTextAreaElement> = e => {
+        setPr(Number(e.target.value));
+    };
+
     return (
         <form
             onSubmit={onSubmit}
@@ -116,7 +132,7 @@ export const FormRoadSelect = (props: IFormSelect) => {
                         <Button
                             variant="contained"
                             color="error"
-                            onClick={() => onDelete(data.id ? data.id : 0)}
+                            onClick={() => onDelete(data.id ? data.id : '')}
                         >
                             Delete Point
                         </Button>
@@ -127,7 +143,7 @@ export const FormRoadSelect = (props: IFormSelect) => {
                         sx={style}
                         id="demo-simple-select"
                         label="Starting Point"
-                        defaultValue={data?.startingPointId}
+                        defaultValue={data?.startingPoint.id}
                     >
                         {points.map(v => (
                             <MenuItem value={v}>{v}</MenuItem>
@@ -138,12 +154,30 @@ export const FormRoadSelect = (props: IFormSelect) => {
                         sx={style}
                         id="demo-simple-select"
                         label="Ending Point"
-                        defaultValue={data?.endingPointId}
+                        defaultValue={data?.endingPoint.id}
                     >
                         {points.map(v => (
                             <MenuItem value={v}>{v}</MenuItem>
                         ))}
                     </Select>
+                    <FormControlLabel
+                        control={<Checkbox onChange={(e, c) => setP(c)} />}
+                        label="odcinek płatny"
+                    />
+                    {p && (
+                        <TextField
+                            id="outlined-basic"
+                            sx={{
+                                label: { color: 'white' },
+                                input: { color: 'white' },
+                            }}
+                            label="cena"
+                            variant="outlined"
+                            type="number"
+                            defaultValue={pr ? pr : 0}
+                            onChange={changePrice}
+                        />
+                    )}
                     <Button
                         type="submit"
                         value="Submit"

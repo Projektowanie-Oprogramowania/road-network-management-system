@@ -1,29 +1,47 @@
-import { Point, Road, Infrastructure_object } from './Interfaces';
-
-import { addRoad, editRoad, removeRoad, getRoads } from './RoadLogic';
-import { addPoint, editPoint, removePoint, getPoints } from './PointLogic';
-import { getNetworks } from './NetworkLogic';
-
-interface MapData {
-    points: Array<Point>;
-    roads: Array<Road>;
-    objects: Array<Infrastructure_object>;
-}
+import { InfrastructureObject } from './Interfaces';
 
 export const getInfrastructure = async () => {
-    //TODO dodać sprawdzanie jeżeli w ten sposób
-    const points: Point[] = (await getPoints()).value;
-    const roads: Road[] = (await getRoads()).value;
+    const objects: InfrastructureObject[] = [];
 
-    const objects: Infrastructure_object[] = [];
+    //GET http
 
     return {
-        points: points,
-        roads: roads,
-        objects: objects,
+        error: 0,
+        message: 'get infrastructure',
+        value: objects,
     };
 };
 
-export { addRoad, editRoad, removeRoad, getRoads };
-export { addPoint, editPoint, removePoint, getPoints };
-export { getNetworks };
+export const addInfrastructure = async () => {
+    //POST http
+
+    const newObj = {};
+
+    return {
+        error: 0,
+        message: 'add infrastructure',
+        value: newObj,
+    };
+};
+
+export const editInfrastructure = async () => {
+    //PUT http
+
+    const newObj = {};
+
+    return {
+        error: 0,
+        message: 'edit infrastructure',
+        value: newObj,
+    };
+};
+
+export const deleteInfrastructure = async () => {
+    //DELETE http
+
+    return {
+        error: 0,
+        message: 'delete infrastructure',
+        value: null,
+    };
+};

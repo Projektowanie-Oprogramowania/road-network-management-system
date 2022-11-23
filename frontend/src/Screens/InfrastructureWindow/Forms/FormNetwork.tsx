@@ -5,38 +5,29 @@ import { FormRoad, FormRoadSelect } from './FormRoad';
 import { Graph, mapConfig, mapPointsAndRoads } from '../Map';
 import useAlert from '@context/useAlert';
 
-import {
-    addPoint,
-    addRoad,
-    editPoint,
-    removePoint,
-    editRoad,
-    removeRoad,
-    getNetworks,
-    getRoads,
-    getPoints,
-} from '../Logic/InfrastructureLogic';
-import { Point, Road, IRoadNetwork } from '../Logic/Interfaces';
+import { Point, Road } from '../Logic/Interfaces';
 
 import { Button, Box, Paper, TextField } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import Carousel from 'react-material-ui-carousel';
 
 import '../InfrastructureStyles.css';
-
+/*
 interface IFormNetwork {
     onClose: () => void;
+    regionId?: string;
     name?: string;
     length?: number;
-    startPoint?: Point;
-    endPoint?: Point;
-    points?: Point[];
+    startPoint?: PointDTO;
+    endPoint?: PointDTO;
+    points?: PointDTO[];
     mainPoints?: Point[];
-    roads?: Road[];
+    roads?: RoadDTO[];
 }
 
 export const FormNetwork: React.FC<IFormNetwork> = ({
     onClose,
+    regionId,
     name = '',
     length = 0,
     startPoint,
@@ -55,9 +46,10 @@ export const FormNetwork: React.FC<IFormNetwork> = ({
     const [_length, setLength] = React.useState(length);
 
     const [_mainPoints, setMainPoints] = React.useState(mainPoints);
-    const [_points, setPoints] = React.useState<Point[]>(points);
-    const [_roads, setRoads] = React.useState<Road[]>(roads);
+    const [_points, setPoints] = React.useState<PointDTO[]>(points);
+    const [_roads, setRoads] = React.useState<RoadDTO[]>(roads);
 
+    const [_region, setRegion] = React.useState(regionId);
     const [page, changePage] = useState(0);
     const [editingMap, setEditingMap] = useState(false);
 
@@ -67,7 +59,7 @@ export const FormNetwork: React.FC<IFormNetwork> = ({
     const [currentPoint, setCurrentPoint] = React.useState<Point | undefined>(
         undefined,
     );
-    const [currentRoad, setCurrentRoad] = React.useState<Road | undefined>(
+    const [currentRoad, setCurrentRoad] = React.useState<RoadDTO | undefined>(
         undefined,
     );
     const [currentNetwork, setCurrentNetwork] = React.useState<
@@ -84,6 +76,14 @@ export const FormNetwork: React.FC<IFormNetwork> = ({
         () => mapPointsAndRoads(_points, _roads),
         [_points, _roads],
     );
+
+    React.useMemo(() => {
+        if (_region) {
+            //utworzenie regionId
+        } else {
+            //
+        }
+    }, []);
 
     //Konteksty
     const theme = useTheme();
@@ -110,7 +110,8 @@ export const FormNetwork: React.FC<IFormNetwork> = ({
             startingPointId: link.source,
             endingPointId: link.target,
             length: link.length,
-            region: link.region,
+            regionId: link.region,
+            isPaid: false,
         });
     };
 
@@ -126,7 +127,12 @@ export const FormNetwork: React.FC<IFormNetwork> = ({
             (e.currentTarget[4] as HTMLInputElement).value,
         );
 
-        const response = await addPoint({ id: id, x: x, y: y });
+        const response = await _addPoint({
+            id: id,
+            x: x,
+            y: y,
+            regionId: regionId ? regionId : '',
+        });
 
         setAlert(response.message);
         if (response.value) {
@@ -149,8 +155,8 @@ export const FormNetwork: React.FC<IFormNetwork> = ({
         );
 
         const response = await editPoint({ id: id, x: x, y: y });
-        if (response.value) {
-            setPoints((await getPoints()).value);
+        if (response.value && regionId) {
+            setPoints((await getPointsForRegion(regionId)).value);
             setFormIsActive(false);
         }
     };
@@ -159,8 +165,8 @@ export const FormNetwork: React.FC<IFormNetwork> = ({
         const response = await removePoint(currentPoint);
 
         setAlert(response.message);
-        if (response.value) {
-            setRoads((await getRoads()).value);
+        if (response.value && regionId) {
+            setRoads((await getRoadsForRegion(regionId)).value);
             setFormIsActive(false);
         }
     };
@@ -182,18 +188,18 @@ export const FormNetwork: React.FC<IFormNetwork> = ({
         });
 
         setAlert(response.message);
-        if (response.value) {
-            setRoads((await getRoads()).value);
+        if (response.value && regionId) {
+            setRoads((await getRoadsForRegion(regionId)).value);
             setFormIsActive(false);
         }
     };
 
-    const onDeleteRoadClick = async function (currentRoad: number) {
+    const onDeleteRoadClick = async function (currentRoad: string) {
         const response = await removeRoad(currentRoad);
 
         setAlert(response.message);
-        if (response.value) {
-            setRoads((await getRoads()).value);
+        if (response.value && regionId) {
+            setRoads((await getRoadsForRegion(regionId)).value);
             setFormIsActive(false);
         }
     };
@@ -209,10 +215,12 @@ export const FormNetwork: React.FC<IFormNetwork> = ({
         const startId: string = (e.currentTarget[1] as HTMLInputElement).value;
         const endId: string = (e.currentTarget[3] as HTMLInputElement).value;
         //addRoad(currentRoad);
-        const response = await addRoad({
-            id: id,
+        const response = await _addRoad({
+            id: id.toString(),
             startId: startId,
             endId: endId,
+            isPaid: false,
+            regionId: regionId ? regionId : '',
         });
 
         setAlert(response.message);
@@ -287,7 +295,6 @@ export const FormNetwork: React.FC<IFormNetwork> = ({
                 height: '960px',
             }}
         >
-            {/* W tym elemencie będą wyświetlane formularze*/}
             {formIsActive && (
                 <div className="fill-window">
                     <div className="form-overlay" />
@@ -548,3 +555,4 @@ export const FormNetwork: React.FC<IFormNetwork> = ({
         </div>
     );
 };
+*/
