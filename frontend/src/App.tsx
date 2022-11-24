@@ -9,9 +9,11 @@ import './App.css';
 
 import FullScreenAlert from './components/alert/AlertComponent';
 
-import DriverApp from './Dashboards/DriverDashboard/MenuWindow';
-import WorkerApp from './Dashboards/WorkerDashboard/MenuWindow';
+import MainApp from './Dashboards/Dashboard';
+//import DriverApp from './Dashboards/DriverDashboard/MenuWindow';
+//import WorkerApp from './Dashboards/WorkerDashboard/MenuWindow';
 
+/* Połączono wszystkie widoki użytkowników w jeden główny
 interface Application {
     value: number;
     label: string;
@@ -30,6 +32,7 @@ const applicationsTable: Array<Application> = [
         app: WorkerApp,
     },
 ];
+*/
 
 const App = () => {
     const [appid, setAppId] = React.useState(0);
@@ -44,6 +47,7 @@ const App = () => {
     return (
         <div className="App">
             <FullScreenAlert />
+            {/* Połączono wszystkie widoki użytkowników w jeden główny
             <div>
                 <FormControl fullWidth>
                     <Select
@@ -60,6 +64,8 @@ const App = () => {
                 </FormControl>
             </div>
             {applicationsTable[appid].app({}, undefined)}
+             */}
+            <MainApp />
         </div>
     );
 };
