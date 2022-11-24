@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
-import { Button, Box, Paper } from '@mui/material';
+import { Box } from '@mui/material';
 import './InfrastructureStyles.css';
 
-import { getRoads, getRoadById } from './Logic/RoadLogic';
+import { getRoadById } from './Logic/RoadLogic';
 import { Road } from './Logic/Interfaces';
 import { useParams } from 'react-router-dom';
 import { Graph, mapConfig, mapFromRoadData } from './Map';
@@ -45,6 +45,7 @@ export const InfrastructureWindowMap = () => {
         fetchInfrastructure(fetchInfrastructureRequest, handleRespnse);
 
         updateData();
+        // eslint-disable-next-line
     }, []);
 
     return (

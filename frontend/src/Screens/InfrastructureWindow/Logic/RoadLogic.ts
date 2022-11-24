@@ -76,7 +76,7 @@ export const getRoadById = async (id: string) => {
     //Send request to delete point
     console.log(`Requested to get networks ${id}`);
 
-    const index = networksTable.findIndex(v => v.id == id);
+    const index = networksTable.findIndex(v => v.id === id);
     return index !== -1 ? networksTable[index] : undefined;
 };
 

@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
-import { Button, Box, Paper } from '@mui/material';
+import { Button, Box } from '@mui/material';
 import './InfrastructureStyles.css';
 
 import { getRoads } from './Logic/RoadLogic';
@@ -34,6 +34,7 @@ export const InfrastructureWindow = ({ isAdmin = false }) => {
 
     useEffect(() => {
         updateData();
+        // eslint-disable-next-line
     }, []);
 
     return (

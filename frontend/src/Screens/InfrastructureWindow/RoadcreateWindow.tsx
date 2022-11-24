@@ -1,17 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
-import { Button, Box, Paper, TextField } from '@mui/material';
+import { Button, Box, TextField } from '@mui/material';
 import './InfrastructureStyles.css';
 
-import { getRoads, getRoadById, addRoadByMainData } from './Logic/RoadLogic';
-import { Point, Region, Road } from './Logic/Interfaces';
+import { getRoadById, addRoadByMainData } from './Logic/RoadLogic';
+import { Point, Road } from './Logic/Interfaces';
 import { useParams, useNavigate } from 'react-router-dom';
 import { FormMainPoint } from './Forms/FormMainPoint';
 
 export const RoadcreateWindow = () => {
     const { roadId } = useParams();
     const navigate = useNavigate();
-    const [road, setRoad] = useState<Road>();
+    const [, setRoad] = useState<Road>();
     const [points, setPoints] = useState<Point[]>([]);
 
     const [name, setName] = useState('');
@@ -60,6 +60,7 @@ export const RoadcreateWindow = () => {
 
     useEffect(() => {
         updateData();
+        // eslint-disable-next-line
     }, []);
 
     interface IMPL {

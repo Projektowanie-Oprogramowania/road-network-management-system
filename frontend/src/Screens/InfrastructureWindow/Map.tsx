@@ -1,5 +1,5 @@
-import { Graph, GraphData } from 'react-d3-graph';
-import { Point, Road, Region } from './Logic/Interfaces';
+import { Graph } from 'react-d3-graph';
+import { Point, Road } from './Logic/Interfaces';
 
 const mapConfig = {
     nodeHighlightBehavior: true,
@@ -27,8 +27,8 @@ export const mapPointsAndRoads = (p: Point[], r: Road[]) => ({
         links: r
             .filter(
                 v =>
-                    p.findIndex(_v => _v.id === v.startingPoint.id) != -1 &&
-                    p.findIndex(_v => _v.id === v.endingPoint.id) != -1,
+                    p.findIndex(_v => _v.id === v.startingPoint.id) !== -1 &&
+                    p.findIndex(_v => _v.id === v.endingPoint.id) !== -1,
             )
             .map(v => ({
                 id: v.id,

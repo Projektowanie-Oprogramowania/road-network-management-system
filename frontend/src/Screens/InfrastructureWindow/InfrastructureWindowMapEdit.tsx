@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
-import { Button, Box, Paper } from '@mui/material';
+import { Box } from '@mui/material';
 import './InfrastructureStyles.css';
 
-import { getRoads, getRoadById } from './Logic/RoadLogic';
+import { getRoadById } from './Logic/RoadLogic';
 import { Road, Segment } from './Logic/Interfaces';
 import { useParams } from 'react-router-dom';
 import { Graph } from 'react-d3-graph';
@@ -16,7 +16,7 @@ export const InfrastructureWindowMapEdit = () => {
 
     const [road, setRoad] = useState<Road>();
     //edycja według segmentu
-    const [segment, setSegment] = useState<Segment>();
+    const [, setSegment] = useState<Segment>();
     const [mapData, setMapData] = useState<any>({
         nodes: [],
         links: [],
@@ -69,6 +69,7 @@ export const InfrastructureWindowMapEdit = () => {
 
     useEffect(() => {
         updateData();
+        // eslint-disable-next-line
     }, []);
 
     return (

@@ -1,5 +1,4 @@
-import React from 'react';
-import { Alert, Box, Button, Paper } from '@mui/material';
+import { Box, Button, Paper } from '@mui/material';
 import useAlert from '@context/useAlert';
 
 const FullScreenAlert = () => {

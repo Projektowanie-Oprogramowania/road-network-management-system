@@ -55,7 +55,7 @@ export const getRegions: () => Array<Region> = () => {
 };
 
 export const getRegion: (id: string) => Region = id => {
-    const index = regions.findIndex(v => v.id == id);
+    const index = regions.findIndex(v => v.id === id);
     return index !== -1
         ? regions[index]
         : {
