@@ -9,13 +9,26 @@ import { Link, useNavigate } from 'react-router-dom';
 
 import ModeEditOutlineOutlinedIcon from '@mui/icons-material/ModeEditOutlineOutlined';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
+import useFetch from 'use-fetch';
 
 export const InfrastructureWindow = ({ isAdmin = false }) => {
     const [roads, setRoads] = useState<Road[]>([]);
     const navigate = useNavigate();
+    const { sendRequest: fetchInfrastructure } = useFetch();
 
     const updateData: () => void = () => {
         //getRoads
+        const handleRespnse = (response: any) => {
+            console.log(response);
+        }
+    
+        const fetchInfrastructureRequest = {
+            url: `infrastructure`
+        }
+    
+        fetchInfrastructure(fetchInfrastructureRequest, handleRespnse);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+
         setRoads(getRoads());
     };
 

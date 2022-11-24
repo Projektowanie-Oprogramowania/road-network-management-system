@@ -8,6 +8,7 @@ import { Road } from './Logic/Interfaces';
 import { useParams } from 'react-router-dom';
 import { Graph, mapConfig, mapFromRoadData } from './Map';
 import useAlert from '@context/useAlert';
+import useFetch from 'use-fetch';
 
 export const InfrastructureWindowMap = () => {
     const { roadId } = useParams();
@@ -30,7 +31,19 @@ export const InfrastructureWindowMap = () => {
         setAlert(`Droga ${source}-${target}`);
     };
 
+    const { sendRequest: fetchInfrastructure } = useFetch();
+
     useEffect(() => {
+        const handleRespnse = (response: any) => {
+            console.log(response);
+        }
+    
+        const fetchInfrastructureRequest = {
+            url: `road/region/${parseInt(roadId!)-1}`
+        }
+    
+        fetchInfrastructure(fetchInfrastructureRequest, handleRespnse);
+
         updateData();
     }, []);
 
