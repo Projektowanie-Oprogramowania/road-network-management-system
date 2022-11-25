@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
 import { Box, Paper } from '@mui/material';
-import { BrowserRouter, Routes, Route, Outlet, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { navList } from './navList';
 
 export const HomeMenu = () => (
