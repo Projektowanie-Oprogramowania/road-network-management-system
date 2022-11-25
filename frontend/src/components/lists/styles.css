@@ -1,0 +1,12 @@
+.SimpleComponent {
+    padding: 10px;
+    cursor: pointer;
+}
+
+.SimpleComponent:hover {
+    background-color: #36393f;
+}
+
+.SimpleComponentChoosen {
+    background-color: #34373d;
+}
