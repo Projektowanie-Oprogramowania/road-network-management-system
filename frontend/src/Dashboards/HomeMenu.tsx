@@ -44,7 +44,7 @@ export const HomeMenu = () => (
                         }}
                         elevation={10}
                     >
-                        <Box>Image Placeholder {v.image}</Box>
+                        <Box><v.image/></Box>
                         <Box>{v.label}</Box>
                     </Paper>
                 </Link>

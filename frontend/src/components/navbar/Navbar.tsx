@@ -18,6 +18,7 @@ interface INavbar {
     navbarList: Array<{
         label: string;
         path: string;
+        image: any;
     }>;
 }
 
@@ -105,6 +106,7 @@ export const Navbar = (props: INavbar) => {
                                                 onClick={handleCloseNavMenu}
                                             >
                                                 <Typography textAlign="center">
+                                                    <v.image sx={{top: 6, position: 'relative', marginLeft: 1, marginRight: 1}}/>
                                                     {v.label}
                                                 </Typography>
                                             </MenuItem>
@@ -154,7 +156,9 @@ export const Navbar = (props: INavbar) => {
                                             display: 'block',
                                         }}
                                     >
+                                        <v.image sx={{top: 6, position: 'relative', marginLeft: 1, marginRight: 1}}/>
                                         {v.label}
+                                        
                                     </Button>
                                 </Link>
                             ))}
