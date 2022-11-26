@@ -10,6 +10,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 import pl.edu.pw.backend.point.Point;
 import pl.edu.pw.backend.region.Region;
 import pl.edu.pw.backend.segment.Segment;
@@ -32,7 +33,7 @@ public class Road {
     @Id
     private int id;
     @ManyToMany
-    @Cascade(org.hibernate.annotations.CascadeType.ALL)
+    @Cascade(CascadeType.SAVE_UPDATE)
     private List<Segment> segments;
 
     private String name;
