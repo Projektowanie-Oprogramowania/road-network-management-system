@@ -1,41 +1,33 @@
 import { IResponse } from 'shared/interfaces';
-import { Point, PointDTO, Road, Segment, SegmentDTO } from './Interfaces';
-import { addRegion, getRegion } from './RegionLogic';
+import { Point, PointFormDTO, Segment, Region } from './Interfaces';
+import { getRegion } from './RegionLogic';
+
+import { generatePoint } from './NodeLogic';
+
+//Siec drogowa
+export interface Road {
+    id: string;
+    name: string;
+    segments: Segment[];
+    startingPoint: string;
+    endingPoint: string;
+    length: number;
+    region: Region;
+}
+
+export interface RoadFormDTO {
+    name: string;
+    startingPoint: string;
+    endingPoint: string;
+    length: number;
+    regionName: string;
+}
 
 let pointId = 0;
 let segmentId = 0;
 let roadId = 4;
 
-const generatePoint: () => Point = () => ({
-    id: String(pointId++),
-    x: Math.floor(Math.random() * 2000),
-    y: Math.floor(Math.random() * 2000),
-});
-
-const generateSegments: () => Segment[] = () => {
-    const size = Math.floor(Math.random() * 20);
-    const segments: Segment[] = [];
-
-    for (let i = 0; i < size; i++) {
-        const numberOfPoints = Math.floor(Math.random() * 20);
-        const points: Point[] = [];
-        for (let j = 0; j < numberOfPoints; j++) {
-            points.push(generatePoint());
-        }
-        segments.push({
-            id: String(segmentId++),
-            points: points,
-            startingPoint: generatePoint(),
-            endingPoint: generatePoint(),
-            isPaid: Math.floor(Math.random() * 2) ? true : false,
-            price: 0,
-        });
-    }
-
-    return segments;
-};
-
-let networksTable: Road[] = [
+let roadMock: Road[] = [
     {
         id: '1',
         name: 'siec 1',
@@ -65,30 +57,48 @@ let networksTable: Road[] = [
     },
 ];
 
+let roadMockId = 4;
+
+export const addRoad: (data: RoadFormDTO) => Road = (d: RoadFormDTO) => {
+    //TODO connect to backend
+    //-----------
+    const r: Road = {
+        id: `road_${roadMockId++}`,
+        ...d,
+        segments: [],
+        region: getRegion(d.regionName);
+    }
+    mockNodes.push(n);
+    //-----------
+    return n;
+    
+}
+
 export const getRoads: () => Road[] = () => {
     //Send request to delete point
     console.log(`Requested to get networks`);
 
-    return networksTable;
+    return roadMock;
 };
 
 export const getRoadById = async (id: string) => {
     //Send request to delete point
     console.log(`Requested to get networks ${id}`);
 
-    const index = networksTable.findIndex(v => v.id === id);
-    return index !== -1 ? networksTable[index] : undefined;
+    const index = roadMock.findIndex(v => v.id === id);
+    return index !== -1 ? roadMock[index] : undefined;
 };
 
 export interface RoadDTO {
     name: string;
     segments: SegmentDTO[];
-    startingPoint: PointDTO;
-    endingPoint: PointDTO;
+    startingPoint: PointFormDTO;
+    endingPoint: PointFormDTO;
     length: number;
     region: string;
 }
 
+/*
 export const addRoad: (r: RoadDTO) => IResponse = (r: RoadDTO) => {
     //Send request to delete point
     console.log(`Requested to get networks`);
@@ -99,11 +109,12 @@ export const addRoad: (r: RoadDTO) => IResponse = (r: RoadDTO) => {
     };
     return response;
 };
+*/
 
 export interface RoadMainData {
     name: string;
-    startingPoint: PointDTO;
-    endingPoint: PointDTO;
+    startingPoint: PointFormDTO;
+    endingPoint: PointFormDTO;
     length: number;
     region: string;
 }
@@ -115,7 +126,7 @@ export const addRoadByMainData: (r: RoadMainData) => IResponse = (
     console.log(`Requested to get networks`);
 
     //mock
-    networksTable.push({
+    roadMock.push({
         id: String(roadId++),
         name: r.name,
         segments: [],
@@ -134,7 +145,7 @@ export const addRoadByMainData: (r: RoadMainData) => IResponse = (
     const response: IResponse = {
         status: 200,
         statusText: 'OK',
-        data: networksTable[networksTable.length - 1],
+        data: roadMock[roadMock.length - 1],
     };
     return response;
 };

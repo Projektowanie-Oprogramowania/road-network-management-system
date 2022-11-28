@@ -1,4 +1,8 @@
-import { Region } from './Interfaces';
+export interface Region {
+    id: string;
+    name: string;
+}
+
 
 const regions: Region[] = [
     {

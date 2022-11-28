@@ -1,4 +1,20 @@
-import { InfrastructureObject } from './Interfaces';
+import { Point } from "./Interfaces";
+
+export interface InfrastructureObject {
+    id: string;
+    name: string;
+    location: Point;
+    type: InfrastructureType;
+}
+
+export enum InfrastructureType {
+    GAS_STATION,
+    RESTAURANT,
+    TOILETS,
+    SHOWERS,
+    HOSTEL,
+    HOTEL,
+}
 
 export const getInfrastructure = async () => {
     const objects: InfrastructureObject[] = [];
