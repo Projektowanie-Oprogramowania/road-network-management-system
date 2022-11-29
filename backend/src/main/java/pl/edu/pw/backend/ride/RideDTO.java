@@ -16,10 +16,10 @@ class RideDTO {
     int id;
     int chargeID;
 
-    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
+//    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     Date startDate;
 
-    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
+//    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     Date endDate;
     List<SegmentDTO> segments;
     String carRegistrationNumber;
