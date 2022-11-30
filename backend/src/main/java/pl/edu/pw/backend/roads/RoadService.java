@@ -6,9 +6,12 @@ import pl.edu.pw.backend.point.PointMapper;
 import pl.edu.pw.backend.region.Region;
 import pl.edu.pw.backend.region.RegionMapper;
 import pl.edu.pw.backend.region.RegionRepository;
+import pl.edu.pw.backend.segment.Segment;
 import pl.edu.pw.backend.segment.SegmentMapper;
+import pl.edu.pw.backend.segment.SegmentRepository;
 
 import javax.transaction.Transactional;
+import java.util.Collection;
 import java.util.List;
 
 @Service
@@ -16,10 +19,11 @@ import java.util.List;
 public class RoadService {
     private final RoadRepository roadRepository;
     private final RegionRepository regionRepository;
+    private final SegmentRepository segmentRepository;
 
     @Transactional
     RoadDTO addRoad(AddRoad addRoad) {
-        Road road = RoadMapper.map(addRoad);
+        Road road = RoadMapper.map(addRoad, (List<Segment>) segmentRepository.findAllById(addRoad.segments));
         return RoadMapper.map(roadRepository.save(road));
     }
 
@@ -30,7 +34,8 @@ public class RoadService {
         road.setEndingPoint(PointMapper.map(roadDTO.endingPoint));
         road.setLength(roadDTO.length);
         road.setRegion(RegionMapper.map(roadDTO.region));
-        road.setSegments(SegmentMapper.mapDTO(roadDTO.segments));
+        road.getSegments().clear();
+        road.getSegments().addAll((Collection<Segment>) segmentRepository.findAllById(roadDTO.segments));
         road.setStartingPoint(PointMapper.map(roadDTO.startingPoint));
         return RoadMapper.map(roadRepository.save(road));
     }

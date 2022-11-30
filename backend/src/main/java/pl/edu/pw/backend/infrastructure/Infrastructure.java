@@ -1,16 +1,18 @@
 package pl.edu.pw.backend.infrastructure;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
-import javax.persistence.Table;
-import lombok.*;
-import pl.edu.pw.backend.point.Point;
-
-import javax.persistence.Entity;
-import javax.persistence.ForeignKey;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
+import javax.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+import pl.edu.pw.backend.point.Point;
 
 
 @Table(name = "infrastructures")

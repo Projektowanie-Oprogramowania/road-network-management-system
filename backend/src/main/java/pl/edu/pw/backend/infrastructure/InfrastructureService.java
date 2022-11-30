@@ -1,16 +1,12 @@
 package pl.edu.pw.backend.infrastructure;
 
-import java.beans.Transient;
+import java.util.ArrayList;
 import java.util.List;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 class InfrastructureService {
-    //store id and use DB entities
-
-    private final static Long RANDOM_ID = 1234L;
 
     @Autowired
     private InfrastructureRepository infrastructureRepository;
@@ -20,7 +16,12 @@ class InfrastructureService {
     }
 
     Infrastructure updateInfrastructureObject(Infrastructure infrastructure) {
-        return infrastructureRepository.findById(RANDOM_ID).orElseThrow();
+        Infrastructure infr = infrastructureRepository.findById(infrastructure.getId())
+            .orElseThrow();
+        infr.setInfrastructureType(infrastructure.getInfrastructureType());
+        infr.setLocation(infrastructure.getLocation());
+        infr.setInfrastructureType(infrastructure.getInfrastructureType());
+        return infrastructureRepository.save(infr);
     }
 
     void removeInfrastructureObject(Long id) {
@@ -29,5 +30,20 @@ class InfrastructureService {
 
     List<Infrastructure> getInfrastructure() {
         return infrastructureRepository.findAll();
+    }
+
+    List<List<Infrastructure>> getInfrastructureListByType() {
+        List<Infrastructure> infraList = infrastructureRepository.findAll();
+        List<List<Infrastructure>> infraListByType = new ArrayList<>();
+        for (InfrastructureType type : InfrastructureType.values()) {
+            List<Infrastructure> typedInfraList = new ArrayList<>();
+            for (Infrastructure infra : infraList) {
+                if (infra.getInfrastructureType() == type) {
+                    typedInfraList.add(infra);
+                }
+            }
+            infraListByType.add(typedInfraList);
+        }
+        return infraListByType;
     }
 }

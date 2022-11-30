@@ -1,27 +1,34 @@
-package pl.edu.pw.backend.point;
+package pl.edu.pw.backend.node;
+
+import lombok.*;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
+@Builder
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 @Entity
-public class Point {
+@NoArgsConstructor
+@Getter
+@Setter
+@AllArgsConstructor
+@RequiredArgsConstructor
+public class Node {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    private double x;
-    private double y;
+    @NonNull
+    public Boolean isCity;
 
-    public Point(double x, double y) {
-        this.x = x;
-        this.y = y;
-    }
+    @NonNull
+    private String name;
+
+    @NonNull
+    private double x;
+
+    @NonNull
+    private double y;
 }
