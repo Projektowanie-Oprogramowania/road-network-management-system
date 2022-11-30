@@ -1,77 +1,21 @@
+import { apiUrl } from 'shared/settings';
+
 export interface Region {
     id: string;
     name: string;
 }
 
-const regions: Region[] = [
-    {
-        id: '0',
-        name: 'Mazowieckie',
-    },
-    {
-        id: '1',
-        name: 'Lubelskie',
-    },
-    {
-        id: '2',
-        name: 'Podlaskie',
-    },
-    {
-        id: '3',
-        name: 'Świętokrzyskie',
-    },
-    {
-        id: '4',
-        name: 'Podkarpackie',
-    },
-    {
-        id: '5',
-        name: 'Śląskie',
-    },
-    {
-        id: '6',
-        name: 'Wielkopolskie',
-    },
-    {
-        id: '7',
-        name: 'Małopolskie',
-    },
-];
-//
-export const getRegionByName = (name: string) => {
-    const r = regions.find(r => r.name === name);
-    if (r) {
-        return r;
-    }
-    return addRegion(name);
-};
-//
-
-export const addRegion: (s: string) => Region = (s: string) => {
-    const r = regions.find(r => r.name === s);
-    if (r) {
-        return r;
-    }
-    regions.push({
-        id: s,
-        name: s,
-    });
-    return regions[regions.length - 1];
-};
-
-export const getRegions: () => Array<Region> = () => {
-    //Send request to delete point
-    console.log(`Requested to get networks`);
+export const getRegions: () => Promise<Region[]> = async () => {
+    let regions: Region[] = [];
+    await fetch(`${apiUrl}/region`)
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            }
+        })
+        .then(r => {
+            regions = r;
+        });
 
     return regions;
-};
-
-export const getRegion: (id: string) => Region = id => {
-    const index = regions.findIndex(v => v.id === id);
-    return index !== -1
-        ? regions[index]
-        : {
-              id: 'null',
-              name: 'null',
-          };
 };

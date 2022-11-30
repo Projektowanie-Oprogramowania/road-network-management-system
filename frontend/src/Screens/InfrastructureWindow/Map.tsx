@@ -57,6 +57,7 @@ const nodeStyle = {
 const pointStyle = {
     color: 'black',
     size: 50,
+    renderLabel: false,
 };
 
 export const mapPointsAndRoads = (p: Point[], r: Road[]) => ({
@@ -85,7 +86,7 @@ export const mapPointsAndRoads = (p: Point[], r: Road[]) => ({
 
 export interface IMapData {
     nodes: Array<{
-        index: string;
+        index?: string;
         id: string;
         x: number;
         y: number;
@@ -95,6 +96,7 @@ export interface IMapData {
     }>;
     links: Array<{
         source: string;
+        breakPoints?: Object[];
         target: string;
         color?: 'lightgreen';
         size?: 80;
@@ -145,7 +147,6 @@ export const appendPoints = (data: IMapData, cities: Point[]): IMapData => {
     for (const city of cities) {
         if (nodes.findIndex(v => v.id === city.id) === -1) {
             nodes.push({
-                index: city.id,
                 id: city.id,
                 x: city.x,
                 y: city.y,
@@ -159,6 +160,74 @@ export const appendPoints = (data: IMapData, cities: Point[]): IMapData => {
     };
 };
 
+export const addNodesFromSegments = (
+    data: IMapData,
+    segments: Segment[],
+    cities: Node[],
+): IMapData => {
+    const nodes = data.nodes;
+    const links = data.links;
+    for (const segment of segments) {
+        const sLength: number = segment.points.length;
+        let index: number = nodes.findIndex(
+            v => v.id === segment.startingPoint.id,
+        );
+        if (
+            index !== -1 &&
+            cities.findIndex(v => v.id === nodes[index].id) === -1
+        ) {
+            nodes[index] = {
+                id: segment.startingPoint.id,
+                x: segment.startingPoint.x,
+                y: segment.startingPoint.y,
+                ...nodeStyle,
+            };
+        } else {
+            nodes.push({
+                id: segment.startingPoint.id,
+                x: segment.startingPoint.x,
+                y: segment.startingPoint.y,
+                ...nodeStyle,
+            });
+        }
+
+        for (const point of segment.points) {
+            index = nodes.findIndex(v => v.id === point.id);
+            if (index === -1)
+                nodes.push({
+                    id: point.id,
+                    x: point.x,
+                    y: point.y,
+                    ...pointStyle,
+                });
+        }
+
+        index = nodes.findIndex(v => v.id === segment.endingPoint.id);
+        if (
+            index !== -1 &&
+            cities.findIndex(v => v.id === nodes[index].id) === -1
+        ) {
+            nodes[index] = {
+                id: segment.endingPoint.id,
+                x: segment.endingPoint.x,
+                y: segment.endingPoint.y,
+                ...nodeStyle,
+            };
+        } else {
+            nodes.push({
+                id: segment.endingPoint.id,
+                x: segment.endingPoint.x,
+                y: segment.endingPoint.y,
+                ...nodeStyle,
+            });
+        }
+    }
+    return {
+        nodes: data.nodes,
+        links: links,
+    };
+};
+
 export const appendSegments = (
     data: IMapData,
     segments: Segment[],
@@ -169,45 +238,50 @@ export const appendSegments = (
         const sLength: number = segment.points.length;
         if (sLength > 0) {
             if (
-                nodes.findIndex(v => v.id === segment.startingPoint) !== -1 &&
-                nodes.findIndex(v => v.id === segment.points[0]) !== -1
+                nodes.findIndex(v => v.id === segment.startingPoint.id) !==
+                    -1 &&
+                nodes.findIndex(v => v.id === segment.points[0].id) !== -1
             ) {
                 links.push({
-                    source: segment.startingPoint,
-                    target: segment.points[0],
+                    source: segment.startingPoint.id,
+                    target: segment.points[0].id,
                 });
             }
 
             for (let i = 0; i < sLength - 1; i++) {
                 if (
-                    nodes.findIndex(v => v.id === segment.points[i]) !== -1 &&
-                    nodes.findIndex(v => v.id === segment.points[i + 1]) !== -1
+                    nodes.findIndex(v => v.id === segment.points[i].id) !==
+                        -1 &&
+                    nodes.findIndex(v => v.id === segment.points[i + 1].id) !==
+                        -1
                 ) {
                     links.push({
-                        source: segment.points[i],
-                        target: segment.points[i + 1],
+                        source: segment.points[i].id,
+                        target: segment.points[i + 1].id,
                     });
                 }
             }
 
             if (
-                nodes.findIndex(v => v.id === segment.points[sLength - 1]) !==
-                    -1 &&
-                nodes.findIndex(v => v.id === segment.endingPoint) !== -1
+                nodes.findIndex(
+                    v => v.id === segment.points[sLength - 1].id,
+                ) !== -1 &&
+                nodes.findIndex(v => v.id === segment.endingPoint.id) !== -1
             ) {
                 links.push({
-                    source: segment.points[sLength - 1],
-                    target: segment.endingPoint,
+                    source: segment.points[sLength - 1].id,
+                    target: segment.endingPoint.id,
                 });
             }
         } else {
             if (
-                nodes.findIndex(v => v.id === segment.startingPoint) !== -1 &&
-                nodes.findIndex(v => v.id === segment.endingPoint) !== -1
+                nodes.findIndex(v => v.id === segment.startingPoint.id) !==
+                    -1 &&
+                nodes.findIndex(v => v.id === segment.endingPoint.id) !== -1
             ) {
                 links.push({
-                    source: segment.startingPoint,
-                    target: segment.endingPoint,
+                    source: segment.startingPoint.id,
+                    target: segment.endingPoint.id,
                 });
             }
         }
@@ -217,6 +291,36 @@ export const appendSegments = (
         links: links,
     };
 };
+
+//Wersja gdzie points to breakPoints
+/*
+export const appendSegments = (
+    data: IMapData,
+    segments: Segment[],
+): IMapData => {
+    const nodes = data.nodes;
+    const links = data.links;
+    for (const segment of segments) {
+        if (
+            nodes.findIndex(v => v.id === segment.startingPoint.id) !== -1 &&
+            nodes.findIndex(v => v.id === segment.endingPoint.id) !== -1
+        ) {
+            links.push({
+                source: segment.startingPoint.id,
+                breakPoints: segment.points.map(v => ({
+                    x: v.x,
+                    y: v.y,
+                })),
+                target: segment.endingPoint.id,
+            });
+        }
+    }
+    return {
+        nodes: data.nodes,
+        links: links,
+    };
+};
+*/
 
 export const mapFromRoadData = (r: Road) => {
     const data: IMapData = {

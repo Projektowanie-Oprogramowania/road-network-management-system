@@ -1,3 +1,5 @@
+import { apiUrl } from 'shared/settings';
+
 export interface Point {
     id: string;
     x: number;
@@ -23,8 +25,6 @@ export interface PointFormDTO {
     x: number;
     y: number;
 }
-
-const apiUrl: string = 'http://localhost:8080';
 
 export const addNode: (n: NodeFormDTO) => Promise<Node> = async (
     node: NodeFormDTO,
@@ -53,6 +53,7 @@ export const addNode: (n: NodeFormDTO) => Promise<Node> = async (
         });
     return n;
 };
+
 export const editNode: (node: Node) => Promise<Node> = async (node: Node) => {
     let n: Node = node;
     await fetch(`${apiUrl}/node`, {
@@ -115,7 +116,9 @@ export const getCities: () => Promise<Node[]> = async () => {
     return nodes;
 };
 
-export const getNodesByRoad: () => Promise<Node[]> = async () => {
+export const getNodesByRoad: (id: string) => Promise<Node[]> = async (
+    id: string,
+) => {
     //TODO - byRoad
     let nodes: Node[] = [];
     await fetch(`${apiUrl}/node`)
@@ -212,10 +215,12 @@ export const removePoint: (id: string) => Promise<void> = async (
     });
 };
 
-export const getPointsByRoad: () => Promise<Point[]> = async () => {
+export const getPointsByRoad: (id: string) => Promise<Point[]> = async (
+    id: string,
+) => {
     //TODO - byRoad
     let points: Point[] = [];
-    await fetch(`${apiUrl}/point`)
+    await fetch(`${apiUrl}/road/${id}/points`)
         .then(response => {
             if (response.ok) {
                 return response.json();

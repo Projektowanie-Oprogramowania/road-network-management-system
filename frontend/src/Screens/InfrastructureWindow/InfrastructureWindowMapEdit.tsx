@@ -36,9 +36,9 @@ export const InfrastructureWindowMapEdit = () => {
         setAlert(`Punkt do edycji ${nodeId}`);
         const s = road?.segments.find(
             v =>
-                v.endingPoint === nodeId ||
-                v.startingPoint === nodeId ||
-                v.points.find(p => p === nodeId),
+                v.endingPoint.id === nodeId ||
+                v.startingPoint.id === nodeId ||
+                v.points.find(p => p.id === nodeId),
         );
         if (s) {
             setSegment(s);
@@ -48,11 +48,13 @@ export const InfrastructureWindowMapEdit = () => {
     const onClickLink = (source: string, target: string) => {
         setAlert(`Droga do edycji ${source}-${target}`);
         const s = road?.segments.find(v => {
-            let sf = v.startingPoint === source || v.endingPoint === source;
-            let tf = v.startingPoint === target || v.endingPoint === target;
+            let sf =
+                v.startingPoint.id === source || v.endingPoint.id === source;
+            let tf =
+                v.startingPoint.id === target || v.endingPoint.id === target;
             for (const p of v.points) {
-                if (!sf) sf = p === source;
-                if (!tf) sf = p === target;
+                if (!sf) sf = p.id === source;
+                if (!tf) sf = p.id === target;
             }
             return sf && tf;
         });

@@ -16,7 +16,7 @@ export const InfrastructureWindow = ({ isAdmin = false }) => {
     const navigate = useNavigate();
     const { sendRequest: fetchInfrastructure } = useFetch();
 
-    const updateData: () => void = () => {
+    const updateData: () => Promise<void> = async () => {
         const handleRespnse = (response: any) => {
             console.log(response);
         };
@@ -26,7 +26,8 @@ export const InfrastructureWindow = ({ isAdmin = false }) => {
         };
 
         fetchInfrastructure(fetchInfrastructureRequest, handleRespnse);
-        setRoads(getRoads());
+        const r = await getRoads();
+        setRoads(r);
     };
 
     useEffect(() => {

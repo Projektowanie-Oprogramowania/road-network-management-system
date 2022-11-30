@@ -3,18 +3,18 @@ import { Point } from './NodeLogic';
 //pojedyncza droga na mapie
 export interface Segment {
     id: string;
-    points: string[];
-    startingPoint: string;
-    endingPoint: string;
+    points: Point[];
+    startingPoint: Point;
+    endingPoint: Point;
     isPaid: boolean;
     price?: number;
     tarrificator?: string;
 }
 
 export interface SegmentFormDTO {
-    points: string[];
-    startingPoint: string;
-    endingPoint: string;
+    points: Point[];
+    startingPoint: Point;
+    endingPoint: Point;
     isPaid: boolean;
     price?: number;
     tarrificator?: string;

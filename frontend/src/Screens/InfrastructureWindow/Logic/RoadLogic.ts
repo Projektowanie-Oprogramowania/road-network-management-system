@@ -1,6 +1,6 @@
 import { IResponse } from 'shared/interfaces';
-import { Point, PointFormDTO, Segment, Region } from './Interfaces';
-import { getRegion, getRegionByName } from './RegionLogic';
+import { apiUrl } from 'shared/settings';
+import { Node, Region, Segment } from './Interfaces';
 /*
 import { generateCity, generatePoint } from './NodeLogic';
 import { generateSegments, Segment } from './SegmentLogic';
@@ -19,77 +19,92 @@ export interface Road {
 
 export interface RoadFormDTO {
     name: string;
-    startingPoint: string;
-    endingPoint: string;
+    startingPoint: Node;
+    endingPoint: Node;
     length: number;
-    regionName: string;
+    region: Region;
 }
 
 let pointId = 0;
 let segmentId = 0;
 let roadId = 4;
 
-let mockRoads: Road[] = [
-    /*    {
-        id: '1',
-        name: 'siec 1',
-        segments: generateSegments(),
-        startingPoint: generateCity().id,
-        endingPoint: generateCity().id,
-        length: 100,
-        region: getRegion('0'),
-    },
-    {
-        id: '2',
-        name: 'siec 2',
-        segments: generateSegments(),
-        startingPoint: generateCity().id,
-        endingPoint: generateCity().id,
-        length: 100,
-        region: getRegion('1'),
-    },
-    {
-        id: '3',
-        name: 'siec 3',
-        segments: generateSegments(),
-        startingPoint: generateCity().id,
-        endingPoint: generateCity().id,
-        length: 100,
-        region: getRegion('2'),
-    },
-*/
-];
+let mockRoads: Road[] = [];
 
-let roadMockId = 4;
-
-export const addRoad: (data: RoadFormDTO) => Road = (data: RoadFormDTO) => {
-    //TODO connect to backend
-    //-----------
-    const r: Road = {
-        id: `road_${roadMockId++}`,
-        ...data,
-        segments: [],
-        region: getRegion(data.regionName),
+export const addRoad: (data: RoadFormDTO) => Promise<Road | undefined> = async (
+    data: RoadFormDTO,
+) => {
+    let road = {
+        endingPoint: {
+            id: data.endingPoint.id,
+            x: data.endingPoint.x,
+            y: data.endingPoint.y,
+        },
+        length: data.length,
+        name: data.name,
+        region: data.region,
+        segments: [0],
+        startingPoint: {
+            id: data.endingPoint.id,
+            x: data.endingPoint.x,
+            y: data.endingPoint.y,
+        },
     };
-    mockRoads.push(r);
-    //-----------
-    return r;
+    let _r: Road | undefined = undefined;
+    await fetch(`${apiUrl}/road`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(road),
+    })
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            }
+        })
+        .then(r => {
+            _r = {
+                id: r.id,
+                name: r.name,
+                segments: r.segments,
+                startingPoint: r.startingPoint.id,
+                endingPoint: r.endingPoint.id,
+                length: r.length,
+                region: r.region,
+            };
+        });
+    return _r;
 };
 
-export const getRoads: () => Road[] = () => {
-    //Send request to delete point
-    console.log(`Requested to get networks`);
+export const getRoads: () => Promise<Road[]> = async () => {
+    let roads: Road[] = [];
+    await fetch(`${apiUrl}/road`)
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            }
+        })
+        .then(r => {
+            roads = r;
+        });
 
-    return mockRoads;
+    return roads;
 };
 
 export const getRoadById = async (id: string) => {
-    //Send request to delete point
-    console.log(`Requested to get networks ${id}`);
+    let road: Road | undefined = undefined;
+    await fetch(`${apiUrl}/road/${id}`)
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            }
+        })
+        .then(r => {
+            road = r;
+        });
 
-    const index = mockRoads.findIndex(v => v.id === id);
-    console.log(index);
-    return index !== -1 ? mockRoads[index] : undefined;
+    return road;
 };
 
 export interface RoadMainData {
@@ -100,6 +115,7 @@ export interface RoadMainData {
     region: string;
 }
 
+/*
 export const addRoadByMainData: (r: RoadMainData) => IResponse = (
     r: RoadMainData,
 ) => {
@@ -124,3 +140,4 @@ export const addRoadByMainData: (r: RoadMainData) => IResponse = (
     };
     return response;
 };
+*/
