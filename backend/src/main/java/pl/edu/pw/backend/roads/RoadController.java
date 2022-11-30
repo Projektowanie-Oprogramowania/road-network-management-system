@@ -1,6 +1,9 @@
 package pl.edu.pw.backend.roads;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +15,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import pl.edu.pw.backend.point.PointDTO;
+import pl.edu.pw.backend.segment.SegmentDTO;
 
 @RequiredArgsConstructor
 @RestController
@@ -50,4 +55,16 @@ public class RoadController {
         return roadService.getRoads();
     }
 
+    @GetMapping("/{id}/points")
+    List<PointDTO> getRoadPoints(@PathVariable int id) {
+        RoadDTO road = roadService.getRoad(id);
+        List<PointDTO> points = new ArrayList<>(Arrays.asList(road.startingPoint, road.endingPoint));
+
+        for (SegmentDTO s : road.getSegments()) {
+            System.out.println(s.getPoints());
+            points.addAll(s.getPoints());
+        }
+
+        return points;
+    }
 }
