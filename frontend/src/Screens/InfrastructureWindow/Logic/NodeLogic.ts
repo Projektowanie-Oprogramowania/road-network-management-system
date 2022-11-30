@@ -24,174 +24,206 @@ export interface PointFormDTO {
     y: number;
 }
 
-const mockNodes: Node[] = [
-    {
-        id: '1',
-        isCity: true,
-        name: 'Warszawa',
-        x: 100,
-        y: 100,
-    },
-    {
-        id: '2',
-        isCity: true,
-        name: 'Lublin',
-        x: 300,
-        y: 100,
-    },
-    {
-        id: '3',
-        isCity: true,
-        name: 'Krakow',
-        x: 300,
-        y: 300,
-    },
-    {
-        id: '4',
-        isCity: true,
-        name: 'Gdynia',
-        x: 400,
-        y: 300,
-    },
-    {
-        id: '5',
-        isCity: true,
-        name: 'Swinoujscie',
-        x: 500,
-        y: 300,
-    },
-    {
-        id: '6',
-        isCity: true,
-        name: 'Kielce',
-        x: 600,
-        y: 300,
-    },
-];
-const mockPoints: Point[] = [];
+const apiUrl: string = 'http://localhost:8080';
 
-let mockNodesid = 0;
-let mockPointsid = 0;
-
-// potem do wywalenia
-export const generatePoint: () => Point = () =>
-    addPoint({
-        x: Math.floor(Math.random() * 2000),
-        y: Math.floor(Math.random() * 2000),
-    });
-
-export const generateNode: () => Node = () =>
-    addNode({
-        isCity: false,
-        name: `wezel-${mockNodesid++}`,
-        x: Math.floor(Math.random() * 2000),
-        y: Math.floor(Math.random() * 2000),
-    });
-
-export const generateCity: () => Node = () => {
-    const cities = getCities();
-    return cities[Math.floor(Math.random() * (cities.length - 1))];
-};
-//
-
-/*
-//TODO connect to backend
 export const addNode: (n: NodeFormDTO) => Promise<Node> = async (
     node: NodeFormDTO,
 ) => {
-*/
-//----------- TMP
-export const addNode: (n: NodeFormDTO) => Node = (node: NodeFormDTO) => {
-    const n: Node = {
-        id: `node_${mockNodesid++}`,
-        ...node,
+    let n: Node = {
+        id: '0',
+        isCity: false,
+        name: 'error',
+        x: 0,
+        y: 0,
     };
-    mockNodes.push(n);
+    await fetch(`${apiUrl}/node`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(node),
+    })
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            }
+        })
+        .then(r => {
+            n = r;
+        });
     return n;
 };
 export const editNode: (node: Node) => Promise<Node> = async (node: Node) => {
-    const index: number = mockNodes.findIndex(v => v.id === node.id);
-    if (index === -1) {
-        throw new Error('node not found');
-    }
-    mockNodes[index] = node;
-    return node;
+    let n: Node = node;
+    await fetch(`${apiUrl}/node`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(node),
+    })
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            }
+        })
+        .then(r => {
+            n = r;
+        });
+    return n;
 };
-//-----------
 
 export const getNodes: () => Promise<Node[]> = async () => {
-    //TODO connect to backend
-    return mockNodes;
+    let nodes: Node[] = [];
+    await fetch(`${apiUrl}/node`)
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            }
+        })
+        .then(r => {
+            nodes = r;
+        });
+
+    return nodes;
 };
 
 export const removeNode: (id: string) => Promise<void> = async (id: string) => {
-    //TODO connect to backend
-    const index = mockNodes.findIndex(v => v.id == id);
-    if (index >= 0) {
-        mockNodes.splice(index, 1);
-    }
+    await fetch(`${apiUrl}/node/${id}`, {
+        method: 'Delete',
+    }).then(response => {
+        if (response.ok) {
+            return response.json();
+        } else {
+            console.log(response.text);
+        }
+    });
 };
 
-/*
-//TODO connect to backend
 export const getCities: () => Promise<Node[]> = async () => {
+    let nodes: Node[] = [];
+    await fetch(`${apiUrl}/node/cities`)
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            }
+        })
+        .then(r => {
+            nodes = r;
+        });
+
+    return nodes;
 };
-*/
-//--------- TMP
-export const getCities: () => Node[] = () => {
-    //TODO connect to backend
-    return mockNodes.filter(v => v.isCity);
-};
-//---------
 
 export const getNodesByRoad: () => Promise<Node[]> = async () => {
-    //TODO connect to backend
-    return mockNodes;
+    //TODO - byRoad
+    let nodes: Node[] = [];
+    await fetch(`${apiUrl}/node`)
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            }
+        })
+        .then(r => {
+            nodes = r;
+        });
+
+    return nodes;
 };
 
-/*
 export const addPoint: (point: PointFormDTO) => Promise<Point> = async (
     point: PointFormDTO,
 ) => {
-*/
-//TODO connect to backend
-//----------- TMP
-export const addPoint: (point: PointFormDTO) => Point = (
-    point: PointFormDTO,
-) => {
-    const p: Point = {
-        id: `point_${mockPointsid++}`,
-        ...point,
+    let p: Point = {
+        id: '0',
+        x: 0,
+        y: 0,
     };
-    mockPoints.push(p);
+    await fetch(`${apiUrl}/point`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(point),
+    })
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            }
+        })
+        .then(r => {
+            p = r;
+        });
     return p;
 };
-export const editPoint: (point: Point) => Point = (point: Point) => {
-    const index: number = mockPoints.findIndex(v => v.id === point.id);
-    if (index === -1) {
-        throw new Error('point not found');
-    }
-    mockPoints[index] = point;
-    return point;
+
+export const editPoint: (point: Point) => Promise<Point> = async (
+    point: Point,
+) => {
+    let p: Point = {
+        id: '0',
+        x: 0,
+        y: 0,
+    };
+    await fetch(`${apiUrl}/point`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(point),
+    })
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            }
+        })
+        .then(r => {
+            p = r;
+        });
+    return p;
 };
-//-----------
 
 export const getPoints: () => Promise<Point[]> = async () => {
-    //TODO connect to backend
-    return mockPoints;
+    let points: Point[] = [];
+    await fetch(`${apiUrl}/point`)
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            }
+        })
+        .then(r => {
+            points = r;
+        });
+
+    return points;
 };
 
 export const removePoint: (id: string) => Promise<void> = async (
     id: string,
 ) => {
-    //TODO connect to backend
-    const index = mockPoints.findIndex(v => v.id == id);
-    if (index >= 0) {
-        mockPoints.splice(index, 1);
-    }
+    await fetch(`${apiUrl}/point/${id}`, {
+        method: 'Delete',
+    }).then(response => {
+        if (response.ok) {
+            return response.json();
+        } else {
+            console.log(response.text);
+        }
+    });
 };
 
 export const getPointsByRoad: () => Promise<Point[]> = async () => {
-    //TODO connect to backend
-    return mockPoints;
+    //TODO - byRoad
+    let points: Point[] = [];
+    await fetch(`${apiUrl}/point`)
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            }
+        })
+        .then(r => {
+            points = r;
+        });
+
+    return points;
 };

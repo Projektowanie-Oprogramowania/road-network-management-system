@@ -19,8 +19,13 @@ const CitiesList = (props: ICitiesList) => {
     const [_cities, setCities] = useState<Node[]>([]);
     const [_page, _setPage] = useState(0);
 
+    const updateCities = async () => {
+        const c = await getCities();
+        setCities(c);
+    };
+
     useEffect(() => {
-        setCities(getCities());
+        updateCities();
     }, []);
 
     return (

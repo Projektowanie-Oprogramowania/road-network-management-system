@@ -50,7 +50,7 @@ export const FormNode = (props: IFormPoint) => {
                 value: node,
             };
         } else {
-            const node = addNode({
+            const node = await addNode({
                 isCity: isCity === true,
                 name: name,
                 x: x,

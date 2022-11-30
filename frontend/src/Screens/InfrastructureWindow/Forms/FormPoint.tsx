@@ -24,15 +24,8 @@ export const FormPoint = (props: IFormPoint) => {
             (e.currentTarget[3] as HTMLInputElement).value,
         );
 
-        let response: {
-            message: string;
-            value?: Node;
-        } = {
-            message: `Error`,
-            value: undefined,
-        };
         if (data) {
-            const p = editPoint({
+            const p = await editPoint({
                 id: data.id,
                 x: x,
                 y: y,
@@ -42,7 +35,7 @@ export const FormPoint = (props: IFormPoint) => {
                 callback(p.id);
             }
         } else {
-            const p = addPoint({
+            const p = await addPoint({
                 x: x,
                 y: y,
             });

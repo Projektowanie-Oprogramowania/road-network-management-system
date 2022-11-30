@@ -20,7 +20,7 @@ import useAlert from '@context/useAlert';
 import useFetch from 'use-fetch';
 import {
     getCities,
-    getNodesByRoad,
+    getNodes,
     getPoints,
     getPointsByRoad,
 } from './Logic/NodeLogic';
@@ -39,23 +39,21 @@ export const InfrastructureWindowMap = () => {
         //getRoads
         if (roadId) {
             const _r = await getRoadById(roadId);
+            const _p = await getPoints();
+            const _n = await getNodes();
             if (_r) {
                 setRoad(_r);
                 setSegments(_r.segments);
-                setPoints(await getPointsByRoad());
-                setNodes(await getNodesByRoad());
+                setPoints(_p);
+                setNodes(_n.filter(v => !v.isCity));
             }
         }
-        setCities(getCities());
+        const _c = await getCities();
+        setCities(_c);
     };
 
     const updateMapData = () => {
         if (road) {
-            console.log(road);
-            console.log(cities);
-            console.log(nodes);
-            console.log(points);
-            console.log(segments);
             let newData: IMapData = {
                 nodes: [],
                 links: [],
@@ -65,7 +63,6 @@ export const InfrastructureWindowMap = () => {
             newData = appendNodes(newData, nodes);
             newData = appendPoints(newData, points);
             newData = appendSegments(newData, segments);
-            console.log(newData);
             setMapData(newData);
         }
     };

@@ -1,4 +1,4 @@
-import { generateNode, generatePoint, Point } from './NodeLogic';
+import { Point } from './NodeLogic';
 
 //pojedyncza droga na mapie
 export interface Segment {
@@ -23,6 +23,7 @@ export interface SegmentFormDTO {
 let segmentMock: Segment[] = [];
 let segmentMockId = 0;
 
+/*
 export const generateSegments: () => Segment[] = () => {
     const size = Math.floor(Math.random() * 20);
     const segments: Segment[] = [];
@@ -46,6 +47,7 @@ export const generateSegments: () => Segment[] = () => {
     segmentMock.push(...segments);
     return segments;
 };
+*/
 
 //TODO connect to backend
 export const addSegment: (segment: SegmentFormDTO) => Promise<Segment> = (

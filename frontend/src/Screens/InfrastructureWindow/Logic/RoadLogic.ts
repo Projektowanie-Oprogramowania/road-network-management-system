@@ -1,9 +1,10 @@
 import { IResponse } from 'shared/interfaces';
-import { Point, PointFormDTO, Region } from './Interfaces';
+import { Point, PointFormDTO, Segment, Region } from './Interfaces';
 import { getRegion, getRegionByName } from './RegionLogic';
-
+/*
 import { generateCity, generatePoint } from './NodeLogic';
 import { generateSegments, Segment } from './SegmentLogic';
+*/
 
 //Siec drogowa
 export interface Road {
@@ -29,7 +30,7 @@ let segmentId = 0;
 let roadId = 4;
 
 let mockRoads: Road[] = [
-    {
+    /*    {
         id: '1',
         name: 'siec 1',
         segments: generateSegments(),
@@ -56,6 +57,7 @@ let mockRoads: Road[] = [
         length: 100,
         region: getRegion('2'),
     },
+*/
 ];
 
 let roadMockId = 4;
