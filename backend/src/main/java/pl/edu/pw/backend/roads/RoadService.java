@@ -1,5 +1,8 @@
 package pl.edu.pw.backend.roads;
 
+import java.util.Collection;
+import java.util.List;
+import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import pl.edu.pw.backend.point.PointMapper;
@@ -7,12 +10,7 @@ import pl.edu.pw.backend.region.Region;
 import pl.edu.pw.backend.region.RegionMapper;
 import pl.edu.pw.backend.region.RegionRepository;
 import pl.edu.pw.backend.segment.Segment;
-import pl.edu.pw.backend.segment.SegmentMapper;
 import pl.edu.pw.backend.segment.SegmentRepository;
-
-import javax.transaction.Transactional;
-import java.util.Collection;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -52,6 +50,10 @@ public class RoadService {
     List<RoadDTO> getRoadsByRegion(int id) {
         Region region = regionRepository.findById(id).orElseThrow();
         return RoadMapper.map(roadRepository.findByRegion(region));
+    }
+
+    List<RoadDTO> getRoads() {
+        return RoadMapper.map((List<Road>) roadRepository.findAll());
     }
 
 }
