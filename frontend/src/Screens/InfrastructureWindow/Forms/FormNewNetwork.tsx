@@ -147,13 +147,13 @@ export const FormNewNetwork: React.FC<IFormNewNetwork> = ({
                             cbPage={4}
                         />
                         <>
-                            <FormPoint onSubmit={onMainPointsAdd} />
+                            {/*<FormPoint onSubmit={onMainPointsAdd} />*/}
                             <Button onClick={() => changePage(1)}>
                                 Anuluj
                             </Button>
                         </>
                         <>
-                            <FormPoint onSubmit={onMainPointsAdd} />
+                            {/*<FormPoint onSubmit={onMainPointsAdd} />*/}
                             <Button onClick={() => changePage(2)}>
                                 Anuluj
                             </Button>

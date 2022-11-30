@@ -1,4 +1,4 @@
-import { generatePoint, Point } from './NodeLogic';
+import { generateNode, generatePoint, Point } from './NodeLogic';
 
 //pojedyncza droga na mapie
 export interface Segment {
@@ -23,8 +23,7 @@ export interface SegmentFormDTO {
 let segmentMock: Segment[] = [];
 let segmentMockId = 0;
 
-
-const generateSegments: () => Promise<Segment[]> = async () => {
+export const generateSegments: () => Segment[] = () => {
     const size = Math.floor(Math.random() * 20);
     const segments: Segment[] = [];
 
@@ -32,22 +31,53 @@ const generateSegments: () => Promise<Segment[]> = async () => {
         const numberOfPoints = Math.floor(Math.random() * 20);
         const points: string[] = [];
         for (let j = 0; j < numberOfPoints; j++) {
-            points.push((await generatePoint()).id);
+            points.push(generatePoint().id);
         }
         segments.push({
-            id: String(segmentId++),
+            id: String(segmentMockId++),
             points: points,
-            startingPoint: await generatePoint(),
-            endingPoint: await generatePoint(),
+            startingPoint: generateNode().id,
+            endingPoint: generateNode().id,
             isPaid: Math.floor(Math.random() * 2) ? true : false,
             price: 0,
         });
     }
 
+    segmentMock.push(...segments);
     return segments;
 };
 
-const addSegment: (s: SegmentFormDTO) => Promise<Segment> = (segment: SegmentFormDTO) => {} 
-const editSegment: (s: Segment) => Promise<Segment> = (segment: SegmentFormDTO) => {} 
-const getSegment: (id: string) => Promise<Segment> = (id: string) => {} 
-const removeSegment: (id: string) => Promise<void> = (id: string) => {} 
+//TODO connect to backend
+export const addSegment: (segment: SegmentFormDTO) => Promise<Segment> = (
+    segment: SegmentFormDTO,
+) => {
+    const s: Segment = {
+        id: `${segmentMockId++}`,
+        ...segment,
+    };
+    segmentMock.push(s);
+    return Promise.resolve(s);
+};
+export const editSegment: (segment: Segment) => Promise<Segment> = (
+    segment: Segment,
+) => {
+    const index: number = segmentMock.findIndex(v => v.id === segment.id);
+    if (index === -1) {
+        return addSegment(segment);
+    }
+    segmentMock[index] = segment;
+    return Promise.resolve(segment);
+};
+export const getSegment: (id: string) => Promise<Segment | undefined> = (
+    id: string,
+) => {
+    return Promise.resolve(segmentMock.find(v => v.id === id));
+};
+export const removeSegment: (id: string) => Promise<void> = (id: string) => {
+    const index: number = segmentMock.findIndex(v => v.id === id);
+    if (index === -1) {
+        return Promise.resolve();
+    }
+    segmentMock.splice(index, 1);
+    return Promise.resolve();
+};

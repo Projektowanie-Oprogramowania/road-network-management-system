@@ -1,8 +1,9 @@
 import { IResponse } from 'shared/interfaces';
-import { Point, PointFormDTO, Segment, Region } from './Interfaces';
-import { getRegion } from './RegionLogic';
+import { Point, PointFormDTO, Region } from './Interfaces';
+import { getRegion, getRegionByName } from './RegionLogic';
 
-import { generatePoint } from './NodeLogic';
+import { generateCity, generatePoint } from './NodeLogic';
+import { generateSegments, Segment } from './SegmentLogic';
 
 //Siec drogowa
 export interface Road {
@@ -27,13 +28,13 @@ let pointId = 0;
 let segmentId = 0;
 let roadId = 4;
 
-let roadMock: Road[] = [
+let mockRoads: Road[] = [
     {
         id: '1',
         name: 'siec 1',
         segments: generateSegments(),
-        startingPoint: generatePoint(),
-        endingPoint: generatePoint(),
+        startingPoint: generateCity().id,
+        endingPoint: generateCity().id,
         length: 100,
         region: getRegion('0'),
     },
@@ -41,8 +42,8 @@ let roadMock: Road[] = [
         id: '2',
         name: 'siec 2',
         segments: generateSegments(),
-        startingPoint: generatePoint(),
-        endingPoint: generatePoint(),
+        startingPoint: generateCity().id,
+        endingPoint: generateCity().id,
         length: 100,
         region: getRegion('1'),
     },
@@ -50,8 +51,8 @@ let roadMock: Road[] = [
         id: '3',
         name: 'siec 3',
         segments: generateSegments(),
-        startingPoint: generatePoint(),
-        endingPoint: generatePoint(),
+        startingPoint: generateCity().id,
+        endingPoint: generateCity().id,
         length: 100,
         region: getRegion('2'),
     },
@@ -59,62 +60,40 @@ let roadMock: Road[] = [
 
 let roadMockId = 4;
 
-export const addRoad: (data: RoadFormDTO) => Road = (d: RoadFormDTO) => {
+export const addRoad: (data: RoadFormDTO) => Road = (data: RoadFormDTO) => {
     //TODO connect to backend
     //-----------
     const r: Road = {
         id: `road_${roadMockId++}`,
-        ...d,
+        ...data,
         segments: [],
-        region: getRegion(d.regionName);
-    }
-    mockNodes.push(n);
+        region: getRegion(data.regionName),
+    };
+    mockRoads.push(r);
     //-----------
-    return n;
-    
-}
+    return r;
+};
 
 export const getRoads: () => Road[] = () => {
     //Send request to delete point
     console.log(`Requested to get networks`);
 
-    return roadMock;
+    return mockRoads;
 };
 
 export const getRoadById = async (id: string) => {
     //Send request to delete point
     console.log(`Requested to get networks ${id}`);
 
-    const index = roadMock.findIndex(v => v.id === id);
-    return index !== -1 ? roadMock[index] : undefined;
+    const index = mockRoads.findIndex(v => v.id === id);
+    console.log(index);
+    return index !== -1 ? mockRoads[index] : undefined;
 };
-
-export interface RoadDTO {
-    name: string;
-    segments: SegmentDTO[];
-    startingPoint: PointFormDTO;
-    endingPoint: PointFormDTO;
-    length: number;
-    region: string;
-}
-
-/*
-export const addRoad: (r: RoadDTO) => IResponse = (r: RoadDTO) => {
-    //Send request to delete point
-    console.log(`Requested to get networks`);
-    const response: IResponse = {
-        status: 200,
-        statusText: 'OK',
-        data: {},
-    };
-    return response;
-};
-*/
 
 export interface RoadMainData {
     name: string;
-    startingPoint: PointFormDTO;
-    endingPoint: PointFormDTO;
+    startingPoint: string;
+    endingPoint: string;
     length: number;
     region: string;
 }
@@ -126,26 +105,20 @@ export const addRoadByMainData: (r: RoadMainData) => IResponse = (
     console.log(`Requested to get networks`);
 
     //mock
-    roadMock.push({
+    mockRoads.push({
         id: String(roadId++),
         name: r.name,
         segments: [],
-        startingPoint: {
-            id: String(pointId++),
-            ...r.startingPoint,
-        },
-        endingPoint: {
-            id: String(pointId++),
-            ...r.endingPoint,
-        },
+        startingPoint: r.startingPoint,
+        endingPoint: r.endingPoint,
         length: r.length,
-        region: addRegion(r.region),
+        region: getRegionByName(r.region),
     });
 
     const response: IResponse = {
         status: 200,
         statusText: 'OK',
-        data: roadMock[roadMock.length - 1],
+        data: mockRoads[mockRoads.length - 1],
     };
     return response;
 };

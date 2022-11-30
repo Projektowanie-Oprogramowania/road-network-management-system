@@ -46,7 +46,7 @@ export const FormRoad = (props: IForm) => {
                 label="starting point"
                 variant="outlined"
                 type="text"
-                defaultValue={data?.startingPoint.id}
+                defaultValue={data?.startingPoint}
             />
             <TextField
                 id="outlined-basic"
@@ -54,7 +54,7 @@ export const FormRoad = (props: IForm) => {
                 label="ending point"
                 variant="outlined"
                 type="text"
-                defaultValue={data?.endingPoint.id}
+                defaultValue={data?.endingPoint}
             />
             <Button
                 type="submit"
@@ -143,7 +143,7 @@ export const FormRoadSelect = (props: IFormSelect) => {
                         sx={style}
                         id="demo-simple-select"
                         label="Starting Point"
-                        defaultValue={data?.startingPoint.id}
+                        defaultValue={data?.startingPoint}
                     >
                         {points.map(v => (
                             <MenuItem value={v}>{v}</MenuItem>
@@ -154,7 +154,7 @@ export const FormRoadSelect = (props: IFormSelect) => {
                         sx={style}
                         id="demo-simple-select"
                         label="Ending Point"
-                        defaultValue={data?.endingPoint.id}
+                        defaultValue={data?.endingPoint}
                     >
                         {points.map(v => (
                             <MenuItem value={v}>{v}</MenuItem>

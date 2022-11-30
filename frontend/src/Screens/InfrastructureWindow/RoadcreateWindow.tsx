@@ -4,138 +4,114 @@ import { Button, Box, TextField } from '@mui/material';
 import './InfrastructureStyles.css';
 
 import { getRoadById, addRoadByMainData } from './Logic/RoadLogic';
-import { Point, Road } from './Logic/Interfaces';
+import { Node } from './Logic/Interfaces';
 import { useParams, useNavigate } from 'react-router-dom';
-import { FormMainPoint } from './Forms/FormMainPoint';
+import { FormNode } from './Forms/FormNode';
+import { getCities, getPointsByRoad } from './Logic/NodeLogic';
+
+interface ICitiesList {
+    callback: (p: Node) => void;
+    onReturn: () => void;
+}
+
+const CitiesList = (props: ICitiesList) => {
+    const { callback, onReturn } = props;
+    const [_cities, setCities] = useState<Node[]>([]);
+    const [_page, _setPage] = useState(0);
+
+    useEffect(() => {
+        setCities(getCities());
+    }, []);
+
+    return (
+        <>
+            {(_page === 0 && (
+                <>
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: '10px',
+                            width: '100%',
+                            marginBottom: '40px',
+                        }}
+                    >
+                        {_cities.length > 0 ? (
+                            _cities.map(v => (
+                                <Button
+                                    sx={{ width: '100%' }}
+                                    variant="contained"
+                                    onClick={() => callback(v)}
+                                >
+                                    {v.name}
+                                </Button>
+                            ))
+                        ) : (
+                            <div>Brak punktów do wybrania</div>
+                        )}
+                    </Box>
+                    <Button
+                        sx={{ width: '100%' }}
+                        variant="contained"
+                        onClick={() => _setPage(1)}
+                    >
+                        Utwórz nowy punkt
+                    </Button>
+                    <Button
+                        sx={{ width: '100%' }}
+                        variant="contained"
+                        color="error"
+                        onClick={() => onReturn()}
+                    >
+                        Powrót
+                    </Button>
+                </>
+            )) || (
+                <FormNode
+                    onSubmit={(p: Node) => {
+                        callback(p);
+                    }}
+                    onReturn={() => _setPage(0)}
+                    isCity={true}
+                />
+            )}
+        </>
+    );
+};
 
 export const RoadcreateWindow = () => {
-    const { roadId } = useParams();
     const navigate = useNavigate();
-    const [, setRoad] = useState<Road>();
-    const [points, setPoints] = useState<Point[]>([]);
 
     const [name, setName] = useState('');
-    const [startingPoint, setSP] = useState<Point>();
-    const [endingPoint, setEP] = useState<Point>();
+    const [startingPoint, setSP] = useState<Node>();
+    const [endingPoint, setEP] = useState<Node>();
     const [length, setLength] = useState(0);
     const [regionName, setRegion] = useState('');
 
     const [page, setPage] = useState(0);
 
-    //Road Params
-    //id: string;
     const createRoad = () => {
-        //createRoad TODO dodać takie do backendu
-        const response = addRoadByMainData({
-            name: name,
-            startingPoint: {
-                name: startingPoint?.name,
-                x: startingPoint ? startingPoint?.x : 0,
-                y: startingPoint ? startingPoint?.y : 0,
-            },
-            endingPoint: {
-                name: endingPoint?.name,
-                x: endingPoint ? endingPoint?.x : 0,
-                y: endingPoint ? endingPoint?.y : 0,
-            },
-            length: length,
-            region: regionName,
-        });
-        if (response.status === 200) {
-            navigate(`/infrastructure/${response.data.id}`);
-        }
-    };
-
-    const updateData: () => void = async () => {
-        //getRoads
-        if (roadId) {
-            const _r = await getRoadById(roadId);
-            //const _p = await getPoints();
-            if (_r) {
-                setRoad(_r);
-                //setPoints(_p);
+        if (startingPoint && endingPoint) {
+            const response = addRoadByMainData({
+                name: name,
+                startingPoint: startingPoint.name,
+                endingPoint: endingPoint.name,
+                length: length,
+                region: regionName,
+            });
+            if (response.status === 200) {
+                navigate(`/infrastructure/${response.data.id}`);
             }
         }
     };
 
-    useEffect(() => {
-        updateData();
-        // eslint-disable-next-line
-    }, []);
-
-    interface IMPL {
-        onSubmit: (p: Point) => void;
-    }
-
-    const MainPointList = (props: IMPL) => {
-        const [_page, _setPage] = useState(0);
-        const addPoint = (p: Point) => {
-            //add To backend
-            setPoints([...points, p]);
-        };
-
-        return (
-            <>
-                {(_page === 0 && (
-                    <>
-                        <Box
-                            sx={{
-                                display: 'flex',
-                                flexDirection: 'column',
-                                gap: '10px',
-                                width: '100%',
-                                marginBottom: '40px',
-                            }}
-                        >
-                            {points.length > 0 ? (
-                                points.map(v => (
-                                    <Button
-                                        sx={{ width: '100%' }}
-                                        variant="contained"
-                                        onClick={() => props.onSubmit(v)}
-                                    >
-                                        {v.name}
-                                    </Button>
-                                ))
-                            ) : (
-                                <div>Brak punktów do wybrania</div>
-                            )}
-                        </Box>
-                        <Button
-                            sx={{ width: '100%' }}
-                            variant="contained"
-                            onClick={() => _setPage(1)}
-                        >
-                            Utwórz nowy punkt
-                        </Button>
-                        <Button
-                            sx={{ width: '100%' }}
-                            variant="contained"
-                            onClick={() => setPage(0)}
-                        >
-                            Powrót
-                        </Button>
-                    </>
-                )) || (
-                    <>
-                        <Button
-                            sx={{ width: '100%' }}
-                            variant="outlined"
-                            onClick={() => _setPage(0)}
-                        >
-                            Powrót
-                        </Button>
-                        <FormMainPoint
-                            onSubmit={(p: Point) => {
-                                addPoint(p);
-                                props.onSubmit(p);
-                            }}
-                        />
-                    </>
-                )}
-            </>
-        );
+    const onReturn = () => {
+        navigate(-1);
     };
+
+    useEffect(() => {
+        // do nothing
+    }, []);
 
     return (
         <div>
@@ -163,19 +139,21 @@ export const RoadcreateWindow = () => {
                         }}
                     >
                         {(page === 1 && (
-                            <MainPointList
-                                onSubmit={(p: Point) => {
+                            <CitiesList
+                                callback={(p: Node) => {
                                     setSP(p);
                                     setPage(0);
                                 }}
+                                onReturn={() => setPage(0)}
                             />
                         )) ||
                             (page === 2 && (
-                                <MainPointList
-                                    onSubmit={(p: Point) => {
+                                <CitiesList
+                                    callback={(p: Node) => {
                                         setEP(p);
                                         setPage(0);
                                     }}
+                                    onReturn={() => setPage(0)}
                                 />
                             )) || (
                                 <>
@@ -252,6 +230,14 @@ export const RoadcreateWindow = () => {
                                         onClick={createRoad}
                                     >
                                         Zapisz
+                                    </Button>
+                                    <Button
+                                        sx={{ width: '100%' }}
+                                        variant="contained"
+                                        color="error"
+                                        onClick={onReturn}
+                                    >
+                                        Anuluj
                                     </Button>
                                 </>
                             )}

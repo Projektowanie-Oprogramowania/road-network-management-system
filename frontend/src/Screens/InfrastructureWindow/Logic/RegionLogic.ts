@@ -3,7 +3,6 @@ export interface Region {
     name: string;
 }
 
-
 const regions: Region[] = [
     {
         id: '0',
@@ -38,6 +37,15 @@ const regions: Region[] = [
         name: 'Małopolskie',
     },
 ];
+//
+export const getRegionByName = (name: string) => {
+    const r = regions.find(r => r.name === name);
+    if (r) {
+        return r;
+    }
+    return addRegion(name);
+};
+//
 
 export const addRegion: (s: string) => Region = (s: string) => {
     const r = regions.find(r => r.name === s);

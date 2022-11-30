@@ -17,24 +17,20 @@ export const InfrastructureWindow = ({ isAdmin = false }) => {
     const { sendRequest: fetchInfrastructure } = useFetch();
 
     const updateData: () => void = () => {
-        //getRoads
         const handleRespnse = (response: any) => {
             console.log(response);
-        }
-    
-        const fetchInfrastructureRequest = {
-            url: `infrastructure`
-        }
-    
-        fetchInfrastructure(fetchInfrastructureRequest, handleRespnse);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        };
 
+        const fetchInfrastructureRequest = {
+            url: `infrastructure`,
+        };
+
+        fetchInfrastructure(fetchInfrastructureRequest, handleRespnse);
         setRoads(getRoads());
     };
 
     useEffect(() => {
         updateData();
-        // eslint-disable-next-line
     }, []);
 
     return (

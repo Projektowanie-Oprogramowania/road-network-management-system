@@ -1,15 +1,19 @@
 import React from 'react';
-import { Point } from '../Logic/Interfaces';
+import { Node } from '../Logic/Interfaces';
 import { Button, TextField } from '@mui/material';
 import useAlert from '@context/useAlert';
 
+import { addNode, editNode } from '../Logic/NodeLogic';
+
 interface IFormPoint {
-    onSubmit: (p: Point) => void;
+    isCity?: boolean;
+    data?: Node;
+    onSubmit: (p: Node) => void;
+    onReturn: () => void;
 }
 
-export const FormMainPoint = (props: IFormPoint) => {
-    const { onSubmit } = props;
-    //Konteksty
+export const FormNode = (props: IFormPoint) => {
+    const { isCity, data, onSubmit, onReturn } = props;
     const { setAlert } = useAlert();
 
     const handleSubmit: React.FormEventHandler<HTMLFormElement> = async (
@@ -24,11 +28,39 @@ export const FormMainPoint = (props: IFormPoint) => {
         const y: number = Number(
             (e.currentTarget[4] as HTMLInputElement).value,
         );
-        //AddPoint
-        const response = {
-            message: `Utworzono punkt ${name}`,
-            value: { id: name, name: name, x: x, y: y },
+
+        let response: {
+            message: string;
+            value?: Node;
+        } = {
+            message: `Error`,
+            value: undefined,
         };
+
+        if (data) {
+            const node = await editNode({
+                id: data.id,
+                isCity: data.isCity,
+                name: name,
+                x: x,
+                y: y,
+            });
+            response = {
+                message: `Edytowano punkt ${name}`,
+                value: node,
+            };
+        } else {
+            const node = addNode({
+                isCity: isCity === true,
+                name: name,
+                x: x,
+                y: y,
+            });
+            response = {
+                message: `Utworzono punkt ${name}`,
+                value: node,
+            };
+        }
 
         setAlert(response.message);
         if (response.value) {
@@ -54,6 +86,7 @@ export const FormMainPoint = (props: IFormPoint) => {
                 variant="outlined"
                 type="text"
                 autoComplete="off"
+                defaultValue={data?.name}
             />
             <TextField
                 id="outlined-basic"
@@ -62,6 +95,7 @@ export const FormMainPoint = (props: IFormPoint) => {
                 variant="outlined"
                 type="number"
                 autoComplete="off"
+                defaultValue={data?.x}
             />
             <TextField
                 id="outlined-basic"
@@ -70,6 +104,7 @@ export const FormMainPoint = (props: IFormPoint) => {
                 variant="outlined"
                 type="number"
                 autoComplete="off"
+                defaultValue={data?.y}
             />
             <Button
                 type="submit"
@@ -77,7 +112,15 @@ export const FormMainPoint = (props: IFormPoint) => {
                 variant="contained"
                 color="primary"
             >
-                Dodaj
+                {data ? 'Zapisz' : 'Dodaj'}
+            </Button>
+            <Button
+                value="Submit"
+                variant="contained"
+                color="error"
+                onClick={onReturn}
+            >
+                Anuluj
             </Button>
         </form>
     );
