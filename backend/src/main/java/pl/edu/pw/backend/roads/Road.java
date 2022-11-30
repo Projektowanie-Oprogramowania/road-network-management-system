@@ -48,6 +48,6 @@ public class Road {
     private double length;
 
     @ManyToOne
-    @Cascade(org.hibernate.annotations.CascadeType.ALL)
+    @Cascade(CascadeType.SAVE_UPDATE)
     private Region region;
 }

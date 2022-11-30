@@ -22,6 +22,7 @@ public class RoadService {
     @Transactional
     RoadDTO addRoad(AddRoad addRoad) {
         Road road = RoadMapper.map(addRoad, (List<Segment>) segmentRepository.findAllById(addRoad.segments));
+        regionRepository.saveAndFlush(road.getRegion());
         return RoadMapper.map(roadRepository.save(road));
     }
 
