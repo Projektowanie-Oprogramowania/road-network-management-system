@@ -9,6 +9,7 @@ import { NavigateWindow } from '../Screens/NavigationWindow/NavigationWindow';
 
 import { HomeMenu } from './HomeMenu';
 import { navList } from './navList';
+import TariffWindow from 'Screens/TariffWindow/TariffWindow';
 
 const Layout = () => (
     <>
@@ -38,6 +39,10 @@ export const MenuWindow = () => (
                 <Route
                     path="infrastructure/new"
                     element={<RoadcreateWindow />}
+                />
+                <Route
+                    path="tariff"
+                    element={<TariffWindow />}
                 />
             </Route>
         </Routes>
