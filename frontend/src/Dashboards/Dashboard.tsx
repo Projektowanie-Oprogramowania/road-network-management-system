@@ -10,8 +10,8 @@ import { NavigateWindow } from '../Screens/NavigationWindow/NavigationWindow';
 import { HomeMenu } from './HomeMenu';
 import { navList } from './navList';
 import TariffWindow from 'Screens/TariffWindow/TariffWindow';
-import { FeesWindow } from 'Screens/FeesWindow/FeesWindow';
 import { FeesWindowItem } from 'Screens/FeesWindow/FeesWindowItem';
+import FeesWindow from 'Screens/FeesWindow/FeesWindow';
 
 const Layout = () => (
     <>
