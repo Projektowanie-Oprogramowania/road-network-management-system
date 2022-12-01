@@ -94,7 +94,7 @@ export const InfrastructureWindowMapEdit = () => {
     };
 
     const onClickLink = (source: string, target: string) => {
-        setAlert(`Droga do edycji ${source}-${target}`);
+        //setAlert(`Droga do edycji ${source}-${target}`);
         const s = road?.segments.find(v => {
             let sf =
                 v.startingPoint.id === source || v.endingPoint.id === source;
@@ -148,6 +148,7 @@ export const InfrastructureWindowMapEdit = () => {
             setSegments([...segments, s]);
         }
         setEditPage(0);
+        setEditPage(2);
     };
 
     const handleSubmit = async () => {
