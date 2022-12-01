@@ -2,6 +2,7 @@ import { Graph } from 'react-d3-graph';
 import { Node, Point, Road, Segment } from './Logic/Interfaces';
 
 const mapConfig = {
+    staticGraph: true,
     nodeHighlightBehavior: true,
     width: 1500,
     height: 800,
@@ -14,35 +15,6 @@ const mapConfig = {
         highlightColor: 'lightblue',
     },
 };
-
-/*
-const mapConfig = {
-    automaticRearrangeAfterDropNode: false,
-    collapsible: false,
-    directed: false,
-    focusAnimationDuration: 0.75,
-    focusZoom: 1,
-    freezeAllDragEvents: false,
-    height: 400,
-    highlightDegree: 1,
-    highlightOpacity: 0.2,
-    linkHighlightBehavior: true,
-    maxZoom: 8,
-    minZoom: 0.1,
-    nodeHighlightBehavior: true,
-    panAndZoom: false,
-    staticGraph: false,
-    staticGraphWithDragAndDrop: false,
-    width: 800,
-    d3: {
-        alphaTarget: 0.05,
-        gravity: -400,
-        linkLength: 300,
-        linkStrength: 1,
-        disableLinkForce: false,
-    },
-};
-*/
 
 const cityStyle = {
     color: 'red',
@@ -57,7 +29,6 @@ const nodeStyle = {
 const pointStyle = {
     color: 'black',
     size: 50,
-    renderLabel: false,
 };
 
 export const mapPointsAndRoads = (p: Point[], r: Road[]) => ({
@@ -289,6 +260,27 @@ export const appendSegments = (
     return {
         nodes: data.nodes,
         links: links,
+    };
+};
+
+export const addRestOfPoints = (data: IMapData, points: Point[]) => {
+    const nodes = data.nodes;
+    const links = data.links;
+    for (const point of points) {
+        if (nodes.findIndex(v => v.id === point.id) === -1) {
+            console.log(point.x);
+            console.log(point.y);
+            nodes.push({
+                id: point.id,
+                x: point.x,
+                y: point.y,
+                ...pointStyle,
+            });
+        }
+    }
+    return {
+        nodes: nodes,
+        links: data.links,
     };
 };
 

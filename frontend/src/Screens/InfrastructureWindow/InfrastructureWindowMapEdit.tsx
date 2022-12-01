@@ -1,47 +1,95 @@
 import { useEffect, useState } from 'react';
 
-import { Box } from '@mui/material';
+import { Box, Button, Paper } from '@mui/material';
 import './InfrastructureStyles.css';
 
-import { getRoadById } from './Logic/RoadLogic';
-import { Road, Segment } from './Logic/Interfaces';
-import { useParams } from 'react-router-dom';
-import { Graph } from 'react-d3-graph';
-import { mapConfig, mapFromRoadData } from './Map';
+import { editRoad, getRoadById } from './Logic/RoadLogic';
+import { Point, Road, Segment } from './Logic/Interfaces';
+import { useNavigate, useParams } from 'react-router-dom';
+import {
+    Graph,
+    mapConfig,
+    IMapData,
+    appendCities,
+    appendSegments,
+    addNodesFromSegments,
+    addRestOfPoints,
+} from './Map';
 import useAlert from '@context/useAlert';
+
+import { FormSegment } from './Forms/FormSegment';
+import { getCities, getPointsByRoad, Node } from './Logic/NodeLogic';
+import { FormPoint } from './Forms/FormPoint';
+import { FormNode } from './Forms/FormNode';
 
 export const InfrastructureWindowMapEdit = () => {
     const { roadId } = useParams();
     const { setAlert } = useAlert();
 
+    const navigate = useNavigate();
+
     const [road, setRoad] = useState<Road>();
-    //edycja według segmentu
-    const [, setSegment] = useState<Segment>();
+    const [cities, setCities] = useState<Node[]>([]);
+    const [segments, setSegments] = useState<Segment[]>([]);
+    const [points, setPoints] = useState<Point[]>([]);
+
+    //edycja segmentu
+    const [segment, setSegment] = useState<Segment>();
+    //edycja punktu
+    const [point, setPoint] = useState<Point>();
+
     const [mapData, setMapData] = useState<any>({
         nodes: [],
         links: [],
     });
 
+    const [editPage, setEditPage] = useState(0);
+
     const updateData: () => void = async () => {
-        //getRoads
         if (roadId) {
-            const _r = await getRoadById(roadId);
+            const _r: Road | undefined = await getRoadById(roadId);
             if (_r) {
+                const _p = await getPointsByRoad(roadId);
                 setRoad(_r);
+                setSegments(_r['segments']);
+                setPoints(_p);
             }
+        }
+        await updateCities();
+    };
+
+    const updateCities: (c?: Node) => Promise<void> = async (c?: Node) => {
+        const _c = await getCities();
+        setCities(_c);
+    };
+
+    const updateMapData = () => {
+        if (road) {
+            let newData: IMapData = {
+                nodes: [],
+                links: [],
+            };
+            newData = appendCities(newData, cities);
+            newData = addNodesFromSegments(newData, segments, cities);
+            newData = appendSegments(newData, segments);
+            newData = addRestOfPoints(newData, points);
+            setMapData(newData);
         }
     };
 
     const onClickNode = (nodeId: string) => {
-        setAlert(`Punkt do edycji ${nodeId}`);
-        const s = road?.segments.find(
-            v =>
-                v.endingPoint.id === nodeId ||
-                v.startingPoint.id === nodeId ||
-                v.points.find(p => p.id === nodeId),
-        );
-        if (s) {
-            setSegment(s);
+        let index: number = points.findIndex(v => v.id === nodeId);
+        if (index !== -1) {
+            setPoint(points[index]);
+            setEditPage(3);
+        } else {
+            index = cities.findIndex(v => v.name === nodeId);
+            if (index !== -1) {
+                setPoint(cities[index]);
+                setEditPage(4);
+            } else {
+                setAlert(`Błąd punkt ${nodeId} nie istnieje w bazie`);
+            }
         }
     };
 
@@ -63,14 +111,61 @@ export const InfrastructureWindowMapEdit = () => {
         }
     };
 
-    useEffect(() => {
-        if (road) setMapData(mapFromRoadData(road));
-    }, [road]);
+    const onClickGraph = function (event: any) {
+        console.log(event.nativeEvent.srcElement);
+        console.log(event.nativeEvent.srcElement);
+    };
 
     useEffect(() => {
         updateData();
-        // eslint-disable-next-line
     }, []);
+
+    useEffect(() => {
+        updateMapData();
+    }, [road, points, segments]);
+
+    const onCreateNode = (p: Point) => {
+        setPoints([...points, p]);
+        setEditPage(0);
+    };
+
+    const onUpdateNode = (p: Point) => {
+        const index = points.findIndex(v => v.id === p.id);
+        if (index !== -1) {
+            const c = [...points];
+            c[index] = p;
+            setPoints(c);
+        }
+    };
+
+    const handleSegmentUpdate = (s: Segment) => {
+        const index: number = segments.findIndex(v => v.id === s.id);
+        if (index !== -1) {
+            const _s = [...segments];
+            _s[index] = s;
+            setSegments(_s);
+        } else {
+            setSegments([...segments, s]);
+        }
+        setEditPage(0);
+    };
+
+    const handleSubmit = async () => {
+        if (road) {
+            const res = await editRoad({
+                ...road,
+                segments: segments,
+            });
+            if (res) {
+                setAlert(`Zaktualizowano droge id: ${res.id}`);
+                navigate(`/infrastructure/${res.id}`);
+                return;
+            }
+        }
+        setAlert(`Wystapil blad`);
+    };
+
+    const onReturn = () => navigate(-1);
 
     return (
         <div>
@@ -84,17 +179,120 @@ export const InfrastructureWindowMapEdit = () => {
                 }}
             >
                 <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                    <div>{`Id sieci do edycji ${roadId}`}</div>
-                    {road && (
+                    {(road && (
                         <Graph
                             id="graph-id" // id is mandatory
                             data={mapData}
                             config={mapConfig}
                             onClickNode={onClickNode}
                             onClickLink={onClickLink}
+                            onClickGraph={onClickGraph}
                         />
+                    )) || (
+                        <Box
+                            sx={{
+                                width: 1500,
+                                height: 800,
+                                display: 'flex',
+                                bgcolor: 'gray',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                            }}
+                        >
+                            Brak sieci o id: {roadId}
+                        </Box>
                     )}
                 </Box>
+                <Paper
+                    sx={{
+                        height: 800,
+                        width: '100%',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        gap: '5px',
+                        margin: '10px',
+                    }}
+                    elevation={10}
+                >
+                    {editPage || (
+                        <>
+                            <div>EDYCJA</div>
+                            {segment && <Box>Edycja segmentu</Box>}
+                            {point && <Box>Edycja punktu</Box>}
+                            <Button
+                                type="submit"
+                                value="Submit"
+                                variant="contained"
+                                color="primary"
+                                onClick={() => setEditPage(1)}
+                            >
+                                Dodaj wezel
+                            </Button>
+                            <Button
+                                type="submit"
+                                value="Submit"
+                                variant="contained"
+                                color="primary"
+                                onClick={() => setEditPage(2)}
+                            >
+                                Dodaj odcinek
+                            </Button>
+                            <Button
+                                type="submit"
+                                value="Submit"
+                                variant="contained"
+                                color="primary"
+                                onClick={handleSubmit}
+                            >
+                                Zapisz
+                            </Button>
+                            <Button
+                                type="submit"
+                                value="Submit"
+                                variant="contained"
+                                color="error"
+                                onClick={onReturn}
+                            >
+                                Anuluj
+                            </Button>
+                        </>
+                    )}
+                    {editPage === 1 && (
+                        <FormPoint
+                            callback={onCreateNode}
+                            onReturn={() => setEditPage(0)}
+                        />
+                    )}
+                    {editPage === 2 && roadId && (
+                        <FormSegment
+                            roadPoints={points}
+                            onReturn={() => setEditPage(0)}
+                            callback={handleSegmentUpdate}
+                            data={segment ? segment : undefined}
+                        />
+                    )}
+                    {editPage === 3 && (
+                        <FormPoint
+                            data={point}
+                            callback={onUpdateNode}
+                            onReturn={() => setEditPage(0)}
+                        />
+                    )}
+                    {editPage === 4 && point && (
+                        <FormNode
+                            data={{
+                                id: point.id,
+                                name: point.id,
+                                isCity: true,
+                                x: point.x,
+                                y: point.y,
+                            }}
+                            onSubmit={updateCities}
+                            onReturn={() => setEditPage(0)}
+                        />
+                    )}
+                </Paper>
             </div>
         </div>
     );

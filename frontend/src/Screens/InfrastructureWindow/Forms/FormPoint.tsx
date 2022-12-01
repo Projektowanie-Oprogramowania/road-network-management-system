@@ -6,7 +6,7 @@ import { addPoint, editPoint, removePoint } from '../Logic/NodeLogic';
 
 interface IFormPoint {
     data?: Point;
-    callback?: (id: string) => void;
+    callback?: (id: Point) => void;
     onReturn: () => void;
 }
 
@@ -18,10 +18,10 @@ export const FormPoint = (props: IFormPoint) => {
         e.preventDefault();
 
         const x: number = Number(
-            (e.currentTarget[1] as HTMLInputElement).value,
+            (e.currentTarget[0] as HTMLInputElement).value,
         );
         const y: number = Number(
-            (e.currentTarget[3] as HTMLInputElement).value,
+            (e.currentTarget[2] as HTMLInputElement).value,
         );
 
         if (data) {
@@ -32,7 +32,7 @@ export const FormPoint = (props: IFormPoint) => {
             });
             setAlert(`edytowano punkt ${data.id}`);
             if (callback) {
-                callback(p.id);
+                callback(p);
             }
         } else {
             const p = await addPoint({
@@ -41,7 +41,7 @@ export const FormPoint = (props: IFormPoint) => {
             });
             setAlert(`dodano punkt ${p.id}`);
             if (callback) {
-                callback(p.id);
+                callback(p);
             }
         }
     };

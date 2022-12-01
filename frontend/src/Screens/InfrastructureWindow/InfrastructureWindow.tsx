@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { Button, Box } from '@mui/material';
 import './InfrastructureStyles.css';
 
-import { getRoads } from './Logic/RoadLogic';
+import { deleteRoad, getRoads } from './Logic/RoadLogic';
 import { Road } from './Logic/Interfaces';
 import { Link, useNavigate } from 'react-router-dom';
 
@@ -28,6 +28,11 @@ export const InfrastructureWindow = ({ isAdmin = false }) => {
         fetchInfrastructure(fetchInfrastructureRequest, handleRespnse);
         const r = await getRoads();
         setRoads(r);
+    };
+
+    const handleDelete = async (id: string) => {
+        await deleteRoad(id);
+        updateData();
     };
 
     useEffect(() => {
@@ -79,9 +84,7 @@ export const InfrastructureWindow = ({ isAdmin = false }) => {
                                         sx={{ width: '20px' }}
                                         variant="contained"
                                         color="error"
-                                        onClick={() =>
-                                            alert('usuwanie nie dodane dodac')
-                                        }
+                                        onClick={() => handleDelete(v.id)}
                                     >
                                         <DeleteOutlineOutlinedIcon />
                                     </Button>

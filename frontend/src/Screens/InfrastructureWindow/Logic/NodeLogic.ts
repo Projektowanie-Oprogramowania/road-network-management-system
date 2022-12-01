@@ -56,6 +56,7 @@ export const addNode: (n: NodeFormDTO) => Promise<Node> = async (
 
 export const editNode: (node: Node) => Promise<Node> = async (node: Node) => {
     let n: Node = node;
+    console.log(JSON.stringify(node));
     await fetch(`${apiUrl}/node`, {
         method: 'PUT',
         headers: {

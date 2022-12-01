@@ -77,6 +77,44 @@ export const addRoad: (data: RoadFormDTO) => Promise<Road | undefined> = async (
     return _r;
 };
 
+export const editRoad: (data: Road) => Promise<Road | undefined> = async (
+    data: Road,
+) => {
+    let road = {
+        endingPoint: data.endingPoint,
+        length: data.length,
+        name: data.name,
+        region: data.region,
+        segments: data.segments.map(v => v.id),
+        startingPoint: data.startingPoint,
+    };
+    let _r: Road | undefined = undefined;
+    await fetch(`${apiUrl}/road`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(road),
+    })
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            }
+        })
+        .then(r => {
+            _r = {
+                id: r.id,
+                name: r.name,
+                segments: r.segments,
+                startingPoint: r.startingPoint.id,
+                endingPoint: r.endingPoint.id,
+                length: r.length,
+                region: r.region,
+            };
+        });
+    return _r;
+};
+
 export const getRoads: () => Promise<Road[]> = async () => {
     let roads: Road[] = [];
     await fetch(`${apiUrl}/road`)
@@ -115,29 +153,17 @@ export interface RoadMainData {
     region: string;
 }
 
-/*
-export const addRoadByMainData: (r: RoadMainData) => IResponse = (
-    r: RoadMainData,
-) => {
-    //Send request to delete point
-    console.log(`Requested to get networks`);
-
-    //mock
-    mockRoads.push({
-        id: String(roadId++),
-        name: r.name,
-        segments: [],
-        startingPoint: r.startingPoint,
-        endingPoint: r.endingPoint,
-        length: r.length,
-        region: getRegionByName(r.region),
+export const deleteRoad: (id: string) => Promise<void> = async (id: string) => {
+    await fetch(`${apiUrl}/road/${id}`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    }).then(response => {
+        if (response.ok) {
+            return;
+        } else {
+            console.log('blad usuwania');
+        }
     });
-
-    const response: IResponse = {
-        status: 200,
-        statusText: 'OK',
-        data: mockRoads[mockRoads.length - 1],
-    };
-    return response;
 };
-*/

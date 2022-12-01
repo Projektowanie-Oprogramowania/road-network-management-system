@@ -9,23 +9,13 @@ import { useParams } from 'react-router-dom';
 import {
     Graph,
     mapConfig,
-    mapFromRoadData,
     IMapData,
     appendCities,
-    appendNodes,
-    appendPoints,
     appendSegments,
     addNodesFromSegments,
 } from './Map';
 import useAlert from '@context/useAlert';
-import useFetch from 'use-fetch';
-import {
-    getCities,
-    getNodes,
-    getNodesByRoad,
-    getPoints,
-    getPointsByRoad,
-} from './Logic/NodeLogic';
+import { getCities, getPointsByRoad } from './Logic/NodeLogic';
 
 export const InfrastructureWindowMap = () => {
     const { roadId } = useParams();
@@ -33,21 +23,18 @@ export const InfrastructureWindowMap = () => {
     const [road, setRoad] = useState<Road>();
     const [mapData, setMapData] = useState<IMapData>();
     const [cities, setCities] = useState<Node[]>([]);
-    //const [nodes, setNodes] = useState<Node[]>([]);
     const [points, setPoints] = useState<Point[]>([]);
     const [segments, setSegments] = useState<Segment[]>([]);
+    //infrastruktura ig????
 
     const updateData: () => void = async () => {
-        //getRoads
         if (roadId) {
             const _r: Road | undefined = await getRoadById(roadId);
             if (_r) {
                 const _p = await getPointsByRoad(roadId);
-                //const _n = await getNodesByRoad(roadId);
                 setRoad(_r);
                 setSegments(_r['segments']);
                 setPoints(_p);
-                //setNodes(_n.filter(v => !v.isCity));
             }
         }
         const _c = await getCities();
@@ -60,12 +47,9 @@ export const InfrastructureWindowMap = () => {
                 nodes: [],
                 links: [],
             };
-            //newData = mapFromRoadData(road);
             newData = appendCities(newData, cities);
-            //newData = appendNodes(newData, nodes);
             newData = addNodesFromSegments(newData, segments, cities);
             newData = appendSegments(newData, segments);
-            //newData = appendPoints(newData, points);
             setMapData(newData);
         }
     };
@@ -78,20 +62,7 @@ export const InfrastructureWindowMap = () => {
         setAlert(`Droga ${source}-${target}`);
     };
 
-    const { sendRequest: fetchInfrastructure } = useFetch();
-
     useEffect(() => {
-        /*const handleRespnse = (response: any) => {
-            console.log(response);
-        };
-
-        const fetchInfrastructureRequest = {
-            url: `road/region/${parseInt(roadId!) - 1}`,
-        };
-
-        fetchInfrastructure(fetchInfrastructureRequest, handleRespnse);
-        */
-        console.log('up');
         updateData();
     }, []);
 
