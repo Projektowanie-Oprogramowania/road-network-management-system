@@ -4,7 +4,7 @@ const useFetch = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
 
-    const REST_PATH = 'http://localhost:3100/'
+    const REST_PATH = 'http://localhost:8080/'
 
     const sendRequest = useCallback(async (request, applyData) => {
         setIsLoading(true);
