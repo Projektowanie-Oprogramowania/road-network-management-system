@@ -14,5 +14,5 @@ public class AddSegmentDTO {
     List<Long> pointsIds;
     Long startingPointId;
     Long endingPointId;
-    BigDecimal price;
+    Long tariffId;
 }

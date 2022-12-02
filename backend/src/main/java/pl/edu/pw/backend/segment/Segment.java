@@ -22,7 +22,7 @@ public class Segment {
     @Id
     private int id;
 
-    @OneToMany
+    @ManyToMany
     @Cascade(CascadeType.MERGE)
     private List<Point> points;
 
@@ -38,10 +38,10 @@ public class Segment {
     @JoinColumn(name = "tariff_id")
     private Tariff tariff;
 
-    public Segment(List<Point> points, Point startingPoint, Point endingPoint, BigDecimal price) {
+    public Segment(List<Point> points, Point startingPoint, Point endingPoint, Tariff tariff) {
         this.points = points;
         this.startingPoint = startingPoint;
         this.endingPoint = endingPoint;
-        this.price = price;
+        this.tariff = tariff;
     }
 }

@@ -27,7 +27,7 @@ public class TariffService {
         return tariffRepository.save(tariff);
     }
 
-    Tariff getTariff(Long id) {
+    public Tariff getTariff(Long id) {
         return tariffRepository.findById(id).orElseThrow();
     }
 
