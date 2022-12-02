@@ -7,7 +7,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-class TariffService {
+public class TariffService {
 
     private final TariffRepository tariffRepository;
 
