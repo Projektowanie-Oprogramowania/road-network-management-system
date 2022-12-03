@@ -22,7 +22,8 @@ public class RoadService {
     @Transactional
     RoadDTO addRoad(AddRoad addRoad) {
         Road road = RoadMapper.map(addRoad, (List<Segment>) segmentRepository.findAllById(addRoad.segments));
-        regionRepository.saveAndFlush(road.getRegion());
+        Region region = regionRepository.saveAndFlush(regionRepository.findById(addRoad.getRegion().getId()).orElseThrow());
+        road.setRegion(region);
         return RoadMapper.map(roadRepository.save(road));
     }
 
@@ -32,7 +33,8 @@ public class RoadService {
         road.setName(roadDTO.name);
         road.setEndingPoint(PointMapper.map(roadDTO.endingPoint));
         road.setLength(roadDTO.length);
-        road.setRegion(RegionMapper.map(roadDTO.region));
+        Region region = regionRepository.saveAndFlush(regionRepository.findById(roadDTO.getRegion().getId()).orElseThrow());
+        road.setRegion(region);
         road.getSegments().clear();
         road.getSegments().addAll((Collection<Segment>) segmentRepository.findAllById(roadDTO.segments));
         road.setStartingPoint(PointMapper.map(roadDTO.startingPoint));
