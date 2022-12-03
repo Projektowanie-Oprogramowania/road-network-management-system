@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import static org.springframework.http.HttpStatus.CREATED;
@@ -50,5 +51,16 @@ public class PointController {
     @GetMapping("/{id}")
     PointDTO getPoint(@PathVariable Long id) {
         return pointService.getPoint(id);
+    }
+
+    @GetMapping("/cities")
+    public ResponseEntity<List<PointDTO>> getPointsByCities() {
+        List<PointDTO> pointList = pointService.getPointList().stream().map(
+                PointDTO::fromPoint).collect(Collectors.toList());
+
+        Predicate<PointDTO> byCity = point -> point.getName() != "" && point.getName() != null;
+        List<PointDTO> filteredList = pointList.stream().filter(byCity).collect(Collectors.toList());
+
+        return ResponseEntity.ok(filteredList);
     }
 }

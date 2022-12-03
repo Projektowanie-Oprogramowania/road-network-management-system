@@ -20,8 +20,11 @@ public class Point {
     private double x;
     private double y;
 
-    public Point(double x, double y) {
+    private String name;
+
+    public Point(double x, double y, String name) {
         this.x = x;
         this.y = y;
+        this.name = name;
     }
 }

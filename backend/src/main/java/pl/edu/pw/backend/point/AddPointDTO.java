@@ -11,11 +11,13 @@ public class AddPointDTO {
     double x;
     double y;
 
+    String name;
+
     public Point toPoint() {
-        return new Point(x, y);
+        return new Point(x, y, name);
     }
 
     public static PointDTO fromPoint(Point point) {
-        return new PointDTO(point.getId(), point.getX(), point.getY());
+        return new PointDTO(point.getId(), point.getX(), point.getY(), point.getName());
     }
 }
