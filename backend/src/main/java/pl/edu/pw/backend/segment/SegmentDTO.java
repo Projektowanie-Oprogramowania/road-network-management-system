@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import pl.edu.pw.backend.point.PointDTO;
+import pl.edu.pw.backend.tariff.TariffDTO;
 
 @Data
 @AllArgsConstructor
@@ -16,5 +17,5 @@ public class SegmentDTO {
     List<PointDTO> points;
     PointDTO startingPoint;
     PointDTO endingPoint;
-    BigDecimal price;
+    TariffDTO tariffDTO;
 }

@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 import pl.edu.pw.backend.point.Point;
+import pl.edu.pw.backend.tariff.Tariff;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -21,7 +22,7 @@ public class Segment {
     @Id
     private int id;
 
-    @OneToMany
+    @ManyToMany
     @Cascade(CascadeType.MERGE)
     private List<Point> points;
 
@@ -32,12 +33,15 @@ public class Segment {
     @ManyToOne
     @Cascade(CascadeType.MERGE)
     private Point endingPoint;
-    private BigDecimal price;
 
-    public Segment(List<Point> points, Point startingPoint, Point endingPoint, BigDecimal price) {
+    @ManyToOne
+    @JoinColumn(name = "tariff_id")
+    private Tariff tariff;
+
+    public Segment(List<Point> points, Point startingPoint, Point endingPoint, Tariff tariff) {
         this.points = points;
         this.startingPoint = startingPoint;
         this.endingPoint = endingPoint;
-        this.price = price;
+        this.tariff = tariff;
     }
 }

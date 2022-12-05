@@ -12,4 +12,8 @@ public class TariffMapper {
     public static Tariff map(AddTariffDTO tariffDTO) {
         return new Tariff(new Date(System.currentTimeMillis()), tariffDTO.name, tariffDTO.pricesPerKilometer);
     }
+
+    public static Tariff map(TariffDTO tariffDTO) {
+        return new Tariff(new Date(System.currentTimeMillis()), tariffDTO.name, tariffDTO.pricesPerKilometer);
+    }
 }

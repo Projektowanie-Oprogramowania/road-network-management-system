@@ -7,7 +7,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-class TariffService {
+public class TariffService {
 
     private final TariffRepository tariffRepository;
 
@@ -27,7 +27,7 @@ class TariffService {
         return tariffRepository.save(tariff);
     }
 
-    Tariff getTariff(Long id) {
+    public Tariff getTariff(Long id) {
         return tariffRepository.findById(id).orElseThrow();
     }
 

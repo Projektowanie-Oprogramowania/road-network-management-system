@@ -5,6 +5,7 @@ import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import pl.edu.pw.backend.tariff.Tariff;
 
 @Data
 @AllArgsConstructor
@@ -15,5 +16,5 @@ public class UpdateSegmentDTO {
     List<Long> pointsIds;
     Long startingPointId;
     Long endingPointId;
-    BigDecimal price;
+    Long tariffId;
 }

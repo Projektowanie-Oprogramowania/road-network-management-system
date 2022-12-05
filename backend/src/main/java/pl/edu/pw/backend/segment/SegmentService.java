@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.edu.pw.backend.point.Point;
 import pl.edu.pw.backend.point.PointService;
+import pl.edu.pw.backend.tariff.TariffService;
+import pl.edu.pw.backend.tariff.Tariff;
 
 @Service
 class SegmentService {
@@ -16,6 +18,9 @@ class SegmentService {
     @Autowired
     private PointService pointService;
 
+    @Autowired
+    private TariffService tariffService;
+
     Segment addSegment(AddSegmentDTO addSegmentDTO) {
         List<Point> points = addSegmentDTO.getPointsIds().stream()
             .map(pointId -> pointService.getPoint(pointId).toFullPoint())
@@ -23,7 +28,8 @@ class SegmentService {
         Point startingPoint = pointService.getPoint(addSegmentDTO.getStartingPointId())
             .toFullPoint();
         Point endingPoint = pointService.getPoint(addSegmentDTO.getEndingPointId()).toFullPoint();
-        Segment segment = new Segment(points, startingPoint, endingPoint, addSegmentDTO.getPrice());
+        Tariff tariff = tariffService.getTariff(addSegmentDTO.getTariffId());
+        Segment segment = new Segment(points, startingPoint, endingPoint, tariff);
         return segmentRepository.save(segment);
     }
 
@@ -35,7 +41,7 @@ class SegmentService {
         seg.setStartingPoint(
             pointService.getPoint(addSegmentDTO.getStartingPointId()).toFullPoint());
         seg.setEndingPoint(pointService.getPoint(addSegmentDTO.getEndingPointId()).toFullPoint());
-        seg.setPrice(addSegmentDTO.getPrice());
+        seg.setTariff(tariffService.getTariff(addSegmentDTO.getTariffId()));
         return segmentRepository.save(seg);
     }
 
