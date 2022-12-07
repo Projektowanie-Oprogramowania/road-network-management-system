@@ -18,7 +18,7 @@ import {
 import useAlert from '@context/useAlert';
 
 import { FormSegment } from './Forms/FormSegment';
-import { getCities, getPointsByRoad, Node } from './Logic/NodeLogic';
+import { getCities, getPointsByRoad } from './Logic/PointLogic';
 import { FormPoint } from './Forms/FormPoint';
 import { FormNode } from './Forms/FormNode';
 
@@ -29,7 +29,7 @@ export const InfrastructureWindowMapEdit = () => {
     const navigate = useNavigate();
 
     const [road, setRoad] = useState<Road>();
-    const [cities, setCities] = useState<Node[]>([]);
+    const [cities, setCities] = useState<Point[]>([]);
     const [segments, setSegments] = useState<Segment[]>([]);
     const [points, setPoints] = useState<Point[]>([]);
 
@@ -58,7 +58,7 @@ export const InfrastructureWindowMapEdit = () => {
         await updateCities();
     };
 
-    const updateCities: (c?: Node) => Promise<void> = async (c?: Node) => {
+    const updateCities: (c?: Point) => Promise<void> = async (c?: Point) => {
         const _c = await getCities();
         setCities(_c);
     };
@@ -285,7 +285,6 @@ export const InfrastructureWindowMapEdit = () => {
                             data={{
                                 id: point.id,
                                 name: point.id,
-                                isCity: true,
                                 x: point.x,
                                 y: point.y,
                             }}

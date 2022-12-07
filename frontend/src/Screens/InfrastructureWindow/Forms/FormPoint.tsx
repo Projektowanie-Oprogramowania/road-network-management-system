@@ -2,7 +2,7 @@ import React from 'react';
 import { Point } from '../Logic/Interfaces';
 import { Button, TextField } from '@mui/material';
 import useAlert from '@context/useAlert';
-import { addPoint, editPoint, removePoint } from '../Logic/NodeLogic';
+import { addPoint, editPoint, removePoint } from '../Logic/PointLogic';
 
 interface IFormPoint {
     data?: Point;

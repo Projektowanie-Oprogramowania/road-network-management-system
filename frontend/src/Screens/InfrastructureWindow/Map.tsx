@@ -1,5 +1,5 @@
 import { Graph } from 'react-d3-graph';
-import { Node, Point, Road, Segment } from './Logic/Interfaces';
+import { Point, Road, Segment } from './Logic/Interfaces';
 
 const mapConfig = {
     staticGraph: true,
@@ -75,13 +75,13 @@ export interface IMapData {
     }>;
 }
 
-export const appendCities = (data: IMapData, cities: Node[]): IMapData => {
+export const appendCities = (data: IMapData, cities: Point[]): IMapData => {
     const nodes = data.nodes;
     for (const city of cities) {
         if (nodes.findIndex(v => v.id === city.id) === -1) {
             nodes.push({
                 index: city.name,
-                id: city.name,
+                id: city.name ? city.name : city.id,
                 x: city.x,
                 y: city.y,
                 ...cityStyle,
@@ -94,13 +94,13 @@ export const appendCities = (data: IMapData, cities: Node[]): IMapData => {
     };
 };
 
-export const appendNodes = (data: IMapData, nodesTable: Node[]): IMapData => {
+export const appendNodes = (data: IMapData, nodesTable: Point[]): IMapData => {
     const nodes = data.nodes;
     for (const node of nodesTable) {
         if (nodes.findIndex(v => v.id === node.id) === -1) {
             nodes.push({
                 index: node.name,
-                id: node.name,
+                id: node.name ? node.name : node.id,
                 x: node.x,
                 y: node.y,
                 ...nodeStyle,
@@ -134,7 +134,7 @@ export const appendPoints = (data: IMapData, cities: Point[]): IMapData => {
 export const addNodesFromSegments = (
     data: IMapData,
     segments: Segment[],
-    cities: Node[],
+    cities: Point[],
 ): IMapData => {
     const nodes = data.nodes;
     const links = data.links;

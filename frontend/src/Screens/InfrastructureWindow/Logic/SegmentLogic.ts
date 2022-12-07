@@ -1,5 +1,5 @@
 import { apiUrl } from 'shared/settings';
-import { Point } from './NodeLogic';
+import { Point } from './PointLogic';
 
 //pojedyncza droga na mapie
 export interface Segment {

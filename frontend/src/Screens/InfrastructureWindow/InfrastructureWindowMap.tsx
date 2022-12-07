@@ -4,7 +4,7 @@ import { Box } from '@mui/material';
 import './InfrastructureStyles.css';
 
 import { getRoadById } from './Logic/RoadLogic';
-import { Node, Point, Road, Segment } from './Logic/Interfaces';
+import { Point, Road, Segment } from './Logic/Interfaces';
 import { useParams } from 'react-router-dom';
 import {
     Graph,
@@ -15,14 +15,14 @@ import {
     addNodesFromSegments,
 } from './Map';
 import useAlert from '@context/useAlert';
-import { getCities, getPointsByRoad } from './Logic/NodeLogic';
+import { getCities, getPointsByRoad } from './Logic/PointLogic';
 
 export const InfrastructureWindowMap = () => {
     const { roadId } = useParams();
     const { setAlert } = useAlert();
     const [road, setRoad] = useState<Road>();
     const [mapData, setMapData] = useState<IMapData>();
-    const [cities, setCities] = useState<Node[]>([]);
+    const [cities, setCities] = useState<Point[]>([]);
     const [points, setPoints] = useState<Point[]>([]);
     const [segments, setSegments] = useState<Segment[]>([]);
     //infrastruktura ig????

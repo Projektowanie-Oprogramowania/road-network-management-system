@@ -4,20 +4,20 @@ import { Button, Box, TextField } from '@mui/material';
 import './InfrastructureStyles.css';
 
 import { getRoadById, addRoad } from './Logic/RoadLogic';
-import { Node, Region } from './Logic/Interfaces';
+import { Point, Region } from './Logic/Interfaces';
 import { useParams, useNavigate } from 'react-router-dom';
 import { FormNode } from './Forms/FormNode';
-import { getCities, getPointsByRoad } from './Logic/NodeLogic';
+import { getCities, getPointsByRoad } from './Logic/PointLogic';
 import { getRegions } from './Logic/RegionLogic';
 
 interface ICitiesList {
-    callback: (p: Node) => void;
+    callback: (p: Point) => void;
     onReturn: () => void;
 }
 
 const CitiesList = (props: ICitiesList) => {
     const { callback, onReturn } = props;
-    const [_cities, setCities] = useState<Node[]>([]);
+    const [_cities, setCities] = useState<Point[]>([]);
     const [_page, _setPage] = useState(0);
 
     const updateCities = async () => {
@@ -74,7 +74,7 @@ const CitiesList = (props: ICitiesList) => {
                 </>
             )) || (
                 <FormNode
-                    onSubmit={(p: Node) => {
+                    onSubmit={(p: Point) => {
                         callback(p);
                     }}
                     onReturn={() => _setPage(0)}
@@ -93,7 +93,7 @@ interface IRegionList {
 const RegionList = (props: IRegionList) => {
     const { callback, onReturn } = props;
     const [_regions, setRegions] = useState<Region[]>([]);
-    const [_page, _setPage] = useState(0);
+    //const [_page, _setPage] = useState(0);
 
     const updateRegions = async () => {
         const c = await getRegions();
@@ -107,52 +107,40 @@ const RegionList = (props: IRegionList) => {
 
     return (
         <>
-            {(_page === 0 && (
-                <>
-                    <Box
-                        sx={{
-                            display: 'flex',
-                            flexDirection: 'column',
-                            gap: '10px',
-                            width: '100%',
-                            marginBottom: '40px',
-                        }}
-                    >
-                        {_regions.length > 0 ? (
-                            _regions.map(v => (
-                                <Button
-                                    sx={{ width: '100%' }}
-                                    variant="contained"
-                                    onClick={() => callback(v)}
-                                >
-                                    {v.name}
-                                </Button>
-                            ))
-                        ) : (
-                            <div>
-                                Brak regionów do wybrania (Zgłoś problem do
-                                administatora)
-                            </div>
-                        )}
-                    </Box>
-                    <Button
-                        sx={{ width: '100%' }}
-                        variant="contained"
-                        color="error"
-                        onClick={() => onReturn()}
-                    >
-                        Powrót
-                    </Button>
-                </>
-            )) || (
-                <FormNode
-                    onSubmit={(p: Node) => {
-                        callback(p);
-                    }}
-                    onReturn={() => _setPage(0)}
-                    isCity={true}
-                />
-            )}
+            <Box
+                sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '10px',
+                    width: '100%',
+                    marginBottom: '40px',
+                }}
+            >
+                {_regions.length > 0 ? (
+                    _regions.map(v => (
+                        <Button
+                            sx={{ width: '100%' }}
+                            variant="contained"
+                            onClick={() => callback(v)}
+                        >
+                            {v.name}
+                        </Button>
+                    ))
+                ) : (
+                    <div>
+                        Brak regionów do wybrania (Zgłoś problem do
+                        administatora)
+                    </div>
+                )}
+            </Box>
+            <Button
+                sx={{ width: '100%' }}
+                variant="contained"
+                color="error"
+                onClick={() => onReturn()}
+            >
+                Powrót
+            </Button>
         </>
     );
 };
@@ -161,8 +149,8 @@ export const RoadcreateWindow = () => {
     const navigate = useNavigate();
 
     const [name, setName] = useState('');
-    const [startingPoint, setSP] = useState<Node>();
-    const [endingPoint, setEP] = useState<Node>();
+    const [startingPoint, setSP] = useState<Point>();
+    const [endingPoint, setEP] = useState<Point>();
     const [length, setLength] = useState(0);
     const [region, setRegion] = useState<Region>();
 
@@ -218,7 +206,7 @@ export const RoadcreateWindow = () => {
                     >
                         {(page === 1 && (
                             <CitiesList
-                                callback={(p: Node) => {
+                                callback={(p: Point) => {
                                     setSP(p);
                                     setPage(0);
                                 }}
@@ -227,7 +215,7 @@ export const RoadcreateWindow = () => {
                         )) ||
                             (page === 2 && (
                                 <CitiesList
-                                    callback={(p: Node) => {
+                                    callback={(p: Point) => {
                                         setEP(p);
                                         setPage(0);
                                     }}

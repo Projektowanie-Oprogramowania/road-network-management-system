@@ -1,14 +1,14 @@
 import React from 'react';
-import { Node } from '../Logic/Interfaces';
 import { Button, TextField } from '@mui/material';
 import useAlert from '@context/useAlert';
 
-import { addNode, editNode } from '../Logic/NodeLogic';
+import { addPoint, editPoint } from '../Logic/PointLogic';
+import { Point } from '../Logic/Interfaces';
 
 interface IFormPoint {
     isCity?: boolean;
-    data?: Node;
-    onSubmit: (p: Node) => void;
+    data?: Point;
+    onSubmit: (p: Point) => void;
     onReturn: () => void;
 }
 
@@ -31,16 +31,15 @@ export const FormNode = (props: IFormPoint) => {
 
         let response: {
             message: string;
-            value?: Node;
+            value?: Point;
         } = {
             message: `Error`,
             value: undefined,
         };
 
         if (data) {
-            const node = await editNode({
+            const node = await editPoint({
                 id: data.id,
-                isCity: data.isCity,
                 name: name,
                 x: x,
                 y: y,
@@ -50,8 +49,7 @@ export const FormNode = (props: IFormPoint) => {
                 value: node,
             };
         } else {
-            const node = await addNode({
-                isCity: isCity === true,
+            const node = await addPoint({
                 name: name,
                 x: x,
                 y: y,

@@ -12,6 +12,7 @@ import { navList } from './navList';
 import TariffWindow from 'Screens/TariffWindow/TariffWindow';
 import { FeesWindow } from 'Screens/FeesWindow/FeesWindow';
 import { FeesWindowItem } from 'Screens/FeesWindow/FeesWindowItem';
+import TariffCreateWindow from 'Screens/TariffWindow/TariffCreateWindow';
 
 const Layout = () => (
     <>
@@ -43,6 +44,11 @@ export const MenuWindow = () => (
                     element={<RoadcreateWindow />}
                 />
                 <Route path="tariff" element={<TariffWindow />} />
+                <Route path="tariff/add" element={<TariffCreateWindow />} />
+                <Route
+                    path="tariff/:tariffId/edit"
+                    element={<TariffCreateWindow />}
+                />
                 <Route path="fees" element={<FeesWindow />} />
                 <Route path="fees/:id" element={<FeesWindowItem />} />
             </Route>

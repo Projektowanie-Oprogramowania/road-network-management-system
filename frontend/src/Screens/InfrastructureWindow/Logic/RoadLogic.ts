@@ -1,6 +1,6 @@
 import { IResponse } from 'shared/interfaces';
 import { apiUrl } from 'shared/settings';
-import { Node, Region, Segment } from './Interfaces';
+import { Point, Region, Segment } from './Interfaces';
 /*
 import { generateCity, generatePoint } from './NodeLogic';
 import { generateSegments, Segment } from './SegmentLogic';
@@ -19,8 +19,8 @@ export interface Road {
 
 export interface RoadFormDTO {
     name: string;
-    startingPoint: Node;
-    endingPoint: Node;
+    startingPoint: Point;
+    endingPoint: Point;
     length: number;
     region: Region;
 }
