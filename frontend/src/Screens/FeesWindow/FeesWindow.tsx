@@ -372,6 +372,32 @@ export default function FeesWindow() {
                     />
                 </Paper>
             </Box>
+            <Stack direction="column">
+                <Button
+                    type="submit"
+                    variant="contained"
+                    size="large"
+                    onClick={handleAddTariffs}
+                    sx={{
+                        width: 320,
+                        height: 80,
+                        fontSize: 24,
+                        alignSelf: 'center',
+                        borderRadius: '20px',
+                        background: '#388E3C',
+                        position: 'relative',
+                        bottom: -64,
+                        center: '0',
+                    }}
+                >
+                    <Typography
+                        sx={{ fontWeight: 'bold' }}
+                        style={{ textTransform: 'none', fontSize: '24px' }}
+                    >
+                        Dodaj opłatę
+                    </Typography>
+                </Button>
+            </Stack>
         </>
     );
 }

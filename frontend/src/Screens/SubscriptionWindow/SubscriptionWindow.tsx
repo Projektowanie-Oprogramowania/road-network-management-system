@@ -208,7 +208,7 @@ export default function TariffWindow() {
                 >
                     <EnhancedTableToolbar
                         numSelected={selected.length}
-                        title={'Taryfikatory'}
+                        title={'Subskrypcje'}
                         showDisable={false}
                         onDelete={deleteHandler}
                     />
@@ -333,12 +333,12 @@ export default function TariffWindow() {
                     size="large"
                     onClick={handleAddTariffs}
                     sx={{
-                        width: 240,
+                        width: 320,
                         height: 80,
                         fontSize: 24,
                         alignSelf: 'center',
-                        borderRadius: '10px',
-                        background: '#1429D1',
+                        borderRadius: '20px',
+                        background: '#388E3C',
                         position: 'relative',
                         bottom: -64,
                         center: '0',
@@ -348,7 +348,7 @@ export default function TariffWindow() {
                         sx={{ fontWeight: 'bold' }}
                         style={{ textTransform: 'none', fontSize: '24px' }}
                     >
-                        Dodaj taryfikator
+                        Dodaj subskrypcję
                     </Typography>
                 </Button>
             </Stack>

@@ -14,6 +14,8 @@ import { FeesWindowItem } from 'Screens/FeesWindow/FeesWindowItem';
 import FeesWindow from 'Screens/FeesWindow/FeesWindow';
 import SubscriptionWindow from 'Screens/SubscriptionWindow/SubscriptionWindow';
 import TariffCreateWindow from 'Screens/TariffWindow/TariffCreateWindow';
+import { FeesCreateWindow } from 'Screens/FeesWindow/FeesCreateWindow';
+import { SubscriptionCreateWindow } from 'Screens/SubscriptionWindow/SubscriptionCreateWindow';
 
 const Layout = () => (
     <>
@@ -52,7 +54,9 @@ export const MenuWindow = () => (
                 />
                 <Route path="fees" element={<FeesWindow />} />
                 <Route path="fees/:id" element={<FeesWindowItem />} />
+                <Route path="fees/add" element={<FeesCreateWindow />} />
                 <Route path="subscription" element={<SubscriptionWindow />} />
+                <Route path="subscription/add" element={<SubscriptionCreateWindow />} />
             </Route>
         </Routes>
     </BrowserRouter>
