@@ -19,6 +19,7 @@ import {
     EnhancedTableToolbar,
 } from '@components/Table';
 import { Button, Stack, Typography } from '@mui/material';
+import { getTariffs, Tariff } from './TariffLogic';
 
 function createData(id: any, name: any, priceTruck: any, pricePassenger: any) {
     return {
@@ -31,11 +32,11 @@ function createData(id: any, name: any, priceTruck: any, pricePassenger: any) {
 
 let rows: { id: any; name: any; priceTruck: any; pricePassenger: any }[] = [];
 
-function initializeData(tariffs: any[]) {
-    console.log(tariffs);
+function initializeData(tariffs: Tariff[]) {
     rows = [];
-    tariffs.forEach((element: { id: any; name: any }) => {
-        rows.push(createData(element.id, element.name, 2, '-'));
+    console.log(tariffs)
+    tariffs.forEach((element: { id: any; name: any, pricesPerKilometer: any }) => {
+        rows.push(createData(element.id, element.name, element.pricesPerKilometer.TRUCK, element.pricesPerKilometer.PASSENGER));
     });
 }
 
@@ -67,8 +68,6 @@ const headCells = [
 ];
 
 export default function TariffWindow() {
-    const { sendRequest: fetchTariffs } = useFetch();
-    const { sendRequest: deleteTariffsRequest } = useFetch();
 
     useEffect(() => {
         updateData();
@@ -76,38 +75,14 @@ export default function TariffWindow() {
     }, []);
 
     const updateData: () => void = async () => {
-        const handleRespnse = (response: any) => {
-            console.log(response);
-            initializeData(response);
-        };
-
-        const fetchTariffsRequest = {
-            url: `tariff`,
-        };
-
-        fetchTariffs(fetchTariffsRequest, handleRespnse);
-        rows.push(createData(0, 'test', 4, 6));
-        rows.push(createData(1, 'test2', 3, 7));
-    };
-
-    const deleteTariffsHandler = (id: any) => {
-        const deleteTariffsRequestContent = {
-            url: `tariff/${id}`,
-            method: 'DELETE',
-            body: null,
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        };
-
-        const handleDeleteTariffs = (response: any) => {};
-
-        deleteTariffsRequest(deleteTariffsRequestContent, handleDeleteTariffs);
+        const _t = await getTariffs();
+        initializeData(_t);
+        setSelected([])
     };
 
     const deleteHandler = () => {
         selected.forEach(element => {
-            deleteTariffsHandler(element);
+            // DELETE
         });
         window.location.reload();
     };

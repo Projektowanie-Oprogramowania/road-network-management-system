@@ -10,7 +10,7 @@ import Paper from '@mui/material/Paper';
 import Checkbox from '@mui/material/Checkbox';
 import { styled } from '@mui/material/styles';
 import useFetch from '../../use-fetch';
-import { ReactNode, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
     stableSort,
@@ -19,35 +19,25 @@ import {
     EnhancedTableToolbar,
 } from '@components/Table';
 import { Button, Stack, Typography } from '@mui/material';
-import { Fee, getPaymentsByUserID } from 'Screens/FeesWindow/Logic/FeesLogic';
+import { getSubscriptionsByUserID, Subscription } from './SubscriptionLogic';
 
-function createData(id: number, amount: number, chargeType: string, date: Date, description: string, paid: boolean, userID: number) {
+function createData(id: any, chargeId: any, description: any, startDate: any, endDate: any) {
     return {
         id,
-        amount,
-        chargeType,
-        date,
+        chargeId,
         description,
-        paid,
-        userID
+        startDate,
+        endDate
     };
 }
 
-let rows: {  
-    id: number;
-    amount: number;
-    chargeType: string;
-    date: Date;
-    description: string;
-    paid: boolean;
-    userID: number; 
-}[] = [];
+let rows: { id: any; chargeId: any; description: any; startDate: any, endDate: any }[] = [];
 
-function initializeData(tariffs: Fee[]) {
+function initializeData(tariffs: Subscription[]) {
     rows = [];
     console.log(tariffs)
-    tariffs.forEach((element: Fee) => {
-        rows.push(createData(element.id, element.amount, element.chargeType, element.date, element.description, element.paid, element.userID));
+    tariffs.forEach((element: Subscription) => {
+        rows.push(createData(element.id, element.chargeId, element.description, element.startDate, element.endDate));
     });
 }
 
@@ -59,22 +49,10 @@ const headCells = [
         label: 'Id',
     },
     {
-        id: 'amount',
+        id: 'chargeId',
         numeric: true,
         disablePadding: false,
-        label: 'Ilość',
-    },
-    {
-        id: 'chargeType',
-        numeric: true,
-        disablePadding: false,
-        label: 'Typ',
-    },
-    {
-        id: 'date',
-        numeric: true,
-        disablePadding: false,
-        label: 'Data',
+        label: 'Id Opłaty',
     },
     {
         id: 'description',
@@ -83,20 +61,20 @@ const headCells = [
         label: 'Opis',
     },
     {
-        id: 'paid',
-        numeric: false,
-        disablePadding: false,
-        label: 'Zapłacono',
-    },
-    {
-        id: 'userId',
+        id: 'startDate',
         numeric: true,
         disablePadding: false,
-        label: 'Id użytkownika',
+        label: 'Data rozpoczęcia',
+    },
+    {
+        id: 'endDate',
+        numeric: true,
+        disablePadding: false,
+        label: 'Data zakończenia',
     },
 ];
 
-export default function FeesWindow() {
+export default function TariffWindow() {
 
     useEffect(() => {
         updateData();
@@ -104,7 +82,7 @@ export default function FeesWindow() {
     }, []);
 
     const updateData: () => void = async () => {
-        const _t = await getPaymentsByUserID('0');
+        const _t = await getSubscriptionsByUserID("0");
         initializeData(_t);
         setSelected([])
     };
@@ -230,7 +208,7 @@ export default function FeesWindow() {
                 >
                     <EnhancedTableToolbar
                         numSelected={selected.length}
-                        title={'Opłaty'}
+                        title={'Taryfikatory'}
                         showDisable={false}
                         onDelete={deleteHandler}
                     />
@@ -259,25 +237,7 @@ export default function FeesWindow() {
                                     )
                                     .map(
                                         (
-                                            row: {
-                                                amount: React.ReactNode;
-                                                chargeType: React.ReactNode;
-                                                date: React.ReactNode;
-                                                description: React.ReactNode;
-                                                paid: React.ReactNode;
-                                                userId: React.ReactNode;
-                                                id:
-                                                    | boolean
-                                                    | React.ReactElement<
-                                                          any,
-                                                          | string
-                                                          | React.JSXElementConstructor<any>
-                                                      >
-                                                    | React.ReactFragment
-                                                    | React.Key
-                                                    | null
-                                                    | undefined;
-                                            },
+                                            row: Subscription,
                                             index: any,
                                         ) => {
                                             const isItemSelected = isSelected(
@@ -326,23 +286,17 @@ export default function FeesWindow() {
                                                         {' '}
                                                         {row?.id}{' '}
                                                     </StyledTableCell>
-                                                    <StyledTableCell align="right">
-                                                        {row?.amount}
-                                                    </StyledTableCell>
-                                                    <StyledTableCell align="right">
-                                                        {row?.chargeType}
-                                                    </StyledTableCell>
-                                                    <StyledTableCell align="right">
-                                                        {row?.date}
-                                                    </StyledTableCell>
                                                     <StyledTableCell align="left">
+                                                        {row?.chargeId}
+                                                    </StyledTableCell>
+                                                    <StyledTableCell align="right">
                                                         {row?.description}
                                                     </StyledTableCell>
-                                                    <StyledTableCell align="left">
-                                                        {row?.paid ? "tak" : "nie"}
+                                                    <StyledTableCell align="right">
+                                                        {row?.startDate.toString()}
                                                     </StyledTableCell>
                                                     <StyledTableCell align="right">
-                                                        0
+                                                        {row?.endDate.toString()}
                                                     </StyledTableCell>
                                                 </StyledTableRow>
                                             );
@@ -372,6 +326,32 @@ export default function FeesWindow() {
                     />
                 </Paper>
             </Box>
+            <Stack direction="column">
+                <Button
+                    type="submit"
+                    variant="contained"
+                    size="large"
+                    onClick={handleAddTariffs}
+                    sx={{
+                        width: 240,
+                        height: 80,
+                        fontSize: 24,
+                        alignSelf: 'center',
+                        borderRadius: '10px',
+                        background: '#1429D1',
+                        position: 'relative',
+                        bottom: -64,
+                        center: '0',
+                    }}
+                >
+                    <Typography
+                        sx={{ fontWeight: 'bold' }}
+                        style={{ textTransform: 'none', fontSize: '24px' }}
+                    >
+                        Dodaj taryfikator
+                    </Typography>
+                </Button>
+            </Stack>
         </>
     );
 }

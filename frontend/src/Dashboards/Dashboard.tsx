@@ -10,8 +10,9 @@ import { NavigateWindow } from '../Screens/NavigationWindow/NavigationWindow';
 import { HomeMenu } from './HomeMenu';
 import { navList } from './navList';
 import TariffWindow from 'Screens/TariffWindow/TariffWindow';
-import { FeesWindow } from 'Screens/FeesWindow/FeesWindow';
 import { FeesWindowItem } from 'Screens/FeesWindow/FeesWindowItem';
+import FeesWindow from 'Screens/FeesWindow/FeesWindow';
+import SubscriptionWindow from 'Screens/SubscriptionWindow/SubscriptionWindow';
 import TariffCreateWindow from 'Screens/TariffWindow/TariffCreateWindow';
 
 const Layout = () => (
@@ -51,6 +52,7 @@ export const MenuWindow = () => (
                 />
                 <Route path="fees" element={<FeesWindow />} />
                 <Route path="fees/:id" element={<FeesWindowItem />} />
+                <Route path="subscription" element={<SubscriptionWindow />} />
             </Route>
         </Routes>
     </BrowserRouter>
