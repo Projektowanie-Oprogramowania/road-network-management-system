@@ -31,7 +31,7 @@ public class PointController {
     public ResponseEntity<PointDTO> updatePoint(
             @RequestBody PointDTO pointDTO) {
         Point updatedPoint = pointService.updatePoint(
-                pointDTO.toPoint());
+                pointDTO.toFullPoint());
         return ResponseEntity.ok(PointDTO.fromPoint(updatedPoint));
     }
 

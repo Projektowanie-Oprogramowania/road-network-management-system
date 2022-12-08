@@ -93,7 +93,7 @@ export const InfrastructureWindowMap = () => {
                 >
                     <>
                         <div>{`Siec drogowa: ${roadId}`}</div>
-                        {mapData && (
+                        {(mapData && (
                             <Graph
                                 id="graph-id" // id is mandatory
                                 data={mapData}
@@ -101,7 +101,7 @@ export const InfrastructureWindowMap = () => {
                                 onClickNode={onClickNode}
                                 onClickLink={onClickLink}
                             />
-                        )}
+                        )) || <Box>Wczytywanie mapy...</Box>}
                     </>
                 </Box>
             </div>

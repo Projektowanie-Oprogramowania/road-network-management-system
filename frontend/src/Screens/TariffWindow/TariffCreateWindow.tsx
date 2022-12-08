@@ -1,15 +1,26 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react';
-import { Box, Button, Paper, TextField } from '@mui/material';
+import {
+    Box,
+    Button,
+    MenuItem,
+    Paper,
+    Select,
+    SelectChangeEvent,
+    TextField,
+} from '@mui/material';
 import { useParams } from 'react-router-dom';
 import { VehicleType, VehicleTypeTranslate } from './Logic/interfaces';
-import { getTerifficator } from './Logic/tariffsLogic';
+import {
+    addTerifficator,
+    editTerifficator,
+    getTerifficator,
+} from './Logic/tariffsLogic';
 import useAlert from '@context/useAlert';
 
 const TariffCreateWindow = (): JSX.Element => {
     const { tariffId } = useParams();
     const { setAlert } = useAlert();
-    const [id, setId] = useState('');
     const [name, setName] = useState('');
 
     const [tariffs, setTariffs] = useState<{
@@ -20,7 +31,6 @@ const TariffCreateWindow = (): JSX.Element => {
         if (tariffId) {
             const t = await getTerifficator(tariffId);
             if (t) {
-                setId(t.id);
                 setName(t.name);
                 setTariffs(t.pricesPerKilometer);
                 Object.entries(t.pricesPerKilometer).forEach(
@@ -39,12 +49,53 @@ const TariffCreateWindow = (): JSX.Element => {
         initializeData();
     }, [tariffId]);
 
-    const handleSubmit = () => {
-        setAlert('Submit handling need to be implemented');
+    const handleSubmit = async () => {
+        if (!name) {
+            setAlert('Blad nie wprowadzono nazwy taryfikatora');
+            return;
+        }
+        if (!tariffs) {
+            setAlert('Blad nie wprowadzono cen taryfikatora');
+            return;
+        }
+        if (tariffId) {
+            const res = await editTerifficator({
+                id: tariffId,
+                name: name,
+                pricesPerKilometer: tariffs,
+            });
+            if (res) {
+                setAlert(`Edytowano tarryfikator o id ${res.id}`);
+                return;
+            }
+            setAlert('Blad podczas edycji taryfikatora');
+        }
+        const res = await addTerifficator({
+            name: name,
+            pricesPerKilometer: tariffs,
+        });
+        if (res) {
+            setAlert(`Dodano tarryfikator o id ${res.id}`);
+            return;
+        }
+        setAlert('Blad podczas dodawania taryfikatora');
     };
 
     const onReturn = () => {
         setAlert('On return need to be implemented');
+    };
+
+    const [vehiclesToAdd] = React.useMemo(() => {
+        const vehiclesToAdd = VehicleType.filter(
+            v => !tariffs || (tariffs && !Object.keys(tariffs).includes(v)),
+        );
+        return [vehiclesToAdd];
+    }, [tariffs]);
+
+    const addNewVehicleToTarrif = (e: SelectChangeEvent<string>) => {
+        const newT = { ...tariffs };
+        newT[e.target.value] = 0;
+        setTariffs(newT);
     };
 
     return (
@@ -92,7 +143,7 @@ const TariffCreateWindow = (): JSX.Element => {
                                 variant="outlined"
                                 type="number"
                                 autoComplete="off"
-                                value={v}
+                                value={v.toString()}
                                 onChange={e => {
                                     const newT = { ...tariffs };
                                     newT[k] = Number(e.target.value);
@@ -101,7 +152,33 @@ const TariffCreateWindow = (): JSX.Element => {
                             />
                         </>
                     ))}
-                {/* not added ceny */}
+                {
+                    vehiclesToAdd.length > 0 && (
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                gap: '20px',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                            }}
+                        >
+                            <Box>Dodaj nowa oplate</Box>
+                            <Select
+                                labelId="demo-simple-select-label"
+                                id="demo-simple-select"
+                                value=""
+                                onChange={addNewVehicleToTarrif}
+                            >
+                                {vehiclesToAdd.map(v => (
+                                    <MenuItem value={v}>
+                                        {VehicleTypeTranslate[v]} +
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </Box>
+                    )
+                    /* not added ceny */
+                }
                 <Button
                     variant="contained"
                     color="primary"

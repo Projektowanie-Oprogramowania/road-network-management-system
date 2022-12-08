@@ -153,17 +153,14 @@ export interface RoadMainData {
     region: string;
 }
 
-export const deleteRoad: (id: string) => Promise<void> = async (id: string) => {
-    await fetch(`${apiUrl}/road/${id}`, {
+export const deleteRoad: (id: string) => Promise<boolean> = async (
+    id: string,
+) => {
+    const res = await fetch(`${apiUrl}/road/${id}`, {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json',
         },
-    }).then(response => {
-        if (response.ok) {
-            return;
-        } else {
-            console.log('blad usuwania');
-        }
-    });
+    }).then(response => response.ok);
+    return res;
 };

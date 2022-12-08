@@ -6,14 +6,14 @@ import { addPoint, editPoint } from '../Logic/PointLogic';
 import { Point } from '../Logic/Interfaces';
 
 interface IFormPoint {
-    isCity?: boolean;
     data?: Point;
+    onDelete?: (id: string) => void;
     onSubmit: (p: Point) => void;
     onReturn: () => void;
 }
 
 export const FormNode = (props: IFormPoint) => {
-    const { isCity, data, onSubmit, onReturn } = props;
+    const { data, onSubmit, onDelete, onReturn } = props;
     const { setAlert } = useAlert();
 
     const handleSubmit: React.FormEventHandler<HTMLFormElement> = async (
@@ -38,6 +38,12 @@ export const FormNode = (props: IFormPoint) => {
         };
 
         if (data) {
+            console.log({
+                id: data.id,
+                name: name,
+                x: x,
+                y: y,
+            });
             const node = await editPoint({
                 id: data.id,
                 name: name,
@@ -72,7 +78,7 @@ export const FormNode = (props: IFormPoint) => {
             style={{
                 display: 'flex',
                 flexDirection: 'column',
-                width: 400,
+                width: '90%',
                 gap: 10,
                 margin: 10,
             }}

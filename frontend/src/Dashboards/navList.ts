@@ -32,7 +32,7 @@ export const navList = [
         image: AttachMoneyIcon,
     },
     {
-        label: 'Subsrypcje',
+        label: 'Wykup abonament',
         path: 'subscription',
         image: LoyaltyIcon,
     },

@@ -3,16 +3,18 @@ import { Point, Segment } from '../Logic/Interfaces';
 import { Box, Button, TextField } from '@mui/material';
 import useAlert from '@context/useAlert';
 import { addSegment } from '../Logic/SegmentLogic';
+import { getTariffs, Tariff } from 'Screens/TariffWindow/TariffLogic';
 
 interface IForm {
     data?: Segment;
     roadPoints: Point[];
     callback: (s: Segment) => void;
+    onDelete?: (id: string) => void;
     onReturn: () => void;
 }
 
 export const FormSegment = (props: IForm) => {
-    const { data, callback, roadPoints, onReturn } = props;
+    const { data, callback, roadPoints, onDelete, onReturn } = props;
     const { setAlert } = useAlert();
 
     const [startingPont, setSP] = useState<Point>();
@@ -20,8 +22,15 @@ export const FormSegment = (props: IForm) => {
     const [endingPoint, setEP] = useState<Point>();
     const [isPaid, setIsPaid] = useState(false);
     const [cost, setCost] = useState(0);
-
+    const [tarriffID, setTarriffID] = useState<string | undefined>();
     const [page, setPage] = useState(0);
+
+    const [tarrifficators, setTarrificaors] = useState<Tariff[]>();
+
+    const updateTarifficators = async () => {
+        const res = await getTariffs();
+        setTarrificaors(res);
+    };
 
     useEffect(() => {
         if (data) {
@@ -29,23 +38,16 @@ export const FormSegment = (props: IForm) => {
             setPoints(data.points);
             setEP(data.endingPoint);
         }
+        updateTarifficators();
     }, []);
 
-    const onSubmit = async function (e: React.FormEvent<HTMLFormElement>) {
-        e.preventDefault();
-
-        const x: number = Number(
-            (e.currentTarget[1] as HTMLInputElement).value,
-        );
-        const y: number = Number(
-            (e.currentTarget[3] as HTMLInputElement).value,
-        );
-    };
-
-    const onDelete = () => {
-        if (data) {
+    const handleDelete = () => {
+        if (data && onDelete) {
             //removePoint(data.id);
-            //setAlert(`usunieto wezel ${data.id}`);
+            setAlert(`usunieto wezel ${data.id}`);
+            onDelete(data.id);
+        } else {
+            setAlert(`błąd usuwania węzła`);
         }
     };
 
@@ -57,6 +59,7 @@ export const FormSegment = (props: IForm) => {
                 endingPoint: endingPoint,
                 isPaid: isPaid,
                 price: cost,
+                tarrificator: tarriffID,
             });
             if (res) {
                 setAlert(`Dodano segment id: ${res.id}`);
@@ -82,6 +85,10 @@ export const FormSegment = (props: IForm) => {
         setPoints([...points, p]);
     };
 
+    const updateTarrifID = (tID: string | undefined) => {
+        setTarriffID(tID);
+    };
+
     /* Problem z odswiezaniem - rozwiazanie chwilowe trzeba miec wczesjniej dodane punkty
     const handleAddPoint = (p: Point) => {
         if (f) f(p);
@@ -104,7 +111,7 @@ export const FormSegment = (props: IForm) => {
                             setPage(0);
                         }}
                     >
-                        {p.id} x:{p.x} y:{p.y}
+                        {p.name ? p.name : p.id} x:{p.x} y:{p.y}
                     </Button>
                 ))}
                 {/* Problem z odswiezaniem - rozwiazanie chwilowe trzeba miec wczesjniej dodane punkty
@@ -120,9 +127,47 @@ export const FormSegment = (props: IForm) => {
         );
     };
 
+    const TarrifsList = (callback: (id?: string) => void) => (
+        <>
+            {(tarrifficators && (
+                <>
+                    {tarrifficators.map(t => (
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            onClick={() => {
+                                callback(t.id);
+                                setPage(0);
+                            }}
+                        >
+                            {t.id} {t.name}
+                        </Button>
+                    ))}
+                    <Button
+                        variant="contained"
+                        color="error"
+                        onClick={() => {
+                            callback();
+                            setPage(0);
+                        }}
+                    >
+                        Użyj własnej ceny
+                    </Button>
+                </>
+            )) || (
+                <Box>
+                    Brak utworzonych taryfikatorów przejdź do zakładki
+                    'Taryfikatory', aby utworzyć nowy taryfikator
+                </Box>
+            )}
+        </>
+    );
+
     return (
         <form
-            onSubmit={onSubmit}
+            onSubmit={e => {
+                e.preventDefault();
+            }}
             style={{
                 display: 'flex',
                 flexDirection: 'column',
@@ -145,7 +190,11 @@ export const FormSegment = (props: IForm) => {
                             }}
                         >
                             {startingPont
-                                ? `ID:${startingPont.id} x:${startingPont.x} y:${startingPont.y}`
+                                ? `ID:${
+                                      startingPont.name
+                                          ? startingPont.name
+                                          : startingPont.id
+                                  } x:${startingPont.x} y:${startingPont.y}`
                                 : 'Wybierz'}
                         </Button>
                     </Box>
@@ -177,7 +226,9 @@ export const FormSegment = (props: IForm) => {
                                         wordSpacing: '10px',
                                     }}
                                 >
-                                    {`ID:${p.id} x:${p.x} y:${p.y}`}
+                                    {`ID:${p.name ? p.name : p.id} x:${p.x} y:${
+                                        p.y
+                                    }`}
                                 </Box>
                                 <Button
                                     variant="contained"
@@ -209,7 +260,11 @@ export const FormSegment = (props: IForm) => {
                             }}
                         >
                             {endingPoint
-                                ? `ID:${endingPoint.id} x:${endingPoint.x} y:${endingPoint.y}`
+                                ? `ID:${
+                                      endingPoint.name
+                                          ? endingPoint.name
+                                          : endingPoint.id
+                                  } x:${endingPoint.x} y:${endingPoint.y}`
                                 : 'Wybierz'}
                         </Button>
                     </Box>
@@ -243,8 +298,16 @@ export const FormSegment = (props: IForm) => {
                                 value={cost}
                                 onChange={e => setCost(Number(e.target.value))}
                             />
-                            <Button variant="outlined" color="primary">
-                                Użyj taryfikatora
+                            <Button
+                                variant="outlined"
+                                color="primary"
+                                onClick={() => {
+                                    setPage(4);
+                                }}
+                            >
+                                {tarriffID
+                                    ? `Taryfikator ${tarriffID}`
+                                    : 'Użyj taryfikatora'}
                             </Button>
                         </Box>
                     )}
@@ -281,6 +344,7 @@ export const FormSegment = (props: IForm) => {
             {page === 1 && roadPoints && PointList(setStartPoint)}
             {page === 2 && roadPoints && PointList(addPoint)}
             {page === 3 && roadPoints && PointList(setEndPoint)}
+            {page === 4 && TarrifsList(updateTarrifID)}
             {/* Problem z odswiezaniem - rozwiazanie chwilowe trzeba miec wczesjniej dodane punkty
             page === 4 && (
                 <>

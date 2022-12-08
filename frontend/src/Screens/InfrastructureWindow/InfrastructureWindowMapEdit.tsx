@@ -78,12 +78,12 @@ export const InfrastructureWindowMapEdit = () => {
     };
 
     const onClickNode = (nodeId: string) => {
-        let index: number = points.findIndex(v => v.id === nodeId);
+        let index: number = points.findIndex(v => v.id == nodeId);
         if (index !== -1) {
             setPoint(points[index]);
             setEditPage(3);
         } else {
-            index = cities.findIndex(v => v.name === nodeId);
+            index = cities.findIndex(v => v.name == nodeId);
             if (index !== -1) {
                 setPoint(cities[index]);
                 setEditPage(4);
@@ -138,8 +138,17 @@ export const InfrastructureWindowMapEdit = () => {
         }
     };
 
-    const handleSegmentUpdate = (s: Segment) => {
-        const index: number = segments.findIndex(v => v.id === s.id);
+    const onNodeDelete = (id: string) => {
+        const index = points.findIndex(v => v.id === id);
+        if (index !== -1) {
+            const c = [...points];
+            c.slice(index, 1);
+            setPoints(c);
+        }
+    };
+
+    const onSegmentUpdate = (s: Segment) => {
+        const index: number = segments.findIndex(v => v.id == s.id);
         if (index !== -1) {
             const _s = [...segments];
             _s[index] = s;
@@ -148,7 +157,16 @@ export const InfrastructureWindowMapEdit = () => {
             setSegments([...segments, s]);
         }
         setEditPage(0);
-        setEditPage(2);
+    };
+
+    const onSegmentDelete = (id: string) => {
+        const index: number = segments.findIndex(v => v.id == id);
+        if (index !== -1) {
+            const _s = [...segments];
+            _s.slice(index, 1);
+            setSegments(_s);
+        }
+        setEditPage(0);
     };
 
     const handleSubmit = async () => {
@@ -235,6 +253,15 @@ export const InfrastructureWindowMapEdit = () => {
                                 value="Submit"
                                 variant="contained"
                                 color="primary"
+                                onClick={() => setEditPage(5)}
+                            >
+                                Dodaj miasto
+                            </Button>
+                            <Button
+                                type="submit"
+                                value="Submit"
+                                variant="contained"
+                                color="primary"
                                 onClick={() => setEditPage(2)}
                             >
                                 Dodaj odcinek
@@ -262,33 +289,39 @@ export const InfrastructureWindowMapEdit = () => {
                     {editPage === 1 && (
                         <FormPoint
                             callback={onCreateNode}
+                            onDelete={onNodeDelete}
                             onReturn={() => setEditPage(0)}
                         />
                     )}
                     {editPage === 2 && roadId && (
                         <FormSegment
-                            roadPoints={points}
+                            roadPoints={points.concat(cities)}
+                            onDelete={onSegmentDelete}
                             onReturn={() => setEditPage(0)}
-                            callback={handleSegmentUpdate}
+                            callback={onSegmentUpdate}
                             data={segment ? segment : undefined}
                         />
                     )}
                     {editPage === 3 && (
                         <FormPoint
                             data={point}
+                            onDelete={onNodeDelete}
                             callback={onUpdateNode}
                             onReturn={() => setEditPage(0)}
                         />
                     )}
                     {editPage === 4 && point && (
                         <FormNode
-                            data={{
-                                id: point.id,
-                                name: point.id,
-                                x: point.x,
-                                y: point.y,
-                            }}
+                            data={point}
+                            //onDelete={onNodeDelete} - brak możliwości usuwania miast na ten moment
                             onSubmit={updateCities}
+                            onReturn={() => setEditPage(0)}
+                        />
+                    )}
+                    {editPage === 5 && (
+                        <FormNode
+                            data={point}
+                            onSubmit={onUpdateNode}
                             onReturn={() => setEditPage(0)}
                         />
                     )}

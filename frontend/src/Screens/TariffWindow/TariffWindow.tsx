@@ -9,7 +9,6 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Checkbox from '@mui/material/Checkbox';
 import { styled } from '@mui/material/styles';
-import useFetch from '../../use-fetch';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -20,25 +19,8 @@ import {
 } from '@components/Table';
 import { Button, Stack, Typography } from '@mui/material';
 import { getTariffs, Tariff } from './TariffLogic';
-
-function createData(id: any, name: any, priceTruck: any, pricePassenger: any) {
-    return {
-        id,
-        name,
-        priceTruck,
-        pricePassenger,
-    };
-}
-
-let rows: { id: any; name: any; priceTruck: any; pricePassenger: any }[] = [];
-
-function initializeData(tariffs: Tariff[]) {
-    rows = [];
-    console.log(tariffs)
-    tariffs.forEach((element: { id: any; name: any, pricesPerKilometer: any }) => {
-        rows.push(createData(element.id, element.name, element.pricesPerKilometer.TRUCK, element.pricesPerKilometer.PASSENGER));
-    });
-}
+import useAlert from '@context/useAlert';
+import { removeTerifficator } from './Logic/tariffsLogic';
 
 const headCells = [
     {
@@ -65,9 +47,88 @@ const headCells = [
         disablePadding: false,
         label: 'Cena /km pasażerski',
     },
+    {
+        disablePadding: false,
+    },
 ];
 
-export default function TariffWindow() {
+interface IRow {
+    id: any;
+    name: any;
+    priceTruck: any;
+    pricePassenger: any;
+    buttons: JSX.Element;
+}
+
+const TariffWindow: React.FC = () => {
+    const navigate = useNavigate();
+    const { setAlert } = useAlert();
+    const createData = (
+        id: any,
+        name: any,
+        priceTruck: any,
+        pricePassenger: any,
+        buttons: JSX.Element,
+    ) => ({
+        id,
+        name,
+        priceTruck,
+        pricePassenger,
+        buttons,
+    });
+
+    const [rows, setRows] = React.useState<IRow[]>([]);
+
+    const moveToDetails = (id: string): (() => void) => {
+        return () => {
+            navigate(`./${id}/edit`);
+        };
+    };
+
+    const deleteTariff = (id: string): (() => Promise<void>) => {
+        return async () => {
+            const res = await removeTerifficator(id);
+            if (res) {
+                setAlert(`Usunięto ${id}`);
+                updateData();
+                return;
+            }
+            setAlert(`Błąd podczas usuwania!`);
+        };
+    };
+
+    const initializeData = (tariffs: Tariff[]) => {
+        const rows: IRow[] = [];
+        console.log(tariffs);
+        tariffs.forEach(
+            (element: { id: any; name: any; pricesPerKilometer: any }) => {
+                rows.push(
+                    createData(
+                        element.id,
+                        element.name,
+                        element.pricesPerKilometer.TRUCK,
+                        element.pricesPerKilometer.PASSENGER,
+                        <>
+                            <Button
+                                variant="contained"
+                                onClick={moveToDetails(element.id)}
+                            >
+                                Edytuj
+                            </Button>
+                            <Button
+                                variant="contained"
+                                color="error"
+                                onClick={deleteTariff(element.id)}
+                            >
+                                Usuń
+                            </Button>
+                        </>,
+                    ),
+                );
+            },
+        );
+        setRows(rows);
+    };
 
     useEffect(() => {
         updateData();
@@ -77,7 +138,7 @@ export default function TariffWindow() {
     const updateData: () => void = async () => {
         const _t = await getTariffs();
         initializeData(_t);
-        setSelected([])
+        setSelected([]);
     };
 
     const deleteHandler = () => {
@@ -170,19 +231,11 @@ export default function TariffWindow() {
         setPage(0);
     };
 
-    /*
-  const handleChangeDense = (event) => {
-    setDense(event.target.checked);
-  };
-  */
-
     const isSelected = (name: any) => selected.indexOf(name) !== -1;
 
     // Avoid a layout jump when reaching the last page with empty rows.
     const emptyRows =
         page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
-
-    const navigate = useNavigate();
 
     const handleAddTariffs = () => {
         navigate('add', { replace: false });
@@ -257,6 +310,7 @@ export default function TariffWindow() {
                                                     | React.ReactPortal
                                                     | null
                                                     | undefined;
+                                                buttons: JSX.Element;
                                             },
                                             index: any,
                                         ) => {
@@ -315,6 +369,9 @@ export default function TariffWindow() {
                                                     <StyledTableCell align="right">
                                                         {row?.pricePassenger}
                                                     </StyledTableCell>
+                                                    <StyledTableCell align="right">
+                                                        {row?.buttons}
+                                                    </StyledTableCell>
                                                 </StyledTableRow>
                                             );
                                         },
@@ -371,4 +428,6 @@ export default function TariffWindow() {
             </Stack>
         </>
     );
-}
+};
+
+export default TariffWindow;

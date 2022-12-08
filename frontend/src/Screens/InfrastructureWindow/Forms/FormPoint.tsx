@@ -6,12 +6,13 @@ import { addPoint, editPoint, removePoint } from '../Logic/PointLogic';
 
 interface IFormPoint {
     data?: Point;
+    onDelete?: (id: string) => void;
     callback?: (id: Point) => void;
     onReturn: () => void;
 }
 
 export const FormPoint = (props: IFormPoint) => {
-    const { data, callback, onReturn } = props;
+    const { data, callback, onDelete, onReturn } = props;
     const { setAlert } = useAlert();
 
     const onSubmit = async function (e: React.FormEvent<HTMLFormElement>) {
@@ -46,10 +47,13 @@ export const FormPoint = (props: IFormPoint) => {
         }
     };
 
-    const onDelete = () => {
-        if (data) {
+    const handleDelete = () => {
+        if (data && onDelete) {
             removePoint(data.id);
             setAlert(`usunieto punkt ${data.id}`);
+            onDelete(data.id);
+        } else {
+            setAlert(`błąd usuwania`);
         }
     };
 
@@ -68,7 +72,7 @@ export const FormPoint = (props: IFormPoint) => {
                 <Button
                     variant="contained"
                     color="error"
-                    onClick={() => onDelete()}
+                    onClick={() => handleDelete()}
                 >
                     Delete Point
                 </Button>

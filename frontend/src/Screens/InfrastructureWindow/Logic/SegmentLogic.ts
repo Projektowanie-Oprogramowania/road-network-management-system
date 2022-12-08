@@ -1,3 +1,4 @@
+import { Tariff } from 'Screens/TariffWindow/TariffLogic';
 import { apiUrl } from 'shared/settings';
 import { Point } from './PointLogic';
 
@@ -9,14 +10,15 @@ export interface Segment {
     endingPoint: Point;
     isPaid: boolean;
     price?: number;
-    tarrificator?: string;
+    tariffDTO?: Tariff;
 }
 
 export interface SegmentCreate {
     pointsIds: string[];
     startingPointId: string;
     endingPointId: string;
-    price: number;
+    //price: number;
+    tariffId: string;
 }
 
 export interface SegmentFormDTO {
@@ -35,7 +37,8 @@ export const addSegment = async (
         pointsIds: segment.points.map(v => v.id),
         startingPointId: segment.startingPoint.id,
         endingPointId: segment.endingPoint.id,
-        price: segment.isPaid && segment.price ? segment.price : 0,
+        tariffId: segment.tarrificator ? segment.tarrificator : '0',
+        //price: segment.isPaid && segment.price ? segment.price : 0,
     };
     let res: Segment | undefined = undefined;
     await fetch(`${apiUrl}/segments`, {
@@ -64,7 +67,8 @@ export const editSegment: (
         pointsIds: segment.points.map(v => v.id),
         startingPointId: segment.startingPoint.id,
         endingPointId: segment.endingPoint.id,
-        price: segment.isPaid && segment.price ? segment.price : 0,
+        tariffId: segment.tariffDTO ? segment.tariffDTO.id : '0',
+        //price: segment.isPaid && segment.price ? segment.price : 0,
     };
     let res: Segment | undefined = undefined;
     await fetch(`${apiUrl}/segments/${segment.id}`, {
@@ -91,7 +95,7 @@ export const getSegment: (id: string) => Promise<Segment | undefined> = async (
 ) => {
     let res: Segment | undefined = undefined;
     await fetch(`${apiUrl}/segments/${id}`, {
-        method: 'PUT',
+        method: 'GET',
         headers: {
             'Content-Type': 'application/json',
         },
@@ -106,6 +110,21 @@ export const getSegment: (id: string) => Promise<Segment | undefined> = async (
         });
 
     return res;
+};
+
+export const getSegments: () => Promise<Segment[]> = async () => {
+    let segments: Segment[] = [];
+    await fetch(`${apiUrl}/segments`)
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            }
+        })
+        .then(r => {
+            segments = r;
+        });
+
+    return segments;
 };
 
 export const removeSegment: (id: string) => Promise<void> = async (

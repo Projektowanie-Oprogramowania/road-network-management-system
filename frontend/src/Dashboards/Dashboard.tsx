@@ -55,8 +55,11 @@ export const MenuWindow = () => (
                 <Route path="fees" element={<FeesWindow />} />
                 <Route path="fees/:id" element={<FeesWindowItem />} />
                 <Route path="fees/add" element={<FeesCreateWindow />} />
-                <Route path="subscription" element={<SubscriptionWindow />} />
-                <Route path="subscription/add" element={<SubscriptionCreateWindow />} />
+                {/* Nie ma przypadku wyświetl liste subskrypcji więc wystarczy formularz */}
+                <Route
+                    path="subscription"
+                    element={<SubscriptionCreateWindow />}
+                />
             </Route>
         </Routes>
     </BrowserRouter>

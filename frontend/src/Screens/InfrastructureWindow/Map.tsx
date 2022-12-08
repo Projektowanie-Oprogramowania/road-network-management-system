@@ -16,6 +16,21 @@ const mapConfig = {
     },
 };
 
+const mapConfigSmall = {
+    staticGraph: true,
+    nodeHighlightBehavior: true,
+    width: 1000,
+    height: 600,
+    node: {
+        color: 'lightgreen',
+        size: 80,
+        highlightStrokeColor: 'blue',
+    },
+    link: {
+        highlightColor: 'lightblue',
+    },
+};
+
 const cityStyle = {
     color: 'red',
     size: 200,
@@ -69,7 +84,7 @@ export interface IMapData {
         source: string;
         breakPoints?: Object[];
         target: string;
-        color?: 'lightgreen';
+        color?: string;
         size?: 80;
         highlightColor?: 'blue';
     }>;
@@ -83,7 +98,7 @@ export const appendCities = (data: IMapData, cities: Point[]): IMapData => {
                 index: city.name,
                 id: city.name ? city.name : city.id,
                 x: city.x,
-                y: city.y,
+                y: -city.y,
                 ...cityStyle,
             });
         }
@@ -102,7 +117,7 @@ export const appendNodes = (data: IMapData, nodesTable: Point[]): IMapData => {
                 index: node.name,
                 id: node.name ? node.name : node.id,
                 x: node.x,
-                y: node.y,
+                y: -node.y,
                 ...nodeStyle,
             });
         }
@@ -120,7 +135,7 @@ export const appendPoints = (data: IMapData, cities: Point[]): IMapData => {
             nodes.push({
                 id: city.id,
                 x: city.x,
-                y: city.y,
+                y: -city.y,
                 ...pointStyle,
             });
         }
@@ -150,14 +165,14 @@ export const addNodesFromSegments = (
             nodes[index] = {
                 id: segment.startingPoint.id,
                 x: segment.startingPoint.x,
-                y: segment.startingPoint.y,
+                y: -segment.startingPoint.y,
                 ...nodeStyle,
             };
         } else {
             nodes.push({
                 id: segment.startingPoint.id,
                 x: segment.startingPoint.x,
-                y: segment.startingPoint.y,
+                y: -segment.startingPoint.y,
                 ...nodeStyle,
             });
         }
@@ -168,7 +183,7 @@ export const addNodesFromSegments = (
                 nodes.push({
                     id: point.id,
                     x: point.x,
-                    y: point.y,
+                    y: -point.y,
                     ...pointStyle,
                 });
         }
@@ -181,14 +196,14 @@ export const addNodesFromSegments = (
             nodes[index] = {
                 id: segment.endingPoint.id,
                 x: segment.endingPoint.x,
-                y: segment.endingPoint.y,
+                y: -segment.endingPoint.y,
                 ...nodeStyle,
             };
         } else {
             nodes.push({
                 id: segment.endingPoint.id,
                 x: segment.endingPoint.x,
-                y: segment.endingPoint.y,
+                y: -segment.endingPoint.y,
                 ...nodeStyle,
             });
         }
@@ -263,6 +278,74 @@ export const appendSegments = (
     };
 };
 
+export const colorSegments = (
+    data: IMapData,
+    segments: Segment[],
+): IMapData => {
+    const nodes = data.nodes;
+    const links = data.links;
+    for (const segment of segments) {
+        const sLength: number = segment.points.length;
+        if (sLength > 0) {
+            if (
+                nodes.findIndex(v => v.id === segment.startingPoint.id) !==
+                    -1 &&
+                nodes.findIndex(v => v.id === segment.points[0].id) !== -1
+            ) {
+                links.push({
+                    source: segment.startingPoint.id,
+                    target: segment.points[0].id,
+                    color: 'green',
+                });
+            }
+
+            for (let i = 0; i < sLength - 1; i++) {
+                if (
+                    nodes.findIndex(v => v.id === segment.points[i].id) !==
+                        -1 &&
+                    nodes.findIndex(v => v.id === segment.points[i + 1].id) !==
+                        -1
+                ) {
+                    links.push({
+                        source: segment.points[i].id,
+                        target: segment.points[i + 1].id,
+                        color: 'green',
+                    });
+                }
+            }
+
+            if (
+                nodes.findIndex(
+                    v => v.id === segment.points[sLength - 1].id,
+                ) !== -1 &&
+                nodes.findIndex(v => v.id === segment.endingPoint.id) !== -1
+            ) {
+                links.push({
+                    source: segment.points[sLength - 1].id,
+                    target: segment.endingPoint.id,
+                    color: 'green',
+                });
+            }
+        } else {
+            if (
+                nodes.findIndex(v => v.id === segment.startingPoint.id) !==
+                    -1 &&
+                nodes.findIndex(v => v.id === segment.endingPoint.id) !== -1
+            ) {
+                links.push({
+                    source: segment.startingPoint.id,
+                    target: segment.endingPoint.id,
+                    color: 'green',
+                });
+            }
+        }
+    }
+    return {
+        nodes: data.nodes,
+        links: links,
+    };
+};
+
 export const addRestOfPoints = (data: IMapData, points: Point[]) => {
     const nodes = data.nodes;
     const links = data.links;
@@ -273,7 +356,7 @@ export const addRestOfPoints = (data: IMapData, points: Point[]) => {
             nodes.push({
                 id: point.id,
                 x: point.x,
-                y: point.y,
+                y: -point.y,
                 ...pointStyle,
             });
         }
@@ -389,4 +472,4 @@ export const mapFromRoadData = (r: Road) => {
 };
 */
 
-export { Graph, mapConfig };
+export { Graph, mapConfig, mapConfigSmall };

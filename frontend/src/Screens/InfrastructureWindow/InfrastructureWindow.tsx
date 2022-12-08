@@ -10,10 +10,12 @@ import { Link, useNavigate } from 'react-router-dom';
 import ModeEditOutlineOutlinedIcon from '@mui/icons-material/ModeEditOutlineOutlined';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import useFetch from 'use-fetch';
+import useAlert from '@context/useAlert';
 
 export const InfrastructureWindow = ({ isAdmin = false }) => {
     const [roads, setRoads] = useState<Road[]>([]);
     const navigate = useNavigate();
+    const { setAlert } = useAlert();
     const { sendRequest: fetchInfrastructure } = useFetch();
 
     const updateData: () => Promise<void> = async () => {
@@ -31,7 +33,12 @@ export const InfrastructureWindow = ({ isAdmin = false }) => {
     };
 
     const handleDelete = async (id: string) => {
-        await deleteRoad(id);
+        const res = await deleteRoad(id);
+        if (res) {
+            setAlert(`Usunięto drogę ${id}`);
+        } else {
+            setAlert('Błąd usuwania');
+        }
         updateData();
     };
 

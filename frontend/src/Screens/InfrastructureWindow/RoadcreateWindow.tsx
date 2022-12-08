@@ -78,7 +78,6 @@ const CitiesList = (props: ICitiesList) => {
                         callback(p);
                     }}
                     onReturn={() => _setPage(0)}
-                    isCity={true}
                 />
             )}
         </>

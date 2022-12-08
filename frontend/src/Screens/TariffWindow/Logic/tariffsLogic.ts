@@ -69,17 +69,16 @@ export const getTerifficator: (
     return res;
 };
 
-export const removeTerifficator: (id: string) => Promise<void> = async (
+export const removeTerifficator: (id: string) => Promise<boolean> = async (
     id: string,
 ) => {
-    await fetch(`${apiUrl}/tariff/${id}`, {
+    const res: boolean = await fetch(`${apiUrl}/tariff/${id}`, {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json',
         },
     }).then(response => {
-        if (response.ok) {
-            return response.json();
-        }
+        return response.ok;
     });
+    return res;
 };

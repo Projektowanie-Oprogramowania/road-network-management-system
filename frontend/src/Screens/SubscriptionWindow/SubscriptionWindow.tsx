@@ -21,23 +21,43 @@ import {
 import { Button, Stack, Typography } from '@mui/material';
 import { getSubscriptionsByUserID, Subscription } from './SubscriptionLogic';
 
-function createData(id: any, chargeId: any, description: any, startDate: any, endDate: any) {
+function createData(
+    id: any,
+    chargeId: any,
+    description: any,
+    startDate: any,
+    endDate: any,
+) {
     return {
         id,
         chargeId,
         description,
         startDate,
-        endDate
+        endDate,
     };
 }
 
-let rows: { id: any; chargeId: any; description: any; startDate: any, endDate: any }[] = [];
+let rows: {
+    id: any;
+    chargeId: any;
+    description: any;
+    startDate: any;
+    endDate: any;
+}[] = [];
 
 function initializeData(tariffs: Subscription[]) {
     rows = [];
-    console.log(tariffs)
+    console.log(tariffs);
     tariffs.forEach((element: Subscription) => {
-        rows.push(createData(element.id, element.chargeId, element.description, element.startDate, element.endDate));
+        rows.push(
+            createData(
+                element.id,
+                element.chargeId,
+                element.description,
+                element.startDate,
+                element.endDate,
+            ),
+        );
     });
 }
 
@@ -75,16 +95,15 @@ const headCells = [
 ];
 
 export default function TariffWindow() {
-
     useEffect(() => {
         updateData();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const updateData: () => void = async () => {
-        const _t = await getSubscriptionsByUserID("0");
+        const _t = await getSubscriptionsByUserID('0');
         initializeData(_t);
-        setSelected([])
+        setSelected([]);
     };
 
     const deleteHandler = () => {
@@ -235,73 +254,61 @@ export default function TariffWindow() {
                                         page * rowsPerPage,
                                         page * rowsPerPage + rowsPerPage,
                                     )
-                                    .map(
-                                        (
-                                            row: Subscription,
-                                            index: any,
-                                        ) => {
-                                            const isItemSelected = isSelected(
-                                                row?.id,
-                                            );
-                                            const labelId = `enhanced-table-checkbox-${index}`;
+                                    .map((row: Subscription, index: any) => {
+                                        const isItemSelected = isSelected(
+                                            row?.id,
+                                        );
+                                        const labelId = `enhanced-table-checkbox-${index}`;
 
-                                            return (
-                                                <StyledTableRow
-                                                    hover
-                                                    onClick={event =>
-                                                        handleClick(
-                                                            event,
-                                                            row?.id,
-                                                        )
-                                                    }
-                                                    role="checkbox"
-                                                    aria-checked={
-                                                        isItemSelected
-                                                    }
-                                                    tabIndex={-1}
-                                                    selected={isItemSelected}
+                                        return (
+                                            <StyledTableRow
+                                                hover
+                                                onClick={event =>
+                                                    handleClick(event, row?.id)
+                                                }
+                                                role="checkbox"
+                                                aria-checked={isItemSelected}
+                                                tabIndex={-1}
+                                                selected={isItemSelected}
+                                            >
+                                                <StyledTableCell padding="checkbox">
+                                                    <Checkbox
+                                                        sx={{
+                                                            color: 'white',
+                                                        }}
+                                                        color="primary"
+                                                        checked={isItemSelected}
+                                                        inputProps={{
+                                                            'aria-labelledby':
+                                                                labelId,
+                                                        }}
+                                                    />
+                                                </StyledTableCell>
+                                                <StyledTableCell
+                                                    align="right"
+                                                    component="th"
+                                                    id={labelId}
+                                                    scope="row"
+                                                    padding="none"
                                                 >
-                                                    <StyledTableCell padding="checkbox">
-                                                        <Checkbox
-                                                            sx={{
-                                                                color: 'white',
-                                                            }}
-                                                            color="primary"
-                                                            checked={
-                                                                isItemSelected
-                                                            }
-                                                            inputProps={{
-                                                                'aria-labelledby':
-                                                                    labelId,
-                                                            }}
-                                                        />
-                                                    </StyledTableCell>
-                                                    <StyledTableCell
-                                                        align="right"
-                                                        component="th"
-                                                        id={labelId}
-                                                        scope="row"
-                                                        padding="none"
-                                                    >
-                                                        {' '}
-                                                        {row?.id}{' '}
-                                                    </StyledTableCell>
-                                                    <StyledTableCell align="left">
-                                                        {row?.chargeId}
-                                                    </StyledTableCell>
-                                                    <StyledTableCell align="right">
-                                                        {row?.description}
-                                                    </StyledTableCell>
-                                                    <StyledTableCell align="right">
-                                                        {row?.startDate.toString()}
-                                                    </StyledTableCell>
-                                                    <StyledTableCell align="right">
-                                                        {row?.endDate.toString()}
-                                                    </StyledTableCell>
-                                                </StyledTableRow>
-                                            );
-                                        },
-                                    )}
+                                                    {' '}
+                                                    {row?.id}{' '}
+                                                </StyledTableCell>
+                                                <StyledTableCell align="left">
+                                                    {row?.chargeId}
+                                                </StyledTableCell>
+                                                <StyledTableCell align="right">
+                                                    {row?.description}
+                                                </StyledTableCell>
+                                                <StyledTableCell align="right">
+                                                    {row?.startDate.toString()}
+                                                </StyledTableCell>
+                                                <StyledTableCell align="right">
+                                                    {row?.endDate.toString()}
+                                                </StyledTableCell>
+                                            </StyledTableRow>
+                                        );
+                                    })}
                                 {emptyRows > 0 && (
                                     <StyledTableRow
                                         style={{
@@ -348,7 +355,7 @@ export default function TariffWindow() {
                         sx={{ fontWeight: 'bold' }}
                         style={{ textTransform: 'none', fontSize: '24px' }}
                     >
-                        Dodaj subskrypcję
+                        Wykup abonament
                     </Typography>
                 </Button>
             </Stack>

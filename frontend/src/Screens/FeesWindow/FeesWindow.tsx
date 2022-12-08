@@ -19,36 +19,22 @@ import {
     EnhancedTableToolbar,
 } from '@components/Table';
 import { Button, Stack, Typography } from '@mui/material';
-import { Fee, getPaymentsByUserID } from 'Screens/FeesWindow/Logic/FeesLogic';
+import {
+    Fee,
+    getPaymentsByUserID,
+    removeFee,
+} from 'Screens/FeesWindow/Logic/FeesLogic';
+import useAlert from '@context/useAlert';
 
-function createData(id: number, amount: number, chargeType: string, date: Date, description: string, paid: boolean, userID: number) {
-    return {
-        id,
-        amount,
-        chargeType,
-        date,
-        description,
-        paid,
-        userID
-    };
-}
-
-let rows: {  
+interface IRow {
     id: number;
     amount: number;
     chargeType: string;
     date: Date;
     description: string;
     paid: boolean;
-    userID: number; 
-}[] = [];
-
-function initializeData(tariffs: Fee[]) {
-    rows = [];
-    console.log(tariffs)
-    tariffs.forEach((element: Fee) => {
-        rows.push(createData(element.id, element.amount, element.chargeType, element.date, element.description, element.paid, element.userID));
-    });
+    userID: number;
+    buttons: JSX.Element;
 }
 
 const headCells = [
@@ -94,9 +80,88 @@ const headCells = [
         disablePadding: false,
         label: 'Id użytkownika',
     },
+    {
+        disablePadding: false,
+    },
 ];
 
 export default function FeesWindow() {
+    const [rows, setRows] = React.useState<IRow[]>([]);
+    const { setAlert } = useAlert();
+
+    function createData(
+        id: number,
+        amount: number,
+        chargeType: string,
+        date: Date,
+        description: string,
+        paid: boolean,
+        userID: number,
+        buttons: JSX.Element,
+    ) {
+        return {
+            id,
+            amount,
+            chargeType,
+            date,
+            description,
+            paid,
+            userID,
+            buttons,
+        };
+    }
+
+    const moveToDetails = (id: string): (() => void) => {
+        return () => {
+            navigate(`./${id}`);
+        };
+    };
+
+    const deleteFee = (id: string): (() => Promise<void>) => {
+        return async () => {
+            const res = await removeFee(id);
+            if (res) {
+                setAlert(`Usunięto ${id}`);
+                updateData();
+                return;
+            }
+            setAlert(`Błąd podczas usuwania!`);
+        };
+    };
+
+    function initializeData(tariffs: Fee[]) {
+        const rows: IRow[] = [];
+        console.log(tariffs);
+        tariffs.forEach((element: Fee) => {
+            rows.push(
+                createData(
+                    element.id,
+                    element.amount,
+                    element.chargeType,
+                    element.date,
+                    element.description,
+                    element.paid,
+                    element.userID,
+                    <>
+                        <Button
+                            variant="contained"
+                            onClick={moveToDetails(String(element.id))}
+                        >
+                            Szczegóły
+                        </Button>
+                        <Button
+                            variant="contained"
+                            color="error"
+                            onClick={deleteFee(String(element.id))}
+                        >
+                            Usuń
+                        </Button>
+                    </>,
+                ),
+            );
+        });
+        setRows(rows);
+    }
 
     useEffect(() => {
         updateData();
@@ -106,7 +171,7 @@ export default function FeesWindow() {
     const updateData: () => void = async () => {
         const _t = await getPaymentsByUserID('0');
         initializeData(_t);
-        setSelected([])
+        setSelected([]);
     };
 
     const deleteHandler = () => {
@@ -277,6 +342,7 @@ export default function FeesWindow() {
                                                     | React.Key
                                                     | null
                                                     | undefined;
+                                                buttons: JSX.Element;
                                             },
                                             index: any,
                                         ) => {
@@ -339,10 +405,15 @@ export default function FeesWindow() {
                                                         {row?.description}
                                                     </StyledTableCell>
                                                     <StyledTableCell align="left">
-                                                        {row?.paid ? "tak" : "nie"}
+                                                        {row?.paid
+                                                            ? 'tak'
+                                                            : 'nie'}
                                                     </StyledTableCell>
                                                     <StyledTableCell align="right">
                                                         0
+                                                    </StyledTableCell>
+                                                    <StyledTableCell align="right">
+                                                        {row?.buttons}
                                                     </StyledTableCell>
                                                 </StyledTableRow>
                                             );
