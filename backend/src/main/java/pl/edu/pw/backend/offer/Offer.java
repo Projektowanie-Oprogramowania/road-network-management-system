@@ -28,9 +28,10 @@ public class Offer {
     private Long auctionID;
 
     public Offer(String userName, BigDecimal price, String currency, Long auctionID) {
+
         this.userName = userName;
-        this.price = price;
-        this.currency = currency;
+        this.price = CurrencyMapper.map(Currency.valueOf(currency), price);
+        this.currency = Currency.PLN.getName();
         this.auctionID = auctionID;
 
     }
