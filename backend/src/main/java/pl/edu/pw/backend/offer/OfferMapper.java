@@ -14,7 +14,7 @@ public class OfferMapper {
                 offer.getUserName(),
                 offer.getPrice(),
                 offer.getCurrency(),
-                offer.getAuctionID()
+                offer.getAuction().getId()
         );
     }
 
