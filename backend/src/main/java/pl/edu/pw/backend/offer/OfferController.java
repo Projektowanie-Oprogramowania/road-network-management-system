@@ -17,7 +17,7 @@ public class OfferController {
 
     @PostMapping
     public ResponseEntity<OfferDTO> addOffer(@RequestBody AddOfferDTO addOfferDTO) {
-        return ResponseEntity.status(CREATED).body(offerService.addOffer(OfferMapper.map(addOfferDTO)));
+        return ResponseEntity.status(CREATED).body(offerService.addOffer(addOfferDTO));
     }
 
     @GetMapping("/{id}")

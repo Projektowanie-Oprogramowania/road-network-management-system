@@ -3,12 +3,12 @@ package pl.edu.pw.backend.offer;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Cascade;
+import pl.edu.pw.backend.auction.Auction;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.math.BigDecimal;
+import org.hibernate.annotations.CascadeType;
 
 @Data
 @NoArgsConstructor
@@ -25,14 +25,14 @@ public class Offer {
 
     private String currency;
 
-    private Long auctionID;
+    @ManyToOne
+    @Cascade(CascadeType.SAVE_UPDATE)
+    @JoinColumn(name = "auction_id")
+    private Auction auction;
 
-    public Offer(String userName, BigDecimal price, String currency, Long auctionID) {
-
+    public Offer(String userName, BigDecimal price, String currency) {
         this.userName = userName;
         this.price = CurrencyMapper.map(Currency.valueOf(currency), price);
         this.currency = Currency.PLN.getName();
-        this.auctionID = auctionID;
-
     }
 }

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class OfferMapper {
@@ -22,8 +23,7 @@ public class OfferMapper {
         return new Offer(
                 offer.getUserName(),
                 offer.getPrice(),
-                offer.getCurrency(),
-                offer.getAuctionID()
+                offer.getCurrency()
         );
     }
 

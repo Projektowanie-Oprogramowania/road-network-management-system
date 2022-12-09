@@ -16,7 +16,10 @@ class OfferService {
     @Autowired
     private AuctionRepository auctionRepository;
 
-    OfferDTO addOffer(Offer offer) {
+    OfferDTO addOffer(AddOfferDTO addOfferDTO) {
+        Offer offer = OfferMapper.map(addOfferDTO);
+        Auction auction = auctionRepository.findById(addOfferDTO.getAuctionID()).orElseThrow();
+        offer.setAuction(auction);
         return OfferMapper.map(offerRepository.save(offer));
     }
 
