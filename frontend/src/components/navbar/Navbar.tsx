@@ -13,6 +13,7 @@ import MenuItem from '@mui/material/MenuItem';
 import MenuIcon from '@mui/icons-material/Menu';
 import EditRoadIcon from '@mui/icons-material/EditRoad';
 import SettingsIcon from '@mui/icons-material/Settings';
+import { useRole } from '@context/useRole';
 
 interface INavbar {
     navbarList: Array<{
@@ -26,6 +27,8 @@ export const Navbar = (props: INavbar) => {
     const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
         null,
     );
+
+    const { role, changeRole } = useRole();
 
     const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorElNav(event.currentTarget);
@@ -106,7 +109,15 @@ export const Navbar = (props: INavbar) => {
                                                 onClick={handleCloseNavMenu}
                                             >
                                                 <Typography textAlign="center">
-                                                    <v.image sx={{top: 6, position: 'relative', marginLeft: 1, marginRight: 1}}/>
+                                                    <v.image
+                                                        sx={{
+                                                            top: 6,
+                                                            position:
+                                                                'relative',
+                                                            marginLeft: 1,
+                                                            marginRight: 1,
+                                                        }}
+                                                    />
                                                     {v.label}
                                                 </Typography>
                                             </MenuItem>
@@ -156,18 +167,56 @@ export const Navbar = (props: INavbar) => {
                                             display: 'block',
                                         }}
                                     >
-                                        <v.image sx={{top: 6, position: 'relative', marginLeft: 1, marginRight: 1}}/>
+                                        <v.image
+                                            sx={{
+                                                top: 6,
+                                                position: 'relative',
+                                                marginLeft: 1,
+                                                marginRight: 1,
+                                            }}
+                                        />
                                         {v.label}
-                                        
                                     </Button>
                                 </Link>
                             ))}
                         </Box>
 
-                        <Box sx={{ flexGrow: 0 }}>
-                            <Tooltip title="Open settings">
-                                <SettingsIcon />
-                            </Tooltip>
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                flexDirection: 'row',
+                                gap: '10px',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                            }}
+                        >
+                            <Box>Widok</Box>
+                            {(role === 'user' && (
+                                <Button
+                                    variant="contained"
+                                    color="primary"
+                                    onClick={() => changeRole('admin')}
+                                >
+                                    Użytkownik
+                                </Button>
+                            )) ||
+                                (role === 'admin' && (
+                                    <Button
+                                        variant="contained"
+                                        color="error"
+                                        onClick={() => changeRole('user')}
+                                    >
+                                        Pracownik GDDKiA
+                                    </Button>
+                                )) || (
+                                    <Button
+                                        variant="contained"
+                                        color="error"
+                                        onClick={() => changeRole('user')}
+                                    >
+                                        Błąd kliknij aby zmienić role
+                                    </Button>
+                                )}
                         </Box>
                     </Toolbar>
                 </Container>

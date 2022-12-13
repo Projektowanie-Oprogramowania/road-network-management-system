@@ -16,6 +16,7 @@ import SubscriptionWindow from 'Screens/SubscriptionWindow/SubscriptionWindow';
 import TariffCreateWindow from 'Screens/TariffWindow/TariffCreateWindow';
 import { FeesCreateWindow } from 'Screens/FeesWindow/FeesCreateWindow';
 import { SubscriptionCreateWindow } from 'Screens/SubscriptionWindow/SubscriptionCreateWindow';
+import { AuctionsWindow } from 'Screens/AuctionsWindow/AuctionsListScreen';
 
 const Layout = () => (
     <>
@@ -60,6 +61,7 @@ export const MenuWindow = () => (
                     path="subscription"
                     element={<SubscriptionCreateWindow />}
                 />
+                <Route path="auctions" element={<AuctionsWindow />} />
             </Route>
         </Routes>
     </BrowserRouter>
