@@ -1,9 +1,9 @@
 import { apiUrl } from 'shared/settings';
-import { Auction, AuctionOffer } from './interface';
+import { Auction, AuctionOffer, AuctionPOST } from './interface';
 
-export const getAuctions = async (id: string) => {
+export const getAuctions = async () => {
     let auctions: Auction[] = [];
-    await fetch(`${apiUrl}/user/${id}`)
+    await fetch(`${apiUrl}/auction`)
         .then(response => {
             if (response.ok) {
                 return response.json();
@@ -20,7 +20,7 @@ export const getAuctionById = async (
     id: string,
 ): Promise<Auction | undefined> => {
     let auction: Auction | undefined = undefined;
-    await fetch(`${apiUrl}/${id}`)
+    await fetch(`${apiUrl}/auction/${id}`)
         .then(response => {
             if (response.ok) {
                 return response.json();
@@ -33,15 +33,16 @@ export const getAuctionById = async (
     return auction;
 };
 
-/*
-export const addCharge = async (fee: FeeFormDTO): Promise<Auction | undefined> => {
-    let res: Fee | undefined = undefined;
-    await fetch(`${apiUrl}/`, {
+export const addAuction = async (
+    data: AuctionPOST,
+): Promise<Auction | undefined> => {
+    let auction: Auction | undefined = undefined;
+    await fetch(`${apiUrl}/auction`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify(fee),
+        body: JSON.stringify(data),
     })
         .then(response => {
             if (response.ok) {
@@ -49,61 +50,22 @@ export const addCharge = async (fee: FeeFormDTO): Promise<Auction | undefined> =
             }
         })
         .then(r => {
-            res = r;
+            auction = r;
         });
 
-    return res;
+    return auction;
 };
 
-export const gemerateCharge = async (
-    type: string,
-    desc: string,
-): Promise<Fee | undefined> => {
-    const fee: FeeFormDTO = {
-        amount: Math.random() * 1000,
-        chargeType: type,
-        date: new Date((new Date() as any) - Math.random() * 1e12),
-        description: desc,
-        paid: false,
-        userID: 0,
-    };
-    let res: Fee | undefined = undefined;
-    await fetch(`${apiUrl}/`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(fee),
-    })
-        .then(response => {
-            if (response.ok) {
-                return response.json();
-            }
-        })
-        .then(r => {
-            res = r;
-        });
-
-    return res;
-};
-
-export const editCharge: (fee: Fee) => Promise<Fee | undefined> = async (
-    fee: Fee,
-) => {
-    let res: Fee | undefined = undefined;
-    await fetch(`${apiUrl}/${fee.id}`, {
+export const updateAuction = async (
+    data: Auction,
+): Promise<Auction | undefined> => {
+    let auction: Auction | undefined = undefined;
+    await fetch(`${apiUrl}/auction/${data.id}`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-            amount: fee.amount,
-            chargeType: fee.chargeType,
-            date: fee.date,
-            description: fee.description,
-            paid: fee.paid,
-            userID: fee.userID,
-        }),
+        body: JSON.stringify(data as AuctionPOST),
     })
         .then(response => {
             if (response.ok) {
@@ -111,25 +73,30 @@ export const editCharge: (fee: Fee) => Promise<Fee | undefined> = async (
             }
         })
         .then(r => {
-            res = r;
+            auction = r;
         });
 
-    return res;
+    return auction;
 };
-*/
 
-export const deleteAuction: (id: string) => Promise<boolean> = async (
+export const closeAuction = async (
     id: string,
-) => {
-    /*const res: boolean = await fetch(`${apiUrl}/${id}`, {
-        method: 'DELETE',
+): Promise<Auction | undefined> => {
+    let auction: Auction | undefined = undefined;
+    await fetch(`${apiUrl}/auction/close/${id}`, {
+        method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
         },
-    }).then(response => {
-        return response.ok;
-    });
-    return res;
-    */
-    return true;
+    })
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            }
+        })
+        .then(r => {
+            auction = r;
+        });
+
+    return auction;
 };
