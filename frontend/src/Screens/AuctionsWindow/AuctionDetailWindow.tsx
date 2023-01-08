@@ -50,6 +50,7 @@ export const AuctionDetailWindow = () => {
                 margin: '20px',
                 alignItems: 'center',
                 justifyContent: 'center',
+                gap: '50px'
             }}
         >
             <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -141,7 +142,7 @@ export const AuctionDetailWindow = () => {
                     />
                     <Box sx={{ display: 'flex', gap: '30px' }}>
                         <ReturnButton />
-                        {isAdmin && (
+                        {isAdmin ? (
                             <Button
                                 variant="contained"
                                 color="info"
@@ -149,8 +150,30 @@ export const AuctionDetailWindow = () => {
                             >
                                 Edycja
                             </Button>
+                        ) : (
+                            <Button
+                                variant="contained"
+                                color="info"
+                                onClick={() => navigate('./offer')}
+                            >
+                                Złóż ofertę
+                            </Button>
                         )}
                     </Box>
+                </Paper>
+                <Paper
+                    sx={{
+                        width: '700px',
+                        padding: '25px',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        gap: '10px',
+                    }}
+                    elevation={6}
+                >
+                    <Box>Lista zgłoszeń do przetargu</Box>
                 </Paper>
             </LocalizationProvider>
         </Box>

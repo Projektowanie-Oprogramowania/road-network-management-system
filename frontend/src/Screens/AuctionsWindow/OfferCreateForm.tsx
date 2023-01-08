@@ -3,10 +3,17 @@ import { useRole } from '@context/useRole';
 import { Box, Button, Paper } from '@mui/material';
 import { stringify } from 'querystring';
 import React, { useEffect, useState } from 'react';
-import { useParams, useSearchParams } from 'react-router-dom';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { json } from 'stream/consumers';
 
-export const AuctionForm = (auctionID: string) => {
+export const OfferCreateForm = () => {
+    const { id } = useParams();
+    const { role } = useRole();
+    const navigate = useNavigate();
+    const [infoText, setInfoText] = useState('Ładowanie danych...');
+
+    const [loading, setLoading] = useState(false);
+    
     useEffect(() => {}, []);
 
     return (

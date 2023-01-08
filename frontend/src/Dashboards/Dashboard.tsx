@@ -19,6 +19,7 @@ import { SubscriptionCreateWindow } from 'Screens/SubscriptionWindow/Subscriptio
 import { AuctionsWindow } from 'Screens/AuctionsWindow/AuctionsListScreen';
 import { AuctionCreateNewForm } from 'Screens/AuctionsWindow/AuctionCreateNewAuction';
 import { AuctionDetailWindow } from 'Screens/AuctionsWindow/AuctionDetailWindow';
+import { OfferCreateForm } from 'Screens/AuctionsWindow/OfferCreateForm';
 
 const Layout = () => (
     <>
@@ -70,6 +71,7 @@ export const MenuWindow = () => (
                     path="auctions/:id/edit"
                     element={<AuctionCreateNewForm />}
                 />
+                <Route path="auctions/:id/offer" element={<OfferCreateForm />} />
             </Route>
         </Routes>
     </BrowserRouter>
