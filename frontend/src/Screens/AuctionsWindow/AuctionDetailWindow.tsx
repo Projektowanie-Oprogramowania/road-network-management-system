@@ -6,7 +6,8 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { json } from 'stream/consumers';
 import { getAuctionById } from './Logic/AuctionsLogic';
-import { Auction } from './Logic/interface';
+import { getOfferByAuctionId } from './Logic/OfferLogic';
+import { Auction, AuctionOffer } from './Logic/interface';
 import { Dayjs } from 'dayjs';
 import { DesktopDatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -21,6 +22,7 @@ export const AuctionDetailWindow = () => {
     const [loading, setLoading] = useState(false);
 
     const [data, setData] = useState<Auction>();
+    const [offers, setOffers] = useState<AuctionOffer[]>([]);
 
     const updateData = async () => {
         setLoading(true);
@@ -29,8 +31,10 @@ export const AuctionDetailWindow = () => {
             return;
         }
         const r = await getAuctionById(id);
-        if (r) {
+        const o = await getOfferByAuctionId(id);
+        if (r && o) {
             setData(r);
+            setOffers(o);
             setLoading(false);
         } else {
             setInfoText(`Błąd pobierania danych o przetargu ${id}`);
@@ -43,6 +47,38 @@ export const AuctionDetailWindow = () => {
 
     const isAdmin = role === 'admin';
 
+    const renderWinningOffer = () => {
+        const o = offers.reduce(function (prev, current) {
+            return prev.price > current.price ? current : prev;
+        });
+        return (
+            <Box
+                sx={{
+                    backgroundColor: 'rgb(45, 45, 45)',
+                }}
+            >
+                <Box>{o.userName}</Box>
+                <Box>
+                    {o.price} {o.currency}
+                </Box>
+            </Box>
+        );
+    };
+
+    const renderOfferList = () =>
+        offers.map(v => (
+            <Box
+                sx={{
+                    backgroundColor: 'rgb(45, 45, 45)',
+                }}
+            >
+                <Box>{v.userName}</Box>
+                <Box>
+                    {v.price} {v.currency}
+                </Box>
+            </Box>
+        ));
+
     return (
         <Box
             sx={{
@@ -50,7 +86,7 @@ export const AuctionDetailWindow = () => {
                 margin: '20px',
                 alignItems: 'center',
                 justifyContent: 'center',
-                gap: '50px'
+                gap: '50px',
             }}
         >
             <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -161,20 +197,49 @@ export const AuctionDetailWindow = () => {
                         )}
                     </Box>
                 </Paper>
-                <Paper
-                    sx={{
-                        width: '700px',
-                        padding: '25px',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        gap: '10px',
-                    }}
-                    elevation={6}
-                >
-                    <Box>Lista zgłoszeń do przetargu</Box>
-                </Paper>
+                {isAdmin && (
+                    <Paper
+                        sx={{
+                            width: '700px',
+                            padding: '25px',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            gap: '10px',
+                        }}
+                        elevation={6}
+                    >
+                        {offers.length > 0 ? (
+                            <Box
+                                sx={{
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    justifyContent: 'center',
+                                    gap: '10px',
+                                }}
+                            >
+                                {data?.state && data.state !== 'CLOSED' ? (
+                                    <>
+                                        <Box>Lista zgłoszeń do przetargu</Box>
+                                        {renderOfferList()}
+                                    </>
+                                ) : (
+                                    <>
+                                        <Box>Zwycięzca przetargu</Box>
+                                        {renderWinningOffer()}
+                                    </>
+                                )}
+                            </Box>
+                        ) : (
+                            <Box>
+                                {loading
+                                    ? 'Ładowanie danych...'
+                                    : 'Brak zgłoszeń do przetargu'}
+                            </Box>
+                        )}
+                    </Paper>
+                )}
             </LocalizationProvider>
         </Box>
     );

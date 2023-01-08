@@ -14,6 +14,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import EditRoadIcon from '@mui/icons-material/EditRoad';
 import SettingsIcon from '@mui/icons-material/Settings';
 import { useRole } from '@context/useRole';
+import { TextField } from '@mui/material';
 
 interface INavbar {
     navbarList: Array<{
@@ -28,7 +29,7 @@ export const Navbar = (props: INavbar) => {
         null,
     );
 
-    const { role, changeRole } = useRole();
+    const { role, changeRole, userId, changeUser } = useRole();
 
     const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorElNav(event.currentTarget);
@@ -192,13 +193,29 @@ export const Navbar = (props: INavbar) => {
                         >
                             <Box>Widok</Box>
                             {(role === 'user' && (
-                                <Button
-                                    variant="contained"
-                                    color="primary"
-                                    onClick={() => changeRole('admin')}
-                                >
-                                    Użytkownik
-                                </Button>
+                                <>
+                                    <Button
+                                        variant="contained"
+                                        color="primary"
+                                        onClick={() => changeRole('admin')}
+                                    >
+                                        Użytkownik
+                                    </Button>
+                                    <TextField
+                                        id="outlined-basic"
+                                        label={`UserID`}
+                                        variant="outlined"
+                                        type="text"
+                                        autoComplete="off"
+                                        value={userId}
+                                        onChange={e => {
+                                            changeUser(e.target.value);
+                                        }}
+                                        sx={{
+                                            width: '100px',
+                                        }}
+                                    />
+                                </>
                             )) ||
                                 (role === 'admin' && (
                                     <Button

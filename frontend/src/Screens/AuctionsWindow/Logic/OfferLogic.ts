@@ -1,6 +1,8 @@
 import { apiUrl } from 'shared/settings';
 import { AuctionOffer, AuctionOfferPOST } from './interface';
 
+export const Currencies = ['PLN', 'USD', 'EUR', 'GBP', 'YEN'];
+
 export const getOfferByAuctionId = async (id: string) => {
     let offers: AuctionOffer[] = [];
     await fetch(`${apiUrl}/offer/auction/${id}`)
