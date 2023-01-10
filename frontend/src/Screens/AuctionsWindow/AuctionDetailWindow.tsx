@@ -6,7 +6,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { json } from 'stream/consumers';
 import { getAuctionById } from './Logic/AuctionsLogic';
-import { getOfferByAuctionId } from './Logic/OfferLogic';
+import { getOfferByAuctionId, getOfferById } from './Logic/OfferLogic';
 import { Auction, AuctionOffer } from './Logic/interface';
 import { Dayjs } from 'dayjs';
 import { DesktopDatePicker, LocalizationProvider } from '@mui/x-date-pickers';
@@ -15,13 +15,14 @@ import { ReturnButton } from 'shared/ReturnButton';
 
 export const AuctionDetailWindow = () => {
     const { id } = useParams();
-    const { role } = useRole();
+    const { role, userId } = useRole();
     const navigate = useNavigate();
     const [infoText, setInfoText] = useState('Ładowanie danych...');
 
     const [loading, setLoading] = useState(false);
 
     const [data, setData] = useState<Auction>();
+    const [winner, setWinner] = useState<AuctionOffer>();
     const [offers, setOffers] = useState<AuctionOffer[]>([]);
 
     const updateData = async () => {
@@ -33,6 +34,12 @@ export const AuctionDetailWindow = () => {
         const r = await getAuctionById(id);
         const o = await getOfferByAuctionId(id);
         if (r && o) {
+            if (r.winnerId) {
+                const w = await getOfferById(r.winnerId);
+                if (w) {
+                    setWinner(w);
+                }
+            }
             setData(r);
             setOffers(o);
             setLoading(false);
@@ -48,21 +55,30 @@ export const AuctionDetailWindow = () => {
     const isAdmin = role === 'admin';
 
     const renderWinningOffer = () => {
-        const o = offers.reduce(function (prev, current) {
-            return prev.price > current.price ? current : prev;
-        });
-        return (
-            <Box
-                sx={{
-                    backgroundColor: 'rgb(45, 45, 45)',
-                }}
-            >
-                <Box>{o.userName}</Box>
-                <Box>
-                    {o.price} {o.currency}
+        if (winner)
+            return (
+                <Box
+                    sx={{
+                        backgroundColor: 'rgb(45, 45, 45)',
+                    }}
+                >
+                    <Box>{winner.userName}</Box>
+                    <Box>
+                        {winner.price} {winner.currency}
+                    </Box>
                 </Box>
-            </Box>
-        );
+            );
+        else {
+            return (
+                <Box
+                    sx={{
+                        backgroundColor: 'rgb(45, 45, 45)',
+                    }}
+                >
+                    Brak zwycięzcy
+                </Box>
+            );
+        }
     };
 
     const renderOfferList = () =>
@@ -78,6 +94,40 @@ export const AuctionDetailWindow = () => {
                 </Box>
             </Box>
         ));
+
+    const renderUserOffer = () => (
+        <>
+            <Box>Twoje oferty</Box>
+
+            {offers
+                .filter(v => v.userName == userId)
+                .map(v => (
+                    <Box
+                        sx={{
+                            backgroundColor: 'rgb(45, 45, 45)',
+                        }}
+                    >
+                        <Box>{v.userName}</Box>
+                        <Box>
+                            {v.price} {v.currency}
+                        </Box>
+                    </Box>
+                ))}
+        </>
+    );
+
+    const renderUserOfferWinning = () =>
+        winner && winner.userName == userId ? (
+            <>
+                <Box>Twoja oferta wygrała</Box>
+                {renderWinningOffer()}
+            </>
+        ) : (
+            <>
+                <Box>Przetarg został zamknięty</Box>
+                <Box>Nie wygrałeś przetargu</Box>
+            </>
+        );
 
     return (
         <Box
@@ -186,7 +236,7 @@ export const AuctionDetailWindow = () => {
                             >
                                 Edycja
                             </Button>
-                        ) : (
+                        ) : data?.state && data.state === 'OPEN' ? (
                             <Button
                                 variant="contained"
                                 color="info"
@@ -194,52 +244,64 @@ export const AuctionDetailWindow = () => {
                             >
                                 Złóż ofertę
                             </Button>
+                        ) : (
+                            <Box>Przetarg zakończył się</Box>
                         )}
                     </Box>
                 </Paper>
-                {isAdmin && (
-                    <Paper
-                        sx={{
-                            width: '700px',
-                            padding: '25px',
-                            display: 'flex',
-                            flexDirection: 'column',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            gap: '10px',
-                        }}
-                        elevation={6}
-                    >
-                        {offers.length > 0 ? (
-                            <Box
-                                sx={{
-                                    display: 'flex',
-                                    flexDirection: 'column',
-                                    justifyContent: 'center',
-                                    gap: '10px',
-                                }}
-                            >
-                                {data?.state && data.state !== 'CLOSED' ? (
+                <Paper
+                    sx={{
+                        width: '700px',
+                        padding: '25px',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        gap: '10px',
+                    }}
+                    elevation={6}
+                >
+                    {offers.length > 0 ? (
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                justifyContent: 'center',
+                                gap: '10px',
+                            }}
+                        >
+                            {data?.state && data.state === 'OPEN' ? (
+                                isAdmin ? (
                                     <>
                                         <Box>Lista zgłoszeń do przetargu</Box>
                                         {renderOfferList()}
                                     </>
                                 ) : (
+                                    <>{renderUserOffer()}</>
+                                )
+                            ) : data?.state && data.state === 'CLOSED' ? (
+                                isAdmin ? (
                                     <>
                                         <Box>Zwycięzca przetargu</Box>
                                         {renderWinningOffer()}
                                     </>
-                                )}
-                            </Box>
-                        ) : (
-                            <Box>
-                                {loading
-                                    ? 'Ładowanie danych...'
-                                    : 'Brak zgłoszeń do przetargu'}
-                            </Box>
-                        )}
-                    </Paper>
-                )}
+                                ) : (
+                                    <>{renderUserOfferWinning()}</>
+                                )
+                            ) : (
+                                <>
+                                    <Box>Przetarg porzucono</Box>
+                                </>
+                            )}
+                        </Box>
+                    ) : (
+                        <Box>
+                            {loading
+                                ? 'Ładowanie danych...'
+                                : 'Brak zgłoszeń do przetargu'}
+                        </Box>
+                    )}
+                </Paper>
             </LocalizationProvider>
         </Box>
     );
