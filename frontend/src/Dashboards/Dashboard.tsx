@@ -16,6 +16,10 @@ import SubscriptionWindow from 'Screens/SubscriptionWindow/SubscriptionWindow';
 import TariffCreateWindow from 'Screens/TariffWindow/TariffCreateWindow';
 import { FeesCreateWindow } from 'Screens/FeesWindow/FeesCreateWindow';
 import { SubscriptionCreateWindow } from 'Screens/SubscriptionWindow/SubscriptionCreateWindow';
+import { AuctionsWindow } from 'Screens/AuctionsWindow/AuctionsListScreen';
+import { AuctionCreateNewForm } from 'Screens/AuctionsWindow/AuctionCreateNewAuction';
+import { AuctionDetailWindow } from 'Screens/AuctionsWindow/AuctionDetailWindow';
+import { OfferCreateForm } from 'Screens/AuctionsWindow/OfferCreateForm';
 
 const Layout = () => (
     <>
@@ -60,6 +64,14 @@ export const MenuWindow = () => (
                     path="subscription"
                     element={<SubscriptionCreateWindow />}
                 />
+                <Route path="auctions" element={<AuctionsWindow />} />
+                <Route path="auctions/new" element={<AuctionCreateNewForm />} />
+                <Route path="auctions/:id" element={<AuctionDetailWindow />} />
+                <Route
+                    path="auctions/:id/edit"
+                    element={<AuctionCreateNewForm />}
+                />
+                <Route path="auctions/:id/offer" element={<OfferCreateForm />} />
             </Route>
         </Routes>
     </BrowserRouter>

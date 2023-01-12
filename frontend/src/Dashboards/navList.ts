@@ -4,6 +4,7 @@ import NavigationIcon from '@mui/icons-material/Navigation';
 import ReceiptIcon from '@mui/icons-material/Receipt';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import LoyaltyIcon from '@mui/icons-material/Loyalty';
+import GavelIcon from '@mui/icons-material/Gavel';
 
 export const navList = [
     {
@@ -35,5 +36,10 @@ export const navList = [
         label: 'Wykup abonament',
         path: 'subscription',
         image: LoyaltyIcon,
+    },
+    {
+        label: 'Przetargi',
+        path: 'auctions',
+        image: GavelIcon,
     },
 ];
